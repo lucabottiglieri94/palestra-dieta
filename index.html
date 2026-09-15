@@ -110,7 +110,7 @@
 <body class="font-sans min-h-screen pb-32 selection:bg-emerald-500/30 selection:text-white">
 
   <!-- OVERLAY AUTENTICAZIONE GOOGLE FIREBASE -->
-  <div id="loginOverlay" class="login-overlay">
+  <div id="loginOverlay" class="login-overlay hidden">
     <div class="max-w-md w-11/12 p-8 rounded-3xl bg-app-card border border-app-border text-center space-y-5 shadow-2xl">
       <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-700 flex items-center justify-center text-black font-display font-black text-2xl shadow-md">
         IR
@@ -162,14 +162,14 @@
             </span>
           </div>
           <p class="text-xs sm:text-sm text-app-textMuted flex items-center gap-2 font-mono mt-0.5">
-            <span id="cloudStatusReadout" class="text-teal-400 font-semibold">Cloud Connesso ✓</span>
+            <span id="cloudStatusReadout" class="text-teal-400 font-semibold">Attivo</span>
             <span class="text-gray-600">•</span>
-            <span class="text-gray-300">Target Deficit 1.950 kcal</span>
+            <span class="text-gray-300">Target 1.950 kcal</span>
           </p>
         </div>
       </div>
 
-      <!-- Selettore Data Quotidiana Orizzontale -->
+      <!-- Selettore Data Quotidiana -->
       <div class="flex items-center gap-2 bg-app-card px-2.5 py-1.5 rounded-2xl border border-app-border">
         <button onclick="window.shiftSelectedDay(-1)" class="w-7 h-7 rounded-xl hover:bg-app-cardSubtle flex items-center justify-center text-sm text-app-textMuted hover:text-white transition">‹</button>
         <span id="headerCurrentDateLabel" class="text-xs sm:text-sm font-mono font-bold text-emerald-400 px-1 select-none">Oggi</span>
@@ -194,7 +194,9 @@
   <!-- Container Principale -->
   <main class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
 
-    <!-- TAB 1: SCHEDA PALESTRA -->
+    <!-- ============================================================= -->
+    <!-- TAB 1: SCHEDA PALESTRA                                        -->
+    <!-- ============================================================= -->
     <section id="view-workout" class="tab-view space-y-6">
       <div class="grid grid-cols-4 gap-2.5 p-1.5 bg-app-dark rounded-2xl border border-app-border max-w-2xl mx-auto">
         <button onclick="window.switchWorkoutDay('dayA')" id="btn-dayA" class="py-3 rounded-xl text-sm font-bold transition bg-emerald-500 text-black shadow-sm">Giorno A</button>
@@ -299,6 +301,7 @@
         </button>
       </div>
 
+      <!-- Elenco Esercizi Robusto -->
       <div id="exerciseList" class="grid grid-cols-1 lg:grid-cols-2 gap-4"></div>
     </section>
 
@@ -375,7 +378,6 @@
           </div>
         </div>
 
-        <!-- 5 Colonne: Cibo Assunto, Calorie Riposo, Calorie Attive, Spesa Totale, Deficit Netto -->
         <div class="grid grid-cols-2 sm:grid-cols-5 gap-3.5">
           <div class="p-4 rounded-2xl bg-app-card border border-app-border text-center">
             <span class="text-xs uppercase font-bold text-app-textMuted block">Assunte (Cibo)</span>
@@ -408,9 +410,8 @@
           </div>
         </div>
 
-        <!-- CONTROLLI: AGGIORNA CALORIE A RIPOSO & ATTIVE (SMARTWATCH / MANUALE) -->
+        <!-- CONTROLLI: AGGIORNA CALORIE A RIPOSO & ATTIVE -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 pt-1">
-          <!-- Controllo Calorie a Riposo (BMR) -->
           <div class="flex flex-wrap items-center justify-between gap-3 bg-app-dark/80 p-4 rounded-2xl border border-teal-500/30">
             <div>
               <span class="text-sm font-bold text-white block">Calorie a Riposo (BMR / Orologio):</span>
@@ -424,7 +425,6 @@
             </div>
           </div>
 
-          <!-- Controllo Calorie Attive -->
           <div class="flex flex-wrap items-center justify-between gap-3 bg-app-dark/80 p-4 rounded-2xl border border-amber-500/30">
             <div>
               <span class="text-sm font-bold text-white block">Calorie Attive (Palestra / Passi):</span>
@@ -435,7 +435,7 @@
               <button onclick="window.updateBurnedFromNutrition()" class="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-bold text-sm active:scale-95 transition">
                 Salva Attive
               </button>
-              <label class="cursor-pointer px-3.5 py-2 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 text-sm font-bold flex items-center gap-1.5 active:scale-95 transition" title="Scatta foto allo schermo dell'orologio (legge sia attive che riposo)">
+              <label class="cursor-pointer px-3.5 py-2 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 text-sm font-bold flex items-center gap-1.5 active:scale-95 transition" title="Scatta foto allo schermo dell'orologio">
                 <span>📸 Scan Orologio</span>
                 <input type="file" accept="image/*" class="hidden" onchange="window.scanWatchCalories(event)">
               </label>
@@ -760,7 +760,7 @@
     </div>
   </div>
 
-  <!-- FIREBASE & CORE SCRIPT -->
+  <!-- FIREBASE & CORE SCRIPT CORRETTO E BLINDATO -->
   <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js';
     import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js';
@@ -794,14 +794,15 @@
     let selectedDate = new Date();
     const getFormattedDateKey = d => d.toISOString().slice(0, 10);
 
+    // Carica stato con fallback localStorage immediato
     let appData = {
       userApiKey: localStorage.getItem('icon_gemini_key') || '',
-      dailyRecords: {}, // { [dateKey]: { foodLogs, waterLiters, burnedCalories, restingCalories, gymBottles } }
-      defaultRestingCalories: 1950,
+      dailyRecords: JSON.parse(localStorage.getItem('icon_daily_records') || '{}'),
+      defaultRestingCalories: parseInt(localStorage.getItem('icon_resting_calories') || '1950', 10),
       weight: localStorage.getItem('icon_weight_record') || '95.0',
       waist: localStorage.getItem('icon_waist_record') || '104.0',
-      weightHistory: [],
-      workoutExercises: {},
+      weightHistory: JSON.parse(localStorage.getItem('icon_weight_history') || '[]'),
+      workoutExercises: JSON.parse(localStorage.getItem('icon_workout_exercises') || '{}'),
       walkLogs: JSON.parse(localStorage.getItem('icon_walk_logs') || '[]'),
       lidlChecks: {
         block1: JSON.parse(localStorage.getItem('icon_lidl_block1') || '{}'),
@@ -829,6 +830,9 @@
       if (appData.dailyRecords[key].restingCalories === undefined) {
         appData.dailyRecords[key].restingCalories = appData.defaultRestingCalories || 1950;
       }
+      if (!Array.isArray(appData.dailyRecords[key].foodLogs)) {
+        appData.dailyRecords[key].foodLogs = [];
+      }
       return appData.dailyRecords[key];
     }
 
@@ -849,6 +853,34 @@
       } else {
         label.innerText = selectedDate.toLocaleDateString('it-IT', { day: 'numeric', month: 'short' });
       }
+    }
+
+    // Salva sia su localStorage (istantaneo) che su Cloud Firestore
+    function triggerCloudSave() {
+      // 1. Salvataggio locale immediato anti-perdita dati
+      try {
+        localStorage.setItem('icon_daily_records', JSON.stringify(appData.dailyRecords));
+        localStorage.setItem('icon_resting_calories', (appData.defaultRestingCalories || 1950).toString());
+        localStorage.setItem('icon_weight_record', appData.weight);
+        localStorage.setItem('icon_waist_record', appData.waist);
+        localStorage.setItem('icon_workout_exercises', JSON.stringify(appData.workoutExercises));
+        localStorage.setItem('icon_walk_logs', JSON.stringify(appData.walkLogs));
+        localStorage.setItem('icon_lidl_block1', JSON.stringify(appData.lidlChecks.block1));
+        localStorage.setItem('icon_lidl_block2', JSON.stringify(appData.lidlChecks.block2));
+      } catch (e) {
+        console.warn("Storage quota warning", e);
+      }
+
+      // 2. Debounce Cloud Firestore Save
+      if (!currentUser || !cloudDocRef) return;
+      clearTimeout(cloudSaveTimeout);
+      cloudSaveTimeout = setTimeout(async () => {
+        try {
+          await setDoc(cloudDocRef, { ...appData, updatedAt: Date.now() }, { merge: true });
+        } catch (e) {
+          console.error("Errore salvataggio Cloud:", e);
+        }
+      }, 300);
     }
 
     window.handleGoogleLogin = async () => {
@@ -896,6 +928,7 @@
       if (!user) {
         overlay.classList.remove('hidden');
         if (unsubCloud) unsubCloud();
+        cloudStatus.innerText = "Offline / Locale";
         return;
       }
 
@@ -923,18 +956,6 @@
         }
       });
     });
-
-    function triggerCloudSave() {
-      if (!currentUser || !cloudDocRef) return;
-      clearTimeout(cloudSaveTimeout);
-      cloudSaveTimeout = setTimeout(async () => {
-        try {
-          await setDoc(cloudDocRef, { ...appData, updatedAt: Date.now() }, { merge: true });
-        } catch (e) {
-          console.error("Errore salvataggio Cloud:", e);
-        }
-      }, 300);
-    }
 
     async function callGeminiApi(payload) {
       if (!appData.userApiKey) throw new Error("API Key assente");
@@ -1109,7 +1130,6 @@
       if (badge) badge.innerText = `${slot} (${timeStr})`;
     }
 
-    // Eliminazione Singolo Pasto
     window.deleteSingleFoodItem = (indexToDelete) => {
       const day = getSelectedDayData();
       const item = day.foodLogs[indexToDelete];
@@ -1122,11 +1142,11 @@
       renderDualColumnDiet();
       updateDeficitCalculations();
       updateCoachSyncSummaryUI();
+      renderRecompChart();
       triggerCloudSave();
       showNotification(`"${itemName}" eliminato.`);
     };
 
-    // AI Coach
     function updateCoachSyncSummaryUI() {
       const summaryEl = document.getElementById('coachSyncSummaryText');
       if (!summaryEl) return;
@@ -1516,10 +1536,7 @@ Restituisci ESCLUSIVAMENTE un JSON: {"burnedKcal": 450, "restingKcal": 1950}`;
       const resting = Number(day.restingCalories) || 1950;
       const burned = Number(day.burnedCalories) || 0;
       
-      // Spesa Energetica Totale (TDEE)
       const totalExpenditure = resting + burned;
-      
-      // Deficit Reale = Spesa Totale - Assunte
       const actualDeficit = totalExpenditure - totalIntake;
 
       document.getElementById('summaryIntakeKcal').innerText = totalIntake;
@@ -1821,7 +1838,7 @@ Restituisci ESCLUSIVAMENTE un JSON: {"burnedKcal": 450, "restingKcal": 1950}`;
           datasets: [
             {
               type: 'line',
-              label: 'Spesa Energetica Totale (Riposo + Attive)',
+              label: 'Spesa Totale (Riposo + Attive)',
               data: expenditures,
               borderColor: '#10b981',
               borderWidth: 2,
@@ -1852,6 +1869,169 @@ Restituisci ESCLUSIVAMENTE un JSON: {"burnedKcal": 450, "restingKcal": 1950}`;
       });
     }
 
+    // GESTIONE SCHEDA PALESTRA ROBUSTA
+    const ROUTINES = {
+      dayA: {
+        title: "Giorno A: Petto, Deltoidi & Tricipiti",
+        subtitle: "Spinta • 50 min • Focus Tensione & Articolazioni Sicure",
+        exercises: [
+          { id: "ex_A1", code: "M01", name: "Chest Press Orizzontale", model: "Technogym Selection 900", sets: 4, reps: "8-10", rest: 90, defaultKg: 65, seat: "Maniglie a metà altezza petto.", cue: "Scapole addotte. Spinta controllata, frena la discesa 3s." },
+          { id: "ex_A2", code: "M02", name: "Incline Chest Press 30°", model: "Technogym Pure Strength", sets: 3, reps: "10-12", rest: 75, defaultKg: 50, seat: "Impugnature ad altezza clavicole.", cue: "Gomiti a 45°, traiettoria convergente con tenuta in alto." },
+          { id: "ex_A3", code: "M03", name: "Pectoral Machine", model: "Technogym Selection", sets: 3, reps: "12-15", rest: 60, defaultKg: 40, seat: "Gomiti al centro dei cuscinetti.", cue: "Petto aperto. Chiudi coi gomiti, ritorno lento." },
+          { id: "ex_A4", code: "M04", name: "Shoulder Press Machine", model: "Technogym Selection", sets: 3, reps: "8-10", rest: 90, defaultKg: 45, seat: "Maniglie ad altezza orecchie.", cue: "Spingi senza inarcare la schiena lombare." },
+          { id: "ex_A5", code: "M05", name: "Alzate Laterali Cavo Basso", model: "Technogym DAP Cavi", sets: 3, reps: "12-15", rest: 60, defaultKg: 7.5, seat: "Carrucola al foro più basso.", cue: "Guida con il gomito fino ad altezza spalle." },
+          { id: "ex_A6", code: "M06", name: "Pushdown Tricipiti Corda", model: "Technogym Ercolina", sets: 3, reps: "10-12", rest: 60, defaultKg: 22.5, seat: "Carrucola in alto.", cue: "Gomiti bloccati ai fianchi, allarga i capi in basso." }
+        ]
+      },
+      dayB: {
+        title: "Giorno B: Dorso, Spalle Post & Bicipiti",
+        subtitle: "Trazione • 50 min • Spessore V-Taper",
+        exercises: [
+          { id: "ex_B1", code: "M07", name: "Lat Machine Presa Larga", model: "Technogym Selection", sets: 4, reps: "8-10", rest: 90, defaultKg: 55, seat: "Rulli cosce ben saldi.", cue: "Deprimi le scapole, gomiti ai fianchi fino al petto." },
+          { id: "ex_B2", code: "M08", name: "Vertical Traction Divergente", model: "Technogym Selection", sets: 3, reps: "10-12", rest: 75, defaultKg: 50, seat: "Presa comoda a braccia tese.", cue: "Sfrutta la biomeccanica convergente Technogym." },
+          { id: "ex_B3", code: "M09", name: "Pulley Basso", model: "Technogym Selection", sets: 3, reps: "10-12", rest: 75, defaultKg: 50, seat: "Ginocchia leggermente flesse.", cue: "Tira all'ombelico unendo le scapole all'indietro." },
+          { id: "ex_B4", code: "M10", name: "Reverse Fly", model: "Technogym Selection", sets: 3, reps: "12-15", rest: 60, defaultKg: 35, seat: "Petto contro il cuscinetto.", cue: "Apri a croce spingendo indietro i gomiti." },
+          { id: "ex_B5", code: "M11", name: "Arm Curl Panca Scott", model: "Technogym Selection", sets: 3, reps: "10-12", rest: 60, defaultKg: 30, seat: "Ascelle sul bordo dell'imbottitura.", cue: "Fletti isolando il bicipite, niente scatti." },
+          { id: "ex_B6", code: "M12", name: "Hammer Curl Cavo", model: "Technogym Ercolina", sets: 3, reps: "10-12", rest: 60, defaultKg: 20, seat: "Carrucola al suolo.", cue: "Presa neutra coi pollici verso l'alto." }
+        ]
+      },
+      dayC: {
+        title: "Giorno C: Gambe, Polpacci & Addome",
+        subtitle: "Gambe & Core • 50 min • Spinta Metabolica",
+        exercises: [
+          { id: "ex_C1", code: "M13", name: "Leg Press 45° a Slitta", model: "Technogym Pure Strength", sets: 4, reps: "10-12", rest: 90, defaultKg: 130, seat: "Piedi a larghezza spalle a metà pedana.", cue: "Ginocchia a 90°, sacro incollato allo schienale." },
+          { id: "ex_C2", code: "M14", name: "Leg Extension Isolamento", model: "Technogym Selection", sets: 3, reps: "12-15", rest: 60, defaultKg: 40, seat: "Perno sul fulcro del ginocchio.", cue: "1 secondo di tenuta isometrica in cima." },
+          { id: "ex_C3", code: "M15", name: "Seated Leg Curl Femorali", model: "Technogym Selection", sets: 4, reps: "10-12", rest: 75, defaultKg: 45, seat: "Cuscino cosce ben bloccato.", cue: "Porta con forza i talloni sotto il sedile." },
+          { id: "ex_C4", code: "M16", name: "Calf Machine Polpacci", model: "Technogym Selection", sets: 4, reps: "15", rest: 45, defaultKg: 65, seat: "Solo avampiede sulla pedana.", cue: "Allungamento profondo in basso per 2 secondi." },
+          { id: "ex_C5", code: "M17", name: "Abdominal Crunch Machine", model: "Technogym Selection", sets: 3, reps: "15-20", rest: 60, defaultKg: 35, seat: "Piedi vincolati ai rulli inferiori.", cue: "Arrotola la cassa toracica verso il bacino espirando." }
+        ]
+      },
+      dayD: {
+        title: "Giorno D: Upper Body & Cardio Finale",
+        subtitle: "Alta Densità • 50 min • Brucia Grassi",
+        exercises: [
+          { id: "ex_D1", code: "M18", name: "Spinte Panca Inclinata 30°", model: "Technogym Pure Incline", sets: 3, reps: "8-10", rest: 75, defaultKg: 24, seat: "Seduta a 30°.", cue: "Focalizzati sulla chiusura della parte alta del petto." },
+          { id: "ex_D2", code: "M19", name: "Lat Machine Presa Inversa", model: "Technogym Selection", sets: 3, reps: "8-10", rest: 75, defaultKg: 60, seat: "Presa supina a larghezza spalle.", cue: "Tira i gomiti vicini al tronco fino alle clavicole." },
+          { id: "ex_D3", code: "M20", name: "Crossover Cavi Alti", model: "Technogym DAP Cavi", sets: 3, reps: "12-15", rest: 60, defaultKg: 15, seat: "Carrucole in alto.", cue: "Braccia quasi distese, incrocia leggermente le mani." },
+          { id: "ex_D4", code: "M21", name: "Superset Corda + Curl Cavo", model: "Technogym Ercolina", sets: 3, reps: "10 + 10", rest: 60, defaultKg: 20, seat: "Prima tricipiti, subito bicipiti.", cue: "Zero pause tra i due esercizi." },
+          { id: "ex_D5", code: "M22", name: "HIIT Skillrow Finale", model: "Technogym Skillrow", sets: 5, reps: "45s scatto + 45s rec", rest: 45, defaultKg: 0, seat: "Resistenza a livello 5.", cue: "Spinta decisa con le gambe, apri il busto e tira al petto." }
+        ]
+      }
+    };
+
+    const FRACTION_DATA = {
+      block1: {
+        title: "Frazione 1: Lunedì - Giovedì",
+        lidlItems: [
+          { name: "Macinato Magro di Manzo Lidl (500g)", price: 4.60 },
+          { name: "Trancio di Salmone Fresco Lidl (250g)", price: 4.80 },
+          { name: "Patate sfuse per friggitrice ad aria (1.5 kg)", price: 1.70 },
+          { name: "Peperoni misti dolci (3 pz)", price: 1.80 },
+          { name: "Cetrioli freschi (2 pz)", price: 1.20 },
+          { name: "Lenticchie in barattolo Campo Largo (2x400g)", price: 1.60 },
+          { name: "Uova medie da terra (10 pz)", price: 1.90 },
+          { name: "Fiocchi d'avena Crownfield (500g)", price: 0.90 },
+          { name: "Yogurt greco magro 0% Milbona (500g)", price: 1.60 },
+          { name: "Zucchine sfuse (1 kg)", price: 1.60 },
+          { name: "Banane o frutti di bosco (1 kg)", price: 1.80 }
+        ],
+        days: {
+          "Lunedì": {
+            badge: "⚡ Giorno ON (Palestra A)",
+            meals: {
+              "Colazione": { title: "Colazione Energetica", time: "08:00", desc: "🥣 Yogurt greco 0% Milbona (170g) + 45g Avena + 1 banana + caffè amaro", target: "~440 kcal | 32g Pro" },
+              "Spuntino": { title: "Spuntino Mattina", time: "11:00", desc: "🍎 1 Mela fresca o spremuta d'arancia senza zuccheri", target: "~70 kcal | 1g Pro" },
+              "Pranzo": { title: "Pranzo Post-Palestra", time: "14:00", desc: "🥤 Huel Black Edition (400 kcal, 40g proteine) + 5g Creatina nello shaker Icon", target: "~400 kcal | 40g Pro" },
+              "Merenda": { title: "Merenda Pomeridiana", time: "17:30", desc: "🥪 1 fetta pane segale con 40g fesa di tacchino / Mozzarella light + cetriolo", target: "~140 kcal | 12g Pro" },
+              "Cena": { title: "Cena Friggitrice & Fresco", time: "20:30", desc: "🐟 125g Salmone fresco + 200g Patate friggitrice ad aria (190°C) + Zucchine & Cetrioli", target: "~740 kcal | 52g Pro" },
+              "Spuntino notturno": { title: "Spuntino Notturno", time: "23:00", desc: "🍵 Tisana rilassante al finocchio o camomilla senza zuccheri", target: "~0 kcal" }
+            }
+          },
+          "Martedì": {
+            badge: "⚡ Giorno ON (Palestra B)",
+            meals: {
+              "Colazione": { title: "Colazione Proteica", time: "08:00", desc: "🥞 Pancake avena: 45g farina avena + 150g albume + frutti di bosco", target: "~420 kcal | 30g Pro" },
+              "Spuntino": { title: "Spuntino Mattina", time: "11:00", desc: "🥒 Cetrioli freschi a fette con pizzico di sale", target: "~25 kcal | 1g Pro" },
+              "Pranzo": { title: "Pranzo Post-Icon", time: "14:00", desc: "🥤 Huel Black Edition (400 kcal, 40g proteine) + 5g Creatina", target: "~400 kcal | 40g Pro" },
+              "Merenda": { title: "Merenda", time: "17:30", desc: "🥣 150g Yogurt greco 0% con cannella e fettine di mela", target: "~110 kcal | 15g Pro" },
+              "Cena": { title: "Cena Polpette Friggitrice", time: "20:30", desc: "🥩 200g Polpette Manzo Magro (180°C 12 min) + 150g Lenticchie + Peperoni arrostiti", target: "~760 kcal | 58g Pro" },
+              "Spuntino notturno": { title: "Spuntino Notturno", time: "23:00", desc: "🍵 Infuso menta piperita digestivo", target: "~0 kcal" }
+            }
+          },
+          "Mercoledì": {
+            badge: "🌱 Giorno OFF (Camminata)",
+            meals: {
+              "Colazione": { title: "Omelette Mattutina", time: "08:00", desc: "🍳 Omelette con 2 uova + 1 fetta tosta segale + caffè amaro + frutto", target: "~420 kcal | 24g Pro" },
+              "Spuntino": { title: "Spuntino Mattina", time: "11:00", desc: "🥣 80g Yogurt greco 0%", target: "~60 kcal | 8g Pro" },
+              "Pranzo": { title: "Insalatona Proteica", time: "13:30", desc: "🥗 1 barattolo Lenticchie (240g) con cetrioli, 100g Mozzarella Light a dadini + EVO", target: "~550 kcal | 42g Pro" },
+              "Merenda": { title: "Merenda", time: "17:30", desc: "🥪 Fetta di segale con fesa di tacchino", target: "~120 kcal | 10g Pro" },
+              "Cena": { title: "Salmone & Patate", time: "20:30", desc: "🐟 125g Salmone Lidl + 200g Patate in friggitrice + Cetrioli e peperoni a crudo", target: "~710 kcal | 50g Pro" },
+              "Spuntino notturno": { title: "Spuntino Notturno", time: "23:00", desc: "🍵 Camomilla calda", target: "~0 kcal" }
+            }
+          },
+          "Giovedì": {
+            badge: "⚡ Giorno ON (Palestra C)",
+            meals: {
+              "Colazione": { title: "Pancake Energetici", time: "08:00", desc: "🥞 Pancake avena con banana schiacciata e cannella", target: "~430 kcal | 28g Pro" },
+              "Spuntino": { title: "Spuntino Mattina", time: "11:00", desc: "🥒 Cetriolo fresco dissetante", target: "~20 kcal" },
+              "Pranzo": { title: "Pranzo Post-Icon", time: "14:00", desc: "🥤 Huel Black Edition (400 kcal, 40g proteine) + 5g Creatina", target: "~400 kcal | 40g Pro" },
+              "Merenda": { title: "Merenda", time: "17:30", desc: "🧀 60g Mozzarella Light Milbona con fette di pomodoro e origano", target: "~110 kcal | 12g Pro" },
+              "Cena": { title: "Polpette & Patate", time: "20:30", desc: "🥩 200g Polpette Manzo Magro in friggitrice + 200g Patate a spicchi + Peperoni", target: "~750 kcal | 55g Pro" },
+              "Spuntino notturno": { title: "Spuntino Notturno", time: "23:00", desc: "🍵 Tisana zenzero e limone", target: "~0 kcal" }
+            }
+          }
+        }
+      },
+      block2: {
+        title: "Frazione 2: Venerdì - Domenica (Weekend)",
+        lidlItems: [
+          { name: "Trancio di Tonno Fresco Lidl (250g)", price: 5.40 },
+          { name: "Gamberetti sgusciati Lidl (250g)", price: 3.80 },
+          { name: "Riso Basmati Express in busta (2x250g)", price: 2.20 },
+          { name: "Macinato Magro di Manzo Lidl (500g)", price: 4.60 },
+          { name: "Mozzarella Light Milbona (2x125g)", price: 1.80 },
+          { name: "Patate sfuse (1 kg)", price: 1.20 },
+          { name: "Peperoni dolci & Cetrioli freschi", price: 2.00 },
+          { name: "Limoni & erbe per marinature", price: 1.00 }
+        ],
+        days: {
+          "Venerdì": {
+            badge: "⚡ Giorno ON (Palestra D)",
+            meals: {
+              "Colazione": { title: "Colazione", time: "08:00", desc: "🥣 Yogurt greco 0% (170g) + 40g Avena + banana", target: "~420 kcal | 31g Pro" },
+              "Spuntino": { title: "Spuntino", time: "11:00", desc: "🍎 1 Mela o caffè", target: "~70 kcal" },
+              "Pranzo": { title: "Pranzo Post-Icon", time: "14:00", desc: "🥤 Huel Black (400 kcal, 40g proteine) + 5g Creatina", target: "~400 kcal | 40g Pro" },
+              "Merenda": { title: "Merenda", time: "17:30", desc: "🧀 50g Mozzarella Light con cetriolo a rondelle", target: "~95 kcal | 10g Pro" },
+              "Cena": { title: "Gamberetti Express", time: "20:30", desc: "🍤 200g Gamberetti sgusciati saltati 3 min con limone + 1 busta Riso Express + Peperoni", target: "~720 kcal | 54g Pro" },
+              "Spuntino notturno": { title: "Spuntino Notturno", time: "23:00", desc: "🍵 Tisana rilassante", target: "~0 kcal" }
+            }
+          },
+          "Sabato": {
+            badge: "🌱 Giorno OFF / Relax",
+            meals: {
+              "Colazione": { title: "Pancake Weekend", time: "08:30", desc: "🥞 Pancake caldi all'avena con frutti di bosco e cannella", target: "~430 kcal | 27g Pro" },
+              "Spuntino": { title: "Spuntino", time: "11:30", desc: "🥣 100g Yogurt greco 0%", target: "~70 kcal | 10g Pro" },
+              "Pranzo": { title: "Bowl Manzo & Riso", time: "13:30", desc: "🥩 150g Polpette manzo + 100g Riso Basmati Express + cetrioli e peperoni a cubetti", target: "~580 kcal | 45g Pro" },
+              "Merenda": { title: "Merenda", time: "17:30", desc: "🥪 Mezza mela con yogurt o fesa", target: "~120 kcal" },
+              "Cena": { title: "Trancio di Tonno Fresco", time: "20:30", desc: "🥩 160g Tonno Fresco Lidl scottato 1 min per lato con sesamo + 220g Patate friggitrice", target: "~690 kcal | 55g Pro" },
+              "Spuntino notturno": { title: "Spuntino Notturno", time: "23:00", desc: "🍵 Infuso ai frutti rossi", target: "~0 kcal" }
+            }
+          },
+          "Domenica": {
+            badge: "🌱 Giorno OFF / Ricarica",
+            meals: {
+              "Colazione": { title: "Uova e Pane", time: "08:30", desc: "🍳 Uova strapazzate con 1 fetta tosta di segale + frutto fresco", target: "~410 kcal | 23g Pro" },
+              "Spuntino": { title: "Spuntino", time: "11:30", desc: "🥒 Cetriolo fresco con gocce di limone", target: "~20 kcal" },
+              "Pranzo": { title: "Gamberetti & Zucchine", time: "13:30", desc: "🍤 Gamberetti saltati con zucchine e 120g Riso Basmati Express", target: "~540 kcal | 42g Pro" },
+              "Merenda": { title: "Merenda", time: "17:30", desc: "🧀 60g Mozzarella light con cetrioli", target: "~110 kcal | 12g Pro" },
+              "Cena": { title: "Polpette & Patate", time: "20:30", desc: "🥩 200g Polpette Manzo Magro + 200g Patate croccanti in friggitrice + Peperoni", target: "~730 kcal | 56g Pro" },
+              "Spuntino notturno": { title: "Spuntino Notturno", time: "23:00", desc: "🍵 Camomilla o tisana finocchio", target: "~0 kcal" }
+            }
+          }
+        }
+      }
+    };
+
     window.switchWorkoutDay = dayKey => {
       currentWorkoutDay = dayKey;
       ['dayA', 'dayB', 'dayC', 'dayD'].forEach(key => {
@@ -1868,27 +2048,34 @@ Restituisci ESCLUSIVAMENTE un JSON: {"burnedKcal": 450, "restingKcal": 1950}`;
       const routine = ROUTINES[dayKey];
       if (!routine) return;
 
-      document.getElementById('workoutTitle').innerText = routine.title;
-      document.getElementById('workoutSubtitle').innerText = routine.subtitle;
+      const titleEl = document.getElementById('workoutTitle');
+      const subEl = document.getElementById('workoutSubtitle');
+      if (titleEl) titleEl.innerText = routine.title;
+      if (subEl) subEl.innerText = routine.subtitle;
 
       const container = document.getElementById('exerciseList');
+      if (!container) return;
       container.innerHTML = '';
 
+      if (!appData.workoutExercises) appData.workoutExercises = {};
+
       routine.exercises.forEach(ex => {
-        const exState = appData.workoutExercises[`${dayKey}_${ex.id}`] || { kg: ex.defaultKg, completedSets: [] };
-        const currentKg = exState.kg !== null && exState.kg !== undefined ? exState.kg : ex.defaultKg;
+        const key = `${dayKey}_${ex.id}`;
+        const exState = appData.workoutExercises[key] || { kg: ex.defaultKg, completedSets: [] };
+        const currentKg = (exState.kg !== null && exState.kg !== undefined) ? exState.kg : ex.defaultKg;
+        const completedSets = Array.isArray(exState.completedSets) ? exState.completedSets : [];
         const isCardio = ex.defaultKg === 0;
 
-        const allCompleted = exState.completedSets && exState.completedSets.length === ex.sets;
+        const allCompleted = completedSets.length === ex.sets;
         const suggestionBadge = (!isCardio && allCompleted)
           ? `<span class="text-[11px] font-mono font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2.5 py-0.5 rounded-lg inline-block mt-1">🚀 Prossima volta: prova ${(currentKg + 2.5).toFixed(1)}kg!</span>`
           : '';
 
         let setsHTML = '';
         for (let s = 1; s <= ex.sets; s++) {
-          const isDone = exState.completedSets && exState.completedSets.includes(s);
+          const isDone = completedSets.includes(s);
           setsHTML += `
-            <button onclick="window.handleGymSetClick('${dayKey}', '${ex.id}', ${s}, ${ex.rest})" class="h-13 flex-1 min-w-[60px] rounded-xl text-sm font-black transition border flex items-center justify-center gap-1 active:scale-95 ${
+            <button onclick="window.handleGymSetClick('${dayKey}', '${ex.id}', ${s}, ${ex.rest})" class="h-12 flex-1 min-w-[56px] rounded-xl text-sm font-black transition border flex items-center justify-center gap-1 active:scale-95 ${
               isDone ? 'bg-emerald-500 text-black border-emerald-400 shadow-md' : 'bg-app-dark border-app-border text-gray-300 hover:border-emerald-500/40'
             }">
               ${isDone ? '✓ ' : ''}S${s}
@@ -1949,9 +2136,11 @@ Restituisci ESCLUSIVAMENTE un JSON: {"burnedKcal": 450, "restingKcal": 1950}`;
 
     window.adjustWeight = (dayKey, exId, delta) => {
       const key = `${dayKey}_${exId}`;
-      const curr = appData.workoutExercises[key] || { kg: 50, completedSets: [] };
+      if (!appData.workoutExercises[key]) {
+        appData.workoutExercises[key] = { kg: 50, completedSets: [] };
+      }
+      const curr = appData.workoutExercises[key];
       curr.kg = Math.max(2.5, parseFloat(((parseFloat(curr.kg) || 0) + delta).toFixed(1)));
-      appData.workoutExercises[key] = curr;
       renderWorkoutList(dayKey);
       triggerCloudSave();
     };
@@ -1960,18 +2149,22 @@ Restituisci ESCLUSIVAMENTE un JSON: {"burnedKcal": 450, "restingKcal": 1950}`;
       const parsed = parseFloat(val);
       if (!isNaN(parsed) && parsed > 0) {
         const key = `${dayKey}_${exId}`;
-        const curr = appData.workoutExercises[key] || { kg: 50, completedSets: [] };
-        curr.kg = parseFloat(parsed.toFixed(1));
-        appData.workoutExercises[key] = curr;
+        if (!appData.workoutExercises[key]) {
+          appData.workoutExercises[key] = { kg: 50, completedSets: [] };
+        }
+        appData.workoutExercises[key].kg = parseFloat(parsed.toFixed(1));
         triggerCloudSave();
-        showNotification(`Carico Cloud: ${curr.kg} kg`);
+        showNotification(`Carico: ${appData.workoutExercises[key].kg} kg`);
       }
     };
 
     window.handleGymSetClick = (dayKey, exId, setNumber, restSeconds) => {
       const key = `${dayKey}_${exId}`;
-      const curr = appData.workoutExercises[key] || { kg: null, completedSets: [] };
-      let list = curr.completedSets || [];
+      if (!appData.workoutExercises[key]) {
+        appData.workoutExercises[key] = { kg: null, completedSets: [] };
+      }
+      const curr = appData.workoutExercises[key];
+      let list = Array.isArray(curr.completedSets) ? curr.completedSets : [];
 
       if (list.includes(setNumber)) {
         list = list.filter(n => n !== setNumber);
@@ -1982,7 +2175,6 @@ Restituisci ESCLUSIVAMENTE un JSON: {"burnedKcal": 450, "restingKcal": 1950}`;
       }
 
       curr.completedSets = list;
-      appData.workoutExercises[key] = curr;
       renderWorkoutList(dayKey);
       triggerCloudSave();
     };
@@ -2400,6 +2592,7 @@ Restituisci ESCLUSIVAMENTE un JSON: {"burnedKcal": 450, "restingKcal": 1950}`;
       setTimeout(() => toast.remove(), 2600);
     }
 
+    // Inizializzazione immediata con dati locali e caricamento interfaccia
     window.addEventListener('DOMContentLoaded', () => {
       window.switchWorkoutDay('dayA');
       window.selectWeekFraction('block1');
