@@ -99,7 +99,7 @@
       <div>
         <h2 class="font-display font-black text-xl text-white">ICON RECOMP</h2>
         <p class="text-xs text-app-textMuted mt-1.5 leading-relaxed">
-          Accedi con il tuo account Google per salvare carichi, dieta a doppia colonna e deficit calorico sul Cloud Firebase privato.
+          Accedi con il tuo account Google per salvare carichi, pasti scritti a mano o scansionati e deficit sul Cloud privato.
         </p>
       </div>
       <button id="loginBtn" onclick="window.handleGoogleLogin()" class="w-full py-3.5 rounded-2xl bg-white hover:bg-gray-100 text-black font-bold text-xs flex items-center justify-center gap-2.5 transition active:scale-95 shadow-md cursor-pointer">
@@ -165,7 +165,7 @@
     </div>
   </header>
 
-  <!-- Container Principale Desktop Ultra-Wide -->
+  <!-- Container Principale -->
   <main class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
 
     <!-- ============================================================= -->
@@ -276,7 +276,6 @@
         </button>
       </div>
 
-      <!-- Griglia Esercizi (2 colonne su Desktop) -->
       <div id="exerciseList" class="grid grid-cols-1 lg:grid-cols-2 gap-4"></div>
     </section>
 
@@ -357,7 +356,7 @@
 
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
           <div class="p-3.5 rounded-2xl bg-app-card border border-app-border text-center">
-            <span class="text-[10px] uppercase font-bold text-app-textMuted block">Assunte (Scanner)</span>
+            <span class="text-[10px] uppercase font-bold text-app-textMuted block">Assunte (Scanner/Testo)</span>
             <div id="summaryIntakeKcal" class="text-2xl font-mono font-black text-white mt-1">0</div>
             <span class="text-[10px] text-teal-400 font-mono">kcal totali cibo</span>
           </div>
@@ -411,7 +410,7 @@
 
       <div id="daySelectorContainer" class="flex gap-2 overflow-x-auto pb-1 no-scrollbar justify-center"></div>
 
-      <!-- SCHEDA DIETA A DOPPIA COLONNA (CONSIGLIATO VS EFFETTIVAMENTE MANGIATO) -->
+      <!-- SCHEDA DIETA A DOPPIA COLONNA -->
       <div class="space-y-4">
         <div class="flex items-center justify-between px-1">
           <div class="flex items-center gap-2">
@@ -424,7 +423,7 @@
         <div id="dualColumnMealGrid" class="space-y-4"></div>
       </div>
 
-      <!-- Spesa Lidl & Idratazione Grid (2 colonne su PC) -->
+      <!-- Spesa Lidl & Idratazione Grid -->
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 pt-2">
         <div class="apple-glass-card p-5 rounded-2xl border border-app-border space-y-3">
           <div class="flex items-center justify-between">
@@ -454,21 +453,22 @@
     </section>
 
     <!-- ============================================================= -->
-    <!-- TAB 3: SCANNER FOTO PASTI (CON RAGGRUPPAMENTO & SOMME)        -->
+    <!-- TAB 3: SCANNER FOTO & TESTO SCRITTO A MANO                   -->
     <!-- ============================================================= -->
     <section id="view-scanner" class="tab-view hidden space-y-6">
       
-      <div class="apple-glass-card p-6 rounded-3xl border border-app-border text-center space-y-4 max-w-2xl mx-auto">
+      <div class="apple-glass-card p-6 rounded-3xl border border-app-border text-center space-y-5 max-w-2xl mx-auto">
         <div class="w-14 h-14 mx-auto rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-2xl text-emerald-400">
-          📷
+          🍽️
         </div>
         <div>
-          <h3 class="font-display font-black text-lg text-white">Scanner Pasto o Tabella Nutrizionale</h3>
+          <h3 class="font-display font-black text-lg text-white">Registra Cibo: Foto o Scrittura a Mano</h3>
           <p class="text-xs text-app-textSecondary mt-1 max-w-md mx-auto leading-relaxed">
-            Scatta la foto del piatto: Gemini riconosce l'orario e calcola calorie, proteine, carboidrati e grassi inserendoli nel pasto corretto.
+            Scatta la foto del piatto oppure scrivi gli ingredienti (es. <em>"1 piatto di riso venere più 200g di gamberetti"</em>): Gemini calcolerà calorie, proteine, carbo e grassi inserendoli nel pasto giusto.
           </p>
         </div>
 
+        <!-- Selettore Fascia Pasto -->
         <div class="bg-app-dark p-3.5 rounded-2xl border border-app-border flex flex-col sm:flex-row items-center justify-between gap-3 text-left">
           <div class="flex items-center gap-2.5">
             <span class="text-lg">🕒</span>
@@ -491,18 +491,40 @@
           </div>
         </div>
 
-        <label class="cursor-pointer inline-flex items-center gap-2.5 px-6 py-3.5 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-black font-black text-xs sm:text-sm shadow-xl active:scale-95 transition">
-          <span>📸 Scatta o Carica Foto Piatto</span>
+        <!-- INPUT SCRITTURA A MANO PIATTO -->
+        <div class="space-y-2 text-left">
+          <label class="text-[11px] font-bold uppercase tracking-wider text-teal-300 block flex items-center gap-1.5">
+            <span>✍️</span> Inserisci Pasto a Testo
+          </label>
+          <div class="flex gap-2">
+            <input type="text" id="manualDishTextInput" placeholder="es. 1 piatto di riso venere più 200g di gamberetti e zucchine..." class="w-full bg-app-dark border border-app-border focus:border-emerald-500 rounded-2xl px-4 py-3 text-xs sm:text-sm text-white placeholder-app-textMuted focus:outline-none transition">
+            <button onclick="window.processManualFoodText()" class="px-5 py-3 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-black font-black text-xs sm:text-sm active:scale-95 transition shrink-0 flex items-center gap-1.5 shadow-lg">
+              <span>Calcola</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-3 my-2">
+          <div class="h-px flex-1 bg-app-border"></div>
+          <span class="text-[11px] text-app-textMuted font-mono uppercase font-bold">Oppure con la Fotocamera</span>
+          <div class="h-px flex-1 bg-app-border"></div>
+        </div>
+
+        <!-- PULSANTE FOTO SCANNER -->
+        <label class="cursor-pointer inline-flex items-center gap-2.5 px-6 py-3.5 rounded-2xl bg-app-card hover:bg-app-cardSubtle border border-emerald-500/40 text-emerald-300 font-bold text-xs sm:text-sm shadow-lg active:scale-95 transition">
+          <span class="text-base">📸</span>
+          <span>Scatta o Carica Foto Piatto</span>
           <input type="file" id="scannerPhotoInput" accept="image/*" class="hidden" onchange="window.processFoodPhoto(event)">
         </label>
 
+        <!-- Preview & Live Result -->
         <div id="scannerResultBox" class="hidden text-left pt-4 border-t border-app-border space-y-3">
-          <div class="relative w-full h-56 rounded-2xl overflow-hidden bg-black border border-app-border">
+          <div id="foodImgPreviewContainer" class="relative w-full h-56 rounded-2xl overflow-hidden bg-black border border-app-border hidden">
             <img id="foodPreviewImg" src="" alt="Pasto" class="w-full h-full object-cover">
-            <div id="foodLoadingSpinner" class="hidden absolute inset-0 bg-black/85 flex flex-col items-center justify-center p-4 text-center">
-              <div class="w-7 h-7 border-2 border-emerald-400 border-t-transparent rounded-full animate-spin mb-2"></div>
-              <span class="text-xs font-semibold text-emerald-400">Analisi nutrizionale Gemini AI in corso...</span>
-            </div>
+          </div>
+          <div id="foodLoadingSpinner" class="hidden p-6 rounded-2xl bg-app-dark border border-app-border flex flex-col items-center justify-center text-center space-y-2">
+            <div class="w-7 h-7 border-2 border-emerald-400 border-t-transparent rounded-full animate-spin"></div>
+            <span class="text-xs font-semibold text-emerald-400">Calcolo nutrizionale con Gemini AI in corso...</span>
           </div>
           <div id="foodDetailsTarget" class="space-y-2"></div>
         </div>
@@ -686,7 +708,7 @@
     let timerCountdown = null;
     let secondsRemaining = 0;
 
-    // Gestione Login Sicura Anti-Blocco Popup
+    // Login Anti-Blocco Popup
     window.handleGoogleLogin = async () => {
       const msg = document.getElementById('loginStatusMsg');
       const btnLabel = document.getElementById('loginBtnLabel');
@@ -696,14 +718,13 @@
       try {
         await signInWithPopup(auth, provider);
       } catch (err) {
-        console.warn("Popup bloccato o fallito, passo a redirect...", err);
-        // Se il popup viene bloccato (es. Safari iPhone), usa il redirect nativo
+        console.warn("Popup bloccato, uso redirect:", err);
         if (err.code === 'auth/popup-blocked' || err.code === 'auth/popup-closed-by-user') {
           try {
             await signInWithRedirect(auth, provider);
           } catch (rErr) {
             if (msg) {
-              msg.innerText = "Errore redirect: " + (rErr.code || rErr.message);
+              msg.innerText = "Errore: " + (rErr.code || rErr.message);
               msg.classList.remove('hidden');
             }
           }
@@ -716,7 +737,6 @@
       }
     };
 
-    // Controlla l'esito di eventuale redirect al caricamento
     getRedirectResult(auth).catch(err => {
       const msg = document.getElementById('loginStatusMsg');
       if (msg) {
@@ -795,7 +815,6 @@
       throw new Error("Nessun modello Gemini attivo");
     }
 
-    // Riconoscimento orario per 6 fasce
     function detectCurrentMealSlot() {
       const h = new Date().getHours();
       const m = new Date().getMinutes();
@@ -816,7 +835,202 @@
       if (badge) badge.innerText = `${slot} (${timeStr})`;
     }
 
-    // Scanner Smartwatch Display per Calorie Bruciate
+    // =============================================================
+    // ANALISI CIBO: TESTO A MANO (es: "1 piatto riso venere + 200g gamberetti")
+    // =============================================================
+    window.processManualFoodText = async () => {
+      const input = document.getElementById('manualDishTextInput');
+      const textQuery = input.value.trim();
+      if (!textQuery) {
+        showNotification("Scrivi cosa hai mangiato prima di cliccare Calcola.", true);
+        return;
+      }
+
+      const selVal = document.getElementById('scannerSlotSelect').value;
+      const targetSlot = selVal === 'auto' ? detectCurrentMealSlot() : selVal;
+
+      const resultBox = document.getElementById('scannerResultBox');
+      const loading = document.getElementById('foodLoadingSpinner');
+      const target = document.getElementById('foodDetailsTarget');
+      const imgContainer = document.getElementById('foodImgPreviewContainer');
+
+      imgContainer.classList.add('hidden');
+      resultBox.classList.remove('hidden');
+      loading.classList.remove('hidden');
+      target.innerHTML = '';
+
+      if (!appData.userApiKey) {
+        window.openApiKeyModal();
+        loading.classList.add('hidden');
+        showNotification("Inserisci la chiave API Gemini per analizzare il testo.", true);
+        return;
+      }
+
+      try {
+        const prompt = `
+          Agisci come Biologo Nutrizionista Sportivo esperto.
+          L'utente ha inserito a mano questa descrizione di cibo mangiato: "${textQuery}".
+          Fascia pasto assegnata: "${targetSlot}".
+          Profilo atleta: 32 anni, 95kg, deficit 1.950 kcal/die (target 170g proteine).
+          
+          Calcola o stima con accuratezza le calorie e i macronutrienti per gli ingredienti indicati (es. grammature, porzioni descritte).
+          Restituisci ESCLUSIVAMENTE un JSON valido senza blocchi markdown esterni:
+          {
+            "dishName": "${textQuery}",
+            "slot": "${targetSlot}",
+            "calories": 420,
+            "protein": 38,
+            "carbs": 48,
+            "fat": 6,
+            "verdict": "Giudizio clinico per il deficit a 1.950 kcal",
+            "advice": "Consiglio pratico nutrizionale"
+          }
+        `;
+
+        const rawText = await callGeminiApi({
+          contents: [{ role: "user", parts: [{ text: prompt }] }]
+        });
+
+        const cleanJson = rawText.replace(/```json/g, '').replace(/```/g, '').trim();
+        const data = JSON.parse(cleanJson);
+        data.slot = targetSlot;
+        input.value = '';
+        renderFoodAnalysisResult(data);
+      } catch (err) {
+        target.innerHTML = `
+          <div class="p-3.5 rounded-2xl bg-red-950/40 text-red-300 text-xs border border-red-500/30">
+            Errore durante l'elaborazione del testo con Gemini. Riprova descrivendo porzioni o ingredienti.
+          </div>
+        `;
+      } finally {
+        loading.classList.add('hidden');
+      }
+    };
+
+    // SCANNER FOTO PIATTI
+    window.processFoodPhoto = async event => {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const selVal = document.getElementById('scannerSlotSelect').value;
+      const targetSlot = selVal === 'auto' ? detectCurrentMealSlot() : selVal;
+
+      const reader = new FileReader();
+      reader.onload = async function(e) {
+        const base64Content = e.target.result.split(',')[1];
+        const preview = document.getElementById('foodPreviewImg');
+        const imgContainer = document.getElementById('foodImgPreviewContainer');
+        const resultBox = document.getElementById('scannerResultBox');
+        const loading = document.getElementById('foodLoadingSpinner');
+        const target = document.getElementById('foodDetailsTarget');
+
+        preview.src = e.target.result;
+        imgContainer.classList.remove('hidden');
+        resultBox.classList.remove('hidden');
+        loading.classList.remove('hidden');
+        target.innerHTML = '';
+
+        if (!appData.userApiKey) {
+          window.openApiKeyModal();
+          loading.classList.add('hidden');
+          showNotification("Inserisci la chiave API Gemini.", true);
+          return;
+        }
+
+        try {
+          const prompt = `
+            Agisci come Biologo Nutrizionista Sportivo esperto.
+            Momento del pasto: "${targetSlot}".
+            Profilo atleta: 32 anni, 95kg, target deficit 1.950 kcal/die (target 170g proteine).
+            Analizza l'immagine (piatto preparato, singolo ingrediente o tabella nutrizionale) e restituisci ESCLUSIVAMENTE un JSON valido senza blocchi markdown:
+            {
+              "dishName": "Nome descrittivo piatto o pietanza",
+              "slot": "${targetSlot}",
+              "calories": 250,
+              "protein": 24,
+              "carbs": 18,
+              "fat": 8,
+              "verdict": "Giudizio rapido per il deficit",
+              "advice": "Consiglio pratico di cottura o abbinamento"
+            }
+          `;
+
+          const rawText = await callGeminiApi({
+            contents: [{
+              role: "user",
+              parts: [{ text: prompt }, { inlineData: { mimeType: file.type || "image/jpeg", data: base64Content } }]
+            }]
+          });
+
+          const cleanJson = rawText.replace(/```json/g, '').replace(/```/g, '').trim();
+          const data = JSON.parse(cleanJson);
+          data.slot = targetSlot;
+          renderFoodAnalysisResult(data);
+        } catch (err) {
+          target.innerHTML = `
+            <div class="p-3.5 rounded-2xl bg-red-950/40 text-red-300 text-xs border border-red-500/30">
+              Errore durante l'analisi della foto con Gemini.
+            </div>
+          `;
+        } finally {
+          loading.classList.add('hidden');
+        }
+      };
+      reader.readAsDataURL(file);
+    };
+
+    function renderFoodAnalysisResult(data) {
+      const target = document.getElementById('foodDetailsTarget');
+      target.innerHTML = `
+        <div class="flex items-center justify-between">
+          <div>
+            <span class="text-[10px] uppercase font-bold text-emerald-400">${data.slot}</span>
+            <h4 class="font-display font-bold text-white text-base">${data.dishName}</h4>
+          </div>
+          <span class="font-mono font-black text-lg text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-xl border border-emerald-500/20">
+            ${data.calories} kcal
+          </span>
+        </div>
+
+        <div class="grid grid-cols-3 gap-2 text-center text-xs py-1">
+          <div class="p-2.5 rounded-xl bg-app-card border border-app-border"><span class="text-[10px] text-app-textMuted font-semibold block">PROTEINE</span><span class="text-sm font-bold text-white">${data.protein}g</span></div>
+          <div class="p-2.5 rounded-xl bg-app-card border border-app-border"><span class="text-[10px] text-app-textMuted font-semibold block">CARBOIDRATI</span><span class="text-sm font-bold text-white">${data.carbs}g</span></div>
+          <div class="p-2.5 rounded-xl bg-app-card border border-app-border"><span class="text-[10px] text-app-textMuted font-semibold block">GRASSI</span><span class="text-sm font-bold text-white">${data.fat}g</span></div>
+        </div>
+
+        <div class="p-3 rounded-xl bg-app-dark border border-app-border text-xs text-app-textSecondary space-y-1">
+          <p><strong class="text-emerald-400">Verdetto:</strong> ${data.verdict}</p>
+          <p><strong class="text-teal-400">Consiglio:</strong> ${data.advice}</p>
+        </div>
+
+        <button onclick="window.commitMealToLog(${JSON.stringify(data).replace(/"/g, '&quot;')})" class="w-full py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-black text-xs sm:text-sm active:scale-95 transition shadow-lg">
+          + Salva nel pasto "${data.slot}" & Sincronizza Cloud
+        </button>
+      `;
+    }
+
+    window.commitMealToLog = meal => {
+      meal.time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      appData.foodLogs.unshift(meal);
+      renderGroupedMeals();
+      renderDualColumnDiet();
+      updateDeficitCalculations();
+      triggerCloudSave();
+      showNotification(`Pasto registrato in ${meal.slot}!`);
+      document.getElementById('scannerResultBox').classList.add('hidden');
+    };
+
+    window.clearFoodLog = () => {
+      if (!confirm("Vuoi azzerare il diario pasti di oggi?")) return;
+      appData.foodLogs = [];
+      renderGroupedMeals();
+      renderDualColumnDiet();
+      updateDeficitCalculations();
+      triggerCloudSave();
+      showNotification("Diario pasti azzerato.");
+    };
+
+    // Scanner Orologio
     window.scanWatchCalories = async event => {
       const file = event.target.files[0];
       if (!file) return;
@@ -1115,7 +1329,7 @@
             <div class="h-full flex flex-col items-center justify-center p-4 rounded-2xl bg-app-dark/60 border border-dashed border-app-border text-center space-y-2">
               <span class="text-xs text-app-textMuted">Nessun piatto registrato in questo pasto.</span>
               <button onclick="window.triggerScanForSlot('${slotName}')" class="px-3 py-1.5 rounded-xl bg-app-card hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-bold text-xs flex items-center gap-1.5 transition active:scale-95">
-                <span>📸</span> Scansiona ${slotName}
+                <span>📸/✍️</span> Registra ${slotName}
               </button>
             </div>
           `;
@@ -1179,7 +1393,7 @@
               <div class="p-3.5 rounded-2xl bg-app-cardSubtle/60 border border-emerald-500/20 flex flex-col justify-between space-y-2">
                 <div class="flex items-center justify-between text-[11px] uppercase font-bold mb-1">
                   <span class="text-teal-300">🍽️ Effettivamente Mangiato</span>
-                  <span class="text-[10px] text-app-textMuted font-mono">Dati Scanner</span>
+                  <span class="text-[10px] text-app-textMuted font-mono">Dati Scanner / Testo</span>
                 </div>
                 ${actualHTML}
               </div>
@@ -1205,7 +1419,7 @@
       window.navigateToTab('scanner');
       const sel = document.getElementById('scannerSlotSelect');
       if (sel) sel.value = slotName;
-      document.getElementById('scannerPhotoInput').click();
+      document.getElementById('manualDishTextInput').focus();
     };
 
     function renderGroupedMeals() {
@@ -1215,7 +1429,7 @@
       if (appData.foodLogs.length === 0) {
         container.innerHTML = `
           <div class="col-span-full text-xs text-app-textMuted py-8 text-center bg-app-card rounded-2xl border border-app-border">
-            Nessun pasto registrato oggi. Scatta la foto del tuo piatto per iniziare la somma automatica!
+            Nessun pasto registrato oggi. Scrivi cosa hai mangiato o scatta una foto per avviare il calcolo!
           </div>
         `;
         return;
@@ -1276,120 +1490,6 @@
         `;
       }).join('');
     }
-
-    window.processFoodPhoto = async event => {
-      const file = event.target.files[0];
-      if (!file) return;
-
-      const selVal = document.getElementById('scannerSlotSelect').value;
-      const targetSlot = selVal === 'auto' ? detectCurrentMealSlot() : selVal;
-
-      const reader = new FileReader();
-      reader.onload = async function(e) {
-        const base64Content = e.target.result.split(',')[1];
-        document.getElementById('foodPreviewImg').src = e.target.result;
-        document.getElementById('scannerResultBox').classList.remove('hidden');
-        document.getElementById('foodLoadingSpinner').classList.remove('hidden');
-
-        if (!appData.userApiKey) {
-          window.openApiKeyModal();
-          document.getElementById('foodLoadingSpinner').classList.add('hidden');
-          showNotification("Inserisci la chiave API Gemini.", true);
-          return;
-        }
-
-        try {
-          const prompt = `
-            Agisci come Biologo Nutrizionista Sportivo esperto.
-            Momento del pasto: "${targetSlot}".
-            Profilo atleta: 32 anni, 95kg, target deficit 1.950 kcal/die (target 170g proteine).
-            Analizza l'immagine (piatto preparato, singolo ingrediente o tabella nutrizionale) e restituisci ESCLUSIVAMENTE un JSON valido senza blocchi markdown esterni:
-            {
-              "dishName": "Nome descrittivo piatto o pietanza",
-              "slot": "${targetSlot}",
-              "calories": 250,
-              "protein": 24,
-              "carbs": 18,
-              "fat": 8,
-              "verdict": "Giudizio rapido per il deficit",
-              "advice": "Consiglio pratico di cottura o abbinamento"
-            }
-          `;
-
-          const rawText = await callGeminiApi({
-            contents: [{
-              role: "user",
-              parts: [{ text: prompt }, { inlineData: { mimeType: file.type || "image/jpeg", data: base64Content } }]
-            }]
-          });
-
-          const cleanJson = rawText.replace(/```json/g, '').replace(/```/g, '').trim();
-          const data = JSON.parse(cleanJson);
-          data.slot = targetSlot;
-          renderFoodAnalysisResult(data);
-        } catch (err) {
-          document.getElementById('foodDetailsTarget').innerHTML = `
-            <div class="p-3.5 rounded-2xl bg-red-950/40 text-red-300 text-xs border border-red-500/30">
-              Errore durante l'analisi della foto con Gemini. Riprova con un'immagine più luminosa.
-            </div>
-          `;
-        } finally {
-          document.getElementById('foodLoadingSpinner').classList.add('hidden');
-        }
-      };
-      reader.readAsDataURL(file);
-    };
-
-    function renderFoodAnalysisResult(data) {
-      const target = document.getElementById('foodDetailsTarget');
-      target.innerHTML = `
-        <div class="flex items-center justify-between">
-          <div>
-            <span class="text-[10px] uppercase font-bold text-emerald-400">${data.slot}</span>
-            <h4 class="font-display font-bold text-white text-base">${data.dishName}</h4>
-          </div>
-          <span class="font-mono font-black text-lg text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-xl border border-emerald-500/20">
-            ${data.calories} kcal
-          </span>
-        </div>
-
-        <div class="grid grid-cols-3 gap-2 text-center text-xs py-1">
-          <div class="p-2.5 rounded-xl bg-app-card border border-app-border"><span class="text-[10px] text-app-textMuted font-semibold block">PROTEINE</span><span class="text-sm font-bold text-white">${data.protein}g</span></div>
-          <div class="p-2.5 rounded-xl bg-app-card border border-app-border"><span class="text-[10px] text-app-textMuted font-semibold block">CARBOIDRATI</span><span class="text-sm font-bold text-white">${data.carbs}g</span></div>
-          <div class="p-2.5 rounded-xl bg-app-card border border-app-border"><span class="text-[10px] text-app-textMuted font-semibold block">GRASSI</span><span class="text-sm font-bold text-white">${data.fat}g</span></div>
-        </div>
-
-        <div class="p-3 rounded-xl bg-app-dark border border-app-border text-xs text-app-textSecondary space-y-1">
-          <p><strong class="text-emerald-400">Verdetto:</strong> ${data.verdict}</p>
-          <p><strong class="text-teal-400">Consiglio:</strong> ${data.advice}</p>
-        </div>
-
-        <button onclick="window.commitMealToLog(${JSON.stringify(data).replace(/"/g, '&quot;')})" class="w-full py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-black text-xs sm:text-sm active:scale-95 transition shadow-lg">
-          + Salva nel pasto "${data.slot}" & Sincronizza Cloud
-        </button>
-      `;
-    }
-
-    window.commitMealToLog = meal => {
-      meal.time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      appData.foodLogs.unshift(meal);
-      renderGroupedMeals();
-      renderDualColumnDiet();
-      updateDeficitCalculations();
-      triggerCloudSave();
-      showNotification(`Pasto registrato in ${meal.slot}!`);
-      document.getElementById('scannerResultBox').classList.add('hidden');
-    };
-
-    window.clearFoodLog = () => {
-      if (!confirm("Vuoi azzerare il diario pasti di oggi?")) return;
-      appData.foodLogs = [];
-      renderGroupedMeals();
-      renderDualColumnDiet();
-      updateDeficitCalculations();
-      triggerCloudSave();
-      showNotification("Diario pasti azzerato.");
-    };
 
     window.switchWorkoutDay = dayKey => {
       currentWorkoutDay = dayKey;
