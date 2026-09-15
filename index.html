@@ -27,8 +27,8 @@
               borderFocus: 'rgba(16, 185, 129, 0.5)',
               sage: '#10b981',
               sageLight: '#34d399',
-              textMuted: '#8593a2',
-              textSecondary: '#cbd5e1'
+              textMuted: '#94a3b8',
+              textSecondary: '#e2e8f0'
             }
           },
           fontFamily: {
@@ -47,6 +47,7 @@
       background-color: #080a0d;
       color: #f1f5f9;
       touch-action: manipulation;
+      font-size: 15px;
     }
     ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: #080a0d; }
@@ -90,20 +91,20 @@
 
 <body class="font-sans min-h-screen pb-32 selection:bg-emerald-500/30 selection:text-white">
 
-  <!-- OVERLAY AUTENTICAZIONE GOOGLE FIREBASE -->
+  <!-- OVERLAY LOGIN FIREBASE -->
   <div id="loginOverlay" class="login-overlay">
-    <div class="max-w-sm w-11/12 p-7 rounded-3xl bg-app-card border border-app-border text-center space-y-4 shadow-2xl">
-      <div class="w-14 h-14 mx-auto rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-700 flex items-center justify-center text-black font-display font-black text-xl shadow-md">
+    <div class="max-w-md w-11/12 p-8 rounded-3xl bg-app-card border border-app-border text-center space-y-5 shadow-2xl">
+      <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-700 flex items-center justify-center text-black font-display font-black text-2xl shadow-md">
         IR
       </div>
       <div>
-        <h2 class="font-display font-black text-xl text-white">ICON RECOMP</h2>
-        <p class="text-xs text-app-textMuted mt-1.5 leading-relaxed">
-          Accedi con Google per sincronizzare scheda pesi, idratazione a incrementi e AI Coach connesso ai dati reali del Cloud Firebase.
+        <h2 class="font-display font-black text-2xl text-white">ICON RECOMP</h2>
+        <p class="text-sm text-app-textMuted mt-2 leading-relaxed">
+          Accedi con il tuo account Google per salvare carichi, dieta e deficit sul tuo profilo Cloud privato.
         </p>
       </div>
-      <button id="loginBtn" onclick="window.handleGoogleLogin()" class="w-full py-3.5 rounded-2xl bg-white hover:bg-gray-100 text-black font-bold text-xs flex items-center justify-center gap-2.5 transition active:scale-95 shadow-md cursor-pointer">
-        <svg class="w-4 h-4" viewBox="0 0 24 24">
+      <button id="loginBtn" onclick="window.handleGoogleLogin()" class="w-full py-4 rounded-2xl bg-white hover:bg-gray-100 text-black font-bold text-sm flex items-center justify-center gap-3 transition active:scale-95 shadow-md cursor-pointer">
+        <svg class="w-5 h-5" viewBox="0 0 24 24">
           <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
           <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
           <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
@@ -111,54 +112,54 @@
         </svg>
         <span id="loginBtnLabel">Accedi con Google</span>
       </button>
-      <div id="loginStatusMsg" class="text-[11px] text-red-400 hidden"></div>
+      <div id="loginStatusMsg" class="text-xs text-red-400 hidden"></div>
     </div>
   </div>
 
   <!-- Sticky Top Rest Bar -->
-  <div id="activeTimerBar" class="hidden sticky top-0 z-50 bg-gradient-to-r from-emerald-500 to-teal-400 text-black px-4 py-2.5 shadow-2xl flex items-center justify-between transition-all">
-    <div class="flex items-center gap-2">
-      <span class="inline-block w-2.5 h-2.5 rounded-full bg-black animate-ping"></span>
-      <span class="text-xs font-black uppercase tracking-wider font-display">Recupero:</span>
-      <span id="activeTimerValue" class="text-xl font-mono font-black ml-1">01:30</span>
+  <div id="activeTimerBar" class="hidden sticky top-0 z-50 bg-gradient-to-r from-emerald-500 to-teal-400 text-black px-6 py-3 shadow-2xl flex items-center justify-between transition-all">
+    <div class="flex items-center gap-2.5">
+      <span class="inline-block w-3 h-3 rounded-full bg-black animate-ping"></span>
+      <span class="text-sm font-black uppercase tracking-wider font-display">Recupero:</span>
+      <span id="activeTimerValue" class="text-2xl font-mono font-black ml-1">01:30</span>
     </div>
     <div class="flex items-center gap-2">
-      <button onclick="window.addTimerSeconds(15)" class="px-2.5 py-1 bg-black/15 active:scale-90 hover:bg-black/25 rounded-lg text-xs font-bold transition">+15s</button>
-      <button onclick="window.stopDiscreetTimer()" class="px-3 py-1 bg-black text-emerald-400 active:scale-90 rounded-lg text-xs font-bold transition">Salta</button>
+      <button onclick="window.addTimerSeconds(15)" class="px-3 py-1.5 bg-black/15 active:scale-90 hover:bg-black/25 rounded-lg text-xs font-bold transition">+15s</button>
+      <button onclick="window.stopDiscreetTimer()" class="px-3.5 py-1.5 bg-black text-emerald-400 active:scale-90 rounded-lg text-xs font-bold transition">Salta</button>
     </div>
   </div>
 
   <!-- Header Responsive Wide -->
-  <header class="bg-app-black/90 backdrop-blur-xl border-b border-app-border px-4 py-3.5 sticky z-40 top-0">
+  <header class="bg-app-black/90 backdrop-blur-xl border-b border-app-border px-4 py-4 sticky z-40 top-0">
     <div class="max-w-7xl mx-auto flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-700 flex items-center justify-center text-black font-display font-black text-base shadow-md border border-emerald-400/30">
+      <div class="flex items-center gap-3.5">
+        <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-700 flex items-center justify-center text-black font-display font-black text-lg shadow-md border border-emerald-400/30">
           IR
         </div>
         <div>
           <div class="flex items-center gap-2">
-            <h1 class="font-display font-black text-base text-white tracking-tight">ICON RECOMP</h1>
-            <span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+            <h1 class="font-display font-black text-lg sm:text-xl text-white tracking-tight">ICON RECOMP</h1>
+            <span class="text-xs font-bold uppercase px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
               32a • 95kg
             </span>
           </div>
-          <p class="text-[11px] text-app-textMuted flex items-center gap-2 font-mono mt-0.5">
-            <span id="cloudStatusReadout" class="text-teal-400">Cloud Connesso ✓</span>
+          <p class="text-xs sm:text-sm text-app-textMuted flex items-center gap-2 font-mono mt-0.5">
+            <span id="cloudStatusReadout" class="text-teal-400 font-semibold">Cloud Connesso ✓</span>
             <span class="text-gray-600">•</span>
             <span class="text-gray-300">Target Deficit 1.950 kcal</span>
           </p>
         </div>
       </div>
 
-      <div class="flex items-center gap-2.5">
-        <button onclick="window.toggleTimerModal()" class="px-3 py-1.5 rounded-xl bg-app-card border border-app-border text-xs flex items-center gap-1.5 text-emerald-400 font-mono active:scale-95 transition">
+      <div class="flex items-center gap-3">
+        <button onclick="window.toggleTimerModal()" class="px-3.5 py-2 rounded-xl bg-app-card border border-app-border text-sm flex items-center gap-2 text-emerald-400 font-mono active:scale-95 transition">
           <span>⏱️</span>
           <span id="headerTimerReadout">00:00</span>
         </button>
-        <button onclick="window.openApiKeyModal()" class="w-9 h-9 rounded-xl bg-app-card border border-app-border text-xs flex items-center justify-center text-gray-300 transition hover:border-emerald-500/40" title="Configura Gemini API">
-          <span id="apiStatusDot" class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+        <button onclick="window.openApiKeyModal()" class="w-10 h-10 rounded-xl bg-app-card border border-app-border text-sm flex items-center justify-center text-gray-300 transition hover:border-emerald-500/40" title="Configura Gemini API">
+          <span id="apiStatusDot" class="w-3 h-3 rounded-full bg-emerald-400"></span>
         </button>
-        <button id="headerLogoutBtn" class="w-9 h-9 rounded-xl bg-app-card border border-app-border text-xs flex items-center justify-center text-gray-400 hover:text-red-400 transition" title="Esci dall'account">
+        <button id="headerLogoutBtn" class="w-10 h-10 rounded-xl bg-app-card border border-app-border text-sm flex items-center justify-center text-gray-400 hover:text-red-400 transition" title="Esci dall'account">
           ✕
         </button>
       </div>
@@ -171,224 +172,225 @@
     <!-- ============================================================= -->
     <!-- TAB 1: SCHEDA PALESTRA                                        -->
     <!-- ============================================================= -->
-    <section id="view-workout" class="tab-view space-y-5">
-      <div class="grid grid-cols-4 gap-2 p-1.5 bg-app-dark rounded-2xl border border-app-border max-w-xl mx-auto">
-        <button onclick="window.switchWorkoutDay('dayA')" id="btn-dayA" class="py-2.5 rounded-xl text-xs font-bold transition bg-emerald-500 text-black shadow-sm">Giorno A</button>
-        <button onclick="window.switchWorkoutDay('dayB')" id="btn-dayB" class="py-2.5 rounded-xl text-xs font-medium transition text-app-textMuted hover:text-white">Giorno B</button>
-        <button onclick="window.switchWorkoutDay('dayC')" id="btn-dayC" class="py-2.5 rounded-xl text-xs font-medium transition text-app-textMuted hover:text-white">Giorno C</button>
-        <button onclick="window.switchWorkoutDay('dayD')" id="btn-dayD" class="py-2.5 rounded-xl text-xs font-medium transition text-app-textMuted hover:text-white">Giorno D</button>
+    <section id="view-workout" class="tab-view space-y-6">
+      <div class="grid grid-cols-4 gap-2.5 p-1.5 bg-app-dark rounded-2xl border border-app-border max-w-2xl mx-auto">
+        <button onclick="window.switchWorkoutDay('dayA')" id="btn-dayA" class="py-3 rounded-xl text-sm font-bold transition bg-emerald-500 text-black shadow-sm">Giorno A</button>
+        <button onclick="window.switchWorkoutDay('dayB')" id="btn-dayB" class="py-3 rounded-xl text-sm font-medium transition text-app-textMuted hover:text-white">Giorno B</button>
+        <button onclick="window.switchWorkoutDay('dayC')" id="btn-dayC" class="py-3 rounded-xl text-sm font-medium transition text-app-textMuted hover:text-white">Giorno C</button>
+        <button onclick="window.switchWorkoutDay('dayD')" id="btn-dayD" class="py-3 rounded-xl text-sm font-medium transition text-app-textMuted hover:text-white">Giorno D</button>
       </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
         <!-- Borraccia Live Floor -->
-        <div class="apple-glass-card p-4 rounded-2xl border border-teal-500/30 bg-teal-500/[0.03] space-y-3">
+        <div class="apple-glass-card p-5 rounded-2xl border border-teal-500/30 bg-teal-500/[0.03] space-y-4">
           <div class="flex items-center justify-between">
-            <div class="flex items-center gap-2">
-              <span class="text-xl">💧</span>
+            <div class="flex items-center gap-2.5">
+              <span class="text-2xl">💧</span>
               <div>
-                <h3 class="font-display font-bold text-xs text-white uppercase tracking-wider">Borraccia Icon Sala Pesi</h3>
-                <p class="text-[11px] text-app-textMuted">Ricarica rapida +0.5L sincronizzata</p>
+                <h3 class="font-display font-bold text-sm sm:text-base text-white uppercase tracking-wider">Borraccia Sala Pesi</h3>
+                <p class="text-xs text-app-textMuted">+0.5L rapido per ogni ricarica</p>
               </div>
             </div>
-            <span id="gymBottleCountBadge" class="text-xs font-mono font-bold text-teal-300 bg-teal-500/15 px-2.5 py-1 rounded-xl border border-teal-500/30">
+            <span id="gymBottleCountBadge" class="text-xs sm:text-sm font-mono font-bold text-teal-300 bg-teal-500/15 px-3 py-1.5 rounded-xl border border-teal-500/30">
               0 Borracce (0.0 L)
             </span>
           </div>
 
-          <div class="grid grid-cols-2 gap-2">
-            <button onclick="window.addWaterLiters(0.5)" class="py-3 px-3 rounded-xl bg-gradient-to-r from-teal-500/20 to-emerald-500/20 hover:from-teal-500/30 hover:to-emerald-500/30 border border-teal-500/40 text-teal-300 font-bold text-xs flex items-center justify-center gap-2 active:scale-95 transition">
-              <span class="text-base">🚰</span>
-              <span>+1 Borraccia (+0.5L)</span>
+          <div class="grid grid-cols-2 gap-3">
+            <button onclick="window.addWaterLiters(0.5)" class="py-3.5 px-3 rounded-xl bg-gradient-to-r from-teal-500/20 to-emerald-500/20 hover:from-teal-500/30 hover:to-emerald-500/30 border border-teal-500/40 text-teal-300 font-bold text-sm flex items-center justify-center gap-2 active:scale-95 transition">
+              <span class="text-lg">🚰</span>
+              <span>+1 Borraccia (0.5L)</span>
             </button>
-            <label class="cursor-pointer py-3 px-3 rounded-xl bg-app-card hover:bg-app-cardSubtle border border-app-border text-gray-200 font-semibold text-xs flex items-center justify-center gap-2 active:scale-95 transition">
-              <span class="text-base">📸</span>
-              <span>Foto Bevanda Palestra</span>
+            <label class="cursor-pointer py-3.5 px-3 rounded-xl bg-app-card hover:bg-app-cardSubtle border border-app-border text-gray-200 font-semibold text-sm flex items-center justify-center gap-2 active:scale-95 transition">
+              <span class="text-lg">📸</span>
+              <span>Scan Drink Palestra</span>
               <input type="file" id="gymDrinkPhotoInput" accept="image/*" class="hidden" onchange="window.processGymDrinkPhoto(event)">
             </label>
           </div>
 
-          <div id="gymDrinkResultBox" class="hidden p-3 rounded-xl bg-app-dark border border-teal-500/30 space-y-2">
+          <div id="gymDrinkResultBox" class="hidden p-3.5 rounded-xl bg-app-dark border border-teal-500/30 space-y-2">
             <div class="flex items-center gap-3">
-              <img id="gymDrinkPreviewImg" src="" alt="Drink" class="w-14 h-14 rounded-lg object-cover border border-app-border">
-              <div id="gymDrinkAnalysisText" class="text-xs text-app-textSecondary space-y-0.5">
+              <img id="gymDrinkPreviewImg" src="" alt="Drink" class="w-16 h-16 rounded-lg object-cover border border-app-border">
+              <div id="gymDrinkAnalysisText" class="text-sm text-app-textSecondary space-y-0.5">
                 <div class="text-teal-400 font-bold">Analisi drink in corso...</div>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Calorie Bruciate Palestra con Scanner Orologio Integrato -->
-        <div class="apple-glass-card p-4 rounded-2xl border border-amber-500/30 bg-amber-500/[0.03] space-y-3">
+        <!-- Calorie Bruciate Palestra con Scanner Orologio -->
+        <div class="apple-glass-card p-5 rounded-2xl border border-amber-500/30 bg-amber-500/[0.03] space-y-4">
           <div class="flex items-center justify-between">
-            <div class="flex items-center gap-2">
-              <span class="text-xl">🔥</span>
+            <div class="flex items-center gap-2.5">
+              <span class="text-2xl">🔥</span>
               <div>
-                <h3 class="font-display font-bold text-xs text-white uppercase tracking-wider">Calorie Bruciate Sessione</h3>
-                <p class="text-[11px] text-app-textMuted">Smartwatch • Orologio • Technogym</p>
+                <h3 class="font-display font-bold text-sm sm:text-base text-white uppercase tracking-wider">Calorie Bruciate Sessione</h3>
+                <p class="text-xs text-app-textMuted">Smartwatch • Orologio • Technogym</p>
               </div>
             </div>
             <div class="flex items-center gap-2">
-              <label class="cursor-pointer px-2.5 py-1 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 text-[11px] font-bold flex items-center gap-1 active:scale-95 transition" title="Scatta foto allo schermo dell'orologio o app Mi Fitness">
+              <label class="cursor-pointer px-3 py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 text-xs font-bold flex items-center gap-1.5 active:scale-95 transition" title="Scatta foto allo schermo dell'orologio">
                 <span>📸 Scan Orologio</span>
                 <input type="file" accept="image/*" class="hidden" onchange="window.scanWatchCalories(event)">
               </label>
-              <button onclick="window.resetBurnedCalories()" class="text-[10px] text-app-textMuted hover:text-amber-400 px-2 py-1 rounded-lg bg-app-dark border border-app-border transition">
+              <button onclick="window.resetBurnedCalories()" class="text-xs text-app-textMuted hover:text-amber-400 px-2.5 py-1.5 rounded-lg bg-app-dark border border-app-border transition">
                 Azzera ↺
               </button>
             </div>
           </div>
 
-          <div class="flex items-baseline justify-between bg-app-dark/80 p-3 rounded-xl border border-app-border">
+          <div class="flex items-baseline justify-between bg-app-dark/80 p-4 rounded-xl border border-app-border">
             <div>
-              <span class="text-[10px] uppercase font-bold text-app-textMuted block">Dispendio Allenamento</span>
-              <div class="flex items-baseline gap-1">
-                <span id="displayBurnedKcal" class="text-2xl font-display font-black text-amber-400">0</span>
-                <span class="text-xs font-mono font-bold text-app-textMuted">kcal bruciate</span>
+              <span class="text-xs uppercase font-bold text-app-textMuted block">Dispendio Allenamento</span>
+              <div class="flex items-baseline gap-1.5 mt-0.5">
+                <span id="displayBurnedKcal" class="text-3xl font-display font-black text-amber-400">0</span>
+                <span class="text-sm font-mono font-bold text-app-textMuted">kcal bruciate</span>
               </div>
             </div>
             <div class="text-right">
-              <span class="text-[10px] uppercase font-bold text-app-textMuted block">Deficit Netto</span>
-              <div id="displayTotalDeficit" class="text-sm font-mono font-black text-emerald-400">-500 kcal</div>
+              <span class="text-xs uppercase font-bold text-app-textMuted block">Deficit Netto</span>
+              <div id="displayTotalDeficit" class="text-base sm:text-lg font-mono font-black text-emerald-400 mt-1">-500 kcal</div>
             </div>
           </div>
 
-          <div class="grid grid-cols-5 gap-1.5">
-            <button onclick="window.addBurnedCalories(50)" class="py-2 rounded-xl bg-app-card border border-app-border text-xs font-bold text-gray-200 active:scale-95 transition">+50</button>
-            <button onclick="window.addBurnedCalories(100)" class="py-2 rounded-xl bg-app-card border border-app-border text-xs font-bold text-gray-200 active:scale-95 transition">+100</button>
-            <button onclick="window.addBurnedCalories(200)" class="py-2 rounded-xl bg-app-card border border-app-border text-xs font-bold text-gray-200 active:scale-95 transition">+200</button>
-            <button onclick="window.addBurnedCalories(350)" class="py-2 rounded-xl bg-app-card border border-app-border text-xs font-bold text-amber-300 active:scale-95 transition">+350</button>
+          <div class="grid grid-cols-5 gap-2">
+            <button onclick="window.addBurnedCalories(50)" class="py-2.5 rounded-xl bg-app-card border border-app-border text-xs font-bold text-gray-200 active:scale-95 transition">+50</button>
+            <button onclick="window.addBurnedCalories(100)" class="py-2.5 rounded-xl bg-app-card border border-app-border text-xs font-bold text-gray-200 active:scale-95 transition">+100</button>
+            <button onclick="window.addBurnedCalories(200)" class="py-2.5 rounded-xl bg-app-card border border-app-border text-xs font-bold text-gray-200 active:scale-95 transition">+200</button>
+            <button onclick="window.addBurnedCalories(350)" class="py-2.5 rounded-xl bg-app-card border border-app-border text-xs font-bold text-amber-300 active:scale-95 transition">+350</button>
             <div class="flex items-center gap-1">
               <input type="number" id="customKcalInput" placeholder="420" inputmode="numeric" class="w-full bg-app-dark border border-app-border rounded-xl px-2 py-2 text-xs text-center font-mono font-bold text-amber-400 focus:outline-none">
-              <button onclick="window.applyCustomKcal()" class="px-2 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-black text-xs active:scale-95 transition">OK</button>
+              <button onclick="window.applyCustomKcal()" class="px-2.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-black text-xs active:scale-95 transition">OK</button>
             </div>
           </div>
         </div>
       </div>
 
       <!-- Intestazione Giorno -->
-      <div class="apple-glass-card px-4 py-3 rounded-2xl flex items-center justify-between">
+      <div class="apple-glass-card px-5 py-4 rounded-2xl flex items-center justify-between">
         <div>
-          <h2 id="workoutTitle" class="text-sm sm:text-base font-display font-bold text-white leading-snug">Giorno A: Petto, Deltoidi & Tricipiti</h2>
-          <div id="workoutSubtitle" class="text-xs text-app-textMuted">Pausa Pranzo 13:00 - 15:00 • 50 min Technogym</div>
+          <h2 id="workoutTitle" class="text-base sm:text-lg font-display font-bold text-white leading-snug">Giorno A: Petto, Deltoidi & Tricipiti</h2>
+          <div id="workoutSubtitle" class="text-xs sm:text-sm text-app-textMuted mt-0.5">Pausa Pranzo 13:00 - 15:00 • 50 min Technogym</div>
         </div>
-        <button onclick="window.resetCurrentDayChecks()" class="px-3 py-1.5 rounded-xl bg-app-card hover:bg-red-950/40 border border-app-border text-xs text-app-textMuted hover:text-red-300 transition">
+        <button onclick="window.resetCurrentDayChecks()" class="px-3.5 py-2 rounded-xl bg-app-card hover:bg-red-950/40 border border-app-border text-xs sm:text-sm text-app-textMuted hover:text-red-300 transition">
           Azzera Spunte
         </button>
       </div>
 
+      <!-- Griglia Esercizi -->
       <div id="exerciseList" class="grid grid-cols-1 lg:grid-cols-2 gap-4"></div>
     </section>
 
     <!-- ============================================================= -->
     <!-- TAB: CAMMINATA                                                -->
     <!-- ============================================================= -->
-    <section id="view-walk" class="tab-view hidden space-y-5">
-      <div class="apple-glass-card p-4 sm:p-5 rounded-2xl border border-teal-500/30 bg-teal-500/[0.03] space-y-3">
+    <section id="view-walk" class="tab-view hidden space-y-6">
+      <div class="apple-glass-card p-5 sm:p-6 rounded-2xl border border-teal-500/30 bg-teal-500/[0.03] space-y-3">
         <div class="flex items-center justify-between">
-          <div class="flex items-center gap-3">
-            <div class="w-11 h-11 rounded-xl bg-teal-500/15 border border-teal-500/30 flex items-center justify-center text-2xl">👟</div>
+          <div class="flex items-center gap-3.5">
+            <div class="w-12 h-12 rounded-xl bg-teal-500/15 border border-teal-500/30 flex items-center justify-center text-2xl">👟</div>
             <div>
               <div class="flex items-center gap-2">
-                <h2 class="text-base font-display font-black text-white leading-tight">Camminata & Recupero Attivo</h2>
-                <span class="text-[10px] uppercase font-bold px-2 py-0.5 rounded bg-teal-500/20 text-teal-300">NEAT • Giorni OFF</span>
+                <h2 class="text-lg font-display font-black text-white leading-tight">Camminata & Recupero Attivo</h2>
+                <span class="text-xs uppercase font-bold px-2 py-0.5 rounded bg-teal-500/20 text-teal-300">NEAT • Giorni OFF</span>
               </div>
-              <p class="text-xs text-app-textMuted mt-0.5">Passeggiata di coppia • Basso impatto articolare</p>
+              <p class="text-xs sm:text-sm text-app-textMuted mt-0.5">Passeggiata di coppia • Basso impatto articolare</p>
             </div>
           </div>
-          <span class="text-xs font-mono font-bold text-teal-400 bg-teal-500/10 px-2.5 py-1 rounded-lg border border-teal-500/20">Zona 2 Cardio</span>
+          <span class="text-xs sm:text-sm font-mono font-bold text-teal-400 bg-teal-500/10 px-3 py-1.5 rounded-lg border border-teal-500/20">Zona 2 Cardio</span>
         </div>
       </div>
 
-      <div class="apple-glass-card p-5 rounded-2xl border border-app-border space-y-4">
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <div class="p-3.5 rounded-xl bg-app-card border border-app-border space-y-1">
-            <label class="text-[11px] uppercase font-bold text-app-textMuted block">Distanza (km)</label>
-            <input type="number" id="inputWalkKm" step="0.1" inputmode="decimal" placeholder="5.2" oninput="window.updateEstimatedSteps()" class="w-full bg-app-dark border border-app-border rounded-lg px-2.5 py-2 text-sm font-mono font-bold text-teal-300 text-center focus:outline-none">
-            <div id="displayEstimatedSteps" class="text-[10px] text-teal-400/80 font-mono text-center">~0 passi</div>
+      <div class="apple-glass-card p-6 rounded-2xl border border-app-border space-y-5">
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
+          <div class="p-4 rounded-xl bg-app-card border border-app-border space-y-1.5">
+            <label class="text-xs uppercase font-bold text-app-textMuted block">Distanza (km)</label>
+            <input type="number" id="inputWalkKm" step="0.1" inputmode="decimal" placeholder="5.2" oninput="window.updateEstimatedSteps()" class="w-full bg-app-dark border border-app-border rounded-lg px-3 py-2 text-base font-mono font-bold text-teal-300 text-center focus:outline-none">
+            <div id="displayEstimatedSteps" class="text-xs text-teal-400/80 font-mono text-center">~0 passi</div>
           </div>
-          <div class="p-3.5 rounded-xl bg-app-card border border-app-border space-y-1">
-            <label class="text-[11px] uppercase font-bold text-app-textMuted block">Calorie (kcal)</label>
-            <input type="number" id="inputWalkKcal" inputmode="numeric" placeholder="290" class="w-full bg-app-dark border border-app-border rounded-lg px-2.5 py-2 text-sm font-mono font-bold text-amber-300 text-center focus:outline-none">
+          <div class="p-4 rounded-xl bg-app-card border border-app-border space-y-1.5">
+            <label class="text-xs uppercase font-bold text-app-textMuted block">Calorie (kcal)</label>
+            <input type="number" id="inputWalkKcal" inputmode="numeric" placeholder="290" class="w-full bg-app-dark border border-app-border rounded-lg px-3 py-2 text-base font-mono font-bold text-amber-300 text-center focus:outline-none">
           </div>
-          <div class="p-3.5 rounded-xl bg-app-card border border-app-border space-y-1">
-            <label class="text-[11px] uppercase font-bold text-app-textMuted block">BPM Medi</label>
-            <input type="number" id="inputWalkBpm" inputmode="numeric" placeholder="110" oninput="window.updateHeartRateZoneBadge()" class="w-full bg-app-dark border border-red-400 rounded-lg px-2.5 py-2 text-sm font-mono font-bold text-red-300 text-center focus:outline-none">
-            <div id="bpmZoneStatus" class="text-[10px] text-gray-400 font-mono text-center">Zona 2</div>
+          <div class="p-4 rounded-xl bg-app-card border border-app-border space-y-1.5">
+            <label class="text-xs uppercase font-bold text-app-textMuted block">BPM Medi</label>
+            <input type="number" id="inputWalkBpm" inputmode="numeric" placeholder="110" oninput="window.updateHeartRateZoneBadge()" class="w-full bg-app-dark border border-red-400 rounded-lg px-3 py-2 text-base font-mono font-bold text-red-300 text-center focus:outline-none">
+            <div id="bpmZoneStatus" class="text-xs text-gray-400 font-mono text-center">Zona 2</div>
           </div>
-          <div class="p-3.5 rounded-xl bg-app-card border border-teal-500/30 bg-teal-500/[0.04] space-y-1">
-            <label class="text-[11px] uppercase font-bold text-teal-300 block">Acqua (L)</label>
-            <input type="number" id="inputWalkWater" step="0.1" inputmode="decimal" placeholder="0.5" class="w-full bg-app-dark border border-teal-500/40 rounded-lg px-2.5 py-2 text-sm font-mono font-bold text-teal-200 text-center focus:outline-none">
+          <div class="p-4 rounded-xl bg-app-card border border-teal-500/30 bg-teal-500/[0.04] space-y-1.5">
+            <label class="text-xs uppercase font-bold text-teal-300 block">Acqua (L)</label>
+            <input type="number" id="inputWalkWater" step="0.1" inputmode="decimal" placeholder="0.5" class="w-full bg-app-dark border border-teal-500/40 rounded-lg px-3 py-2 text-base font-mono font-bold text-teal-200 text-center focus:outline-none">
           </div>
         </div>
 
-        <button onclick="window.saveWalkSession()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-teal-500 to-emerald-500 active:scale-95 text-black font-black text-xs sm:text-sm transition shadow-lg">
+        <button onclick="window.saveWalkSession()" class="w-full py-4 rounded-xl bg-gradient-to-r from-teal-500 to-emerald-500 active:scale-95 text-black font-black text-sm transition shadow-lg">
           Salva Camminata & Sincronizza Cloud
         </button>
       </div>
 
-      <div class="apple-glass-card p-5 rounded-2xl space-y-3">
+      <div class="apple-glass-card p-6 rounded-2xl space-y-4">
         <div class="flex items-center justify-between">
-          <h4 class="font-display font-black text-xs uppercase tracking-wider text-app-textMuted">Storico Camminate</h4>
-          <button onclick="window.clearWalkLogs()" class="text-[11px] text-app-textMuted hover:text-red-400 transition">Azzera</button>
+          <h4 class="font-display font-black text-sm uppercase tracking-wider text-app-textMuted">Storico Camminate</h4>
+          <button onclick="window.clearWalkLogs()" class="text-xs text-app-textMuted hover:text-red-400 transition">Azzera</button>
         </div>
-        <div id="walkLogContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"></div>
+        <div id="walkLogContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5"></div>
       </div>
     </section>
 
     <!-- ============================================================= -->
     <!-- TAB 2: ALIMENTAZIONE (DOPPIA COLONNA, ACQUA & DEFICIT)       -->
     <!-- ============================================================= -->
-    <section id="view-nutrition" class="tab-view hidden space-y-6">
+    <section id="view-nutrition" class="tab-view hidden space-y-7">
 
       <!-- QUADRO DEFICIT / SURPLUS E CALORIE BRUCIATE -->
-      <div class="apple-glass-card p-5 rounded-3xl border border-emerald-500/30 bg-gradient-to-br from-emerald-500/[0.05] via-teal-500/[0.02] to-transparent space-y-4">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-app-border/60 pb-3">
+      <div class="apple-glass-card p-6 rounded-3xl border border-emerald-500/30 bg-gradient-to-br from-emerald-500/[0.05] via-teal-500/[0.02] to-transparent space-y-5">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-app-border/60 pb-3">
           <div>
-            <h3 class="font-display font-black text-base text-white flex items-center gap-2">
+            <h3 class="font-display font-black text-lg sm:text-xl text-white flex items-center gap-2">
               <span>⚖️</span> Bilancio Calorico Giornaliero & Deficit
             </h3>
-            <p class="text-xs text-app-textMuted mt-0.5">Kcal Cibo Scanner vs Kcal Bruciate (Smartwatch/Manuali) vs Obiettivo 1.950 kcal</p>
+            <p class="text-xs sm:text-sm text-app-textMuted mt-1">Kcal Cibo Scanner vs Kcal Bruciate (Smartwatch/Manuali) vs Obiettivo 1.950 kcal</p>
           </div>
-          <div id="deficitSurplusBadge" class="self-start sm:self-auto px-3.5 py-1.5 rounded-xl font-mono font-black text-sm bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+          <div id="deficitSurplusBadge" class="self-start sm:self-auto px-4 py-2 rounded-xl font-mono font-black text-sm sm:text-base bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
             DEFICIT ATTIVO
           </div>
         </div>
 
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <div class="p-3.5 rounded-2xl bg-app-card border border-app-border text-center">
-            <span class="text-[10px] uppercase font-bold text-app-textMuted block">Assunte (Scanner/Testo)</span>
-            <div id="summaryIntakeKcal" class="text-2xl font-mono font-black text-white mt-1">0</div>
-            <span class="text-[10px] text-teal-400 font-mono">kcal totali cibo</span>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <div class="p-4 rounded-2xl bg-app-card border border-app-border text-center">
+            <span class="text-xs uppercase font-bold text-app-textMuted block">Assunte (Scanner/Testo)</span>
+            <div id="summaryIntakeKcal" class="text-3xl font-mono font-black text-white mt-1">0</div>
+            <span class="text-xs text-teal-400 font-mono">kcal totali cibo</span>
           </div>
 
-          <div class="p-3.5 rounded-2xl bg-app-card border border-app-border text-center">
-            <span class="text-[10px] uppercase font-bold text-app-textMuted block">Bruciate (Attività)</span>
-            <div id="summaryBurnedKcal" class="text-2xl font-mono font-black text-amber-400 mt-1">0</div>
-            <span class="text-[10px] text-amber-300/80 font-mono">palestra / orologio</span>
+          <div class="p-4 rounded-2xl bg-app-card border border-app-border text-center">
+            <span class="text-xs uppercase font-bold text-app-textMuted block">Bruciate (Attività)</span>
+            <div id="summaryBurnedKcal" class="text-3xl font-mono font-black text-amber-400 mt-1">0</div>
+            <span class="text-xs text-amber-300/80 font-mono">palestra / orologio</span>
           </div>
 
-          <div class="p-3.5 rounded-2xl bg-app-card border border-app-border text-center">
-            <span class="text-[10px] uppercase font-bold text-app-textMuted block">Target Nutrizionale</span>
-            <div class="text-2xl font-mono font-black text-gray-300 mt-1">1.950</div>
-            <span class="text-[10px] text-app-textMuted font-mono">kcal obiettivo</span>
+          <div class="p-4 rounded-2xl bg-app-card border border-app-border text-center">
+            <span class="text-xs uppercase font-bold text-app-textMuted block">Target Nutrizionale</span>
+            <div class="text-3xl font-mono font-black text-gray-300 mt-1">1.950</div>
+            <span class="text-xs text-app-textMuted font-mono">kcal obiettivo</span>
           </div>
 
-          <div class="p-3.5 rounded-2xl bg-app-dark border border-emerald-500/40 text-center">
-            <span class="text-[10px] uppercase font-bold text-emerald-400 block">Bilancio Netto</span>
-            <div id="summaryNetBalance" class="text-2xl font-mono font-black text-emerald-300 mt-1">-500</div>
-            <span id="summaryNetStatus" class="text-[10px] text-emerald-400 font-mono font-bold">in target deficit</span>
+          <div class="p-4 rounded-2xl bg-app-dark border border-emerald-500/40 text-center">
+            <span class="text-xs uppercase font-bold text-emerald-400 block">Bilancio Netto</span>
+            <div id="summaryNetBalance" class="text-3xl font-mono font-black text-emerald-300 mt-1">-500</div>
+            <span id="summaryNetStatus" class="text-xs text-emerald-400 font-mono font-bold">in target deficit</span>
           </div>
         </div>
 
         <!-- Inserimento Kcal Bruciate + Scan Smartwatch -->
-        <div class="flex flex-wrap items-center justify-between gap-3 bg-app-dark/80 p-3 rounded-2xl border border-app-border">
-          <span class="text-xs text-app-textSecondary">Aggiorna calorie bruciate (Orologio / Mi Fitness / Apple Watch):</span>
-          <div class="flex items-center gap-2">
-            <input type="number" id="nutritionBurnedInput" placeholder="es. 400" class="w-28 bg-app-card border border-app-border rounded-xl px-3 py-1.5 text-xs text-center font-mono font-bold text-amber-300 focus:outline-none focus:border-amber-400">
-            <button onclick="window.updateBurnedFromNutrition()" class="px-3.5 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-bold text-xs active:scale-95 transition">
+        <div class="flex flex-wrap items-center justify-between gap-3 bg-app-dark/80 p-4 rounded-2xl border border-app-border">
+          <span class="text-sm text-app-textSecondary">Aggiorna calorie bruciate (Orologio / Mi Fitness / Apple Watch):</span>
+          <div class="flex items-center gap-2.5">
+            <input type="number" id="nutritionBurnedInput" placeholder="es. 400" class="w-32 bg-app-card border border-app-border rounded-xl px-3.5 py-2 text-sm text-center font-mono font-bold text-amber-300 focus:outline-none focus:border-amber-400">
+            <button onclick="window.updateBurnedFromNutrition()" class="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-bold text-sm active:scale-95 transition">
               Salva
             </button>
-            <label class="cursor-pointer px-3 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 text-xs font-bold flex items-center gap-1 active:scale-95 transition" title="Scatta foto al display dell'orologio">
+            <label class="cursor-pointer px-3.5 py-2 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 text-sm font-bold flex items-center gap-1.5 active:scale-95 transition" title="Scatta foto al display dell'orologio">
               <span>📸 Scan Display Orologio</span>
               <input type="file" accept="image/*" class="hidden" onchange="window.scanWatchCalories(event)">
             </label>
@@ -396,133 +398,130 @@
         </div>
       </div>
 
-      <!-- SEZIONE ACQUA AVANZATA CON PULSANTI DA 0.5L E PROGRESSO VISIVO -->
-      <div class="apple-glass-card p-5 sm:p-6 rounded-3xl border border-teal-500/30 bg-gradient-to-br from-teal-500/[0.06] to-transparent space-y-4">
+      <!-- SEZIONE ACQUA AVANZATA -->
+      <div class="apple-glass-card p-6 sm:p-7 rounded-3xl border border-teal-500/30 bg-gradient-to-br from-teal-500/[0.06] to-transparent space-y-5">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-app-border/60 pb-3">
-          <div class="flex items-center gap-2.5">
-            <div class="w-10 h-10 rounded-2xl bg-teal-500/15 border border-teal-500/30 flex items-center justify-center text-xl">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-2xl bg-teal-500/15 border border-teal-500/30 flex items-center justify-center text-2xl">
               💧
             </div>
             <div>
-              <h3 class="font-display font-black text-base text-white">Idratazione Giornaliera & Creatina</h3>
-              <p class="text-xs text-app-textMuted">Supporto ritenzione intracellulare muscolare (Target: 3.5 Litri)</p>
+              <h3 class="font-display font-black text-lg text-white">Idratazione Giornaliera & Creatina</h3>
+              <p class="text-xs sm:text-sm text-app-textMuted">Supporto muscolare (Target: 3.5 Litri al giorno)</p>
             </div>
           </div>
-          <div class="flex items-baseline gap-1.5 self-end sm:self-auto">
-            <span id="waterValueDisplayBig" class="text-3xl font-mono font-black text-teal-300">0.0</span>
-            <span class="text-sm font-mono font-bold text-app-textMuted">/ 3.5 L</span>
+          <div class="flex items-baseline gap-2 self-end sm:self-auto">
+            <span id="waterValueDisplayBig" class="text-4xl font-mono font-black text-teal-300">0.0</span>
+            <span class="text-base font-mono font-bold text-app-textMuted">/ 3.5 L</span>
           </div>
         </div>
 
-        <!-- Barra di Avanzamento Dinamica -->
-        <div class="space-y-1.5">
-          <div class="flex justify-between text-xs font-mono">
+        <div class="space-y-2">
+          <div class="flex justify-between text-xs sm:text-sm font-mono">
             <span class="text-app-textMuted">Progresso Idrico</span>
             <span id="waterPercentDisplay" class="text-teal-400 font-bold">0%</span>
           </div>
-          <div class="w-full h-3 rounded-full bg-app-dark overflow-hidden border border-app-border p-0.5">
+          <div class="w-full h-3.5 rounded-full bg-app-dark overflow-hidden border border-app-border p-0.5">
             <div id="waterProgressBar" class="h-full rounded-full bg-gradient-to-r from-teal-500 to-emerald-400 transition-all duration-300" style="width: 0%"></div>
           </div>
         </div>
 
-        <!-- Pulsantiera Rapida: Incrementi da 0.5L, 0.25L, 1.0L, -0.5L e Reset -->
-        <div class="grid grid-cols-2 sm:grid-cols-5 gap-2.5 pt-1">
-          <button onclick="window.addWaterLiters(0.5)" class="py-3 px-3 rounded-2xl bg-teal-500 hover:bg-teal-400 text-black font-black text-xs sm:text-sm flex items-center justify-center gap-2 active:scale-95 transition shadow-lg">
+        <div class="grid grid-cols-2 sm:grid-cols-5 gap-3 pt-1">
+          <button onclick="window.addWaterLiters(0.5)" class="py-3.5 px-3 rounded-2xl bg-teal-500 hover:bg-teal-400 text-black font-black text-sm flex items-center justify-center gap-2 active:scale-95 transition shadow-lg">
             <span>💧</span>
             <span>+0.5 L (Borraccia)</span>
           </button>
-          <button onclick="window.addWaterLiters(0.25)" class="py-3 px-3 rounded-2xl bg-app-card hover:bg-app-cardSubtle border border-teal-500/40 text-teal-300 font-bold text-xs sm:text-sm flex items-center justify-center gap-2 active:scale-95 transition">
+          <button onclick="window.addWaterLiters(0.25)" class="py-3.5 px-3 rounded-2xl bg-app-card hover:bg-app-cardSubtle border border-teal-500/40 text-teal-300 font-bold text-sm flex items-center justify-center gap-2 active:scale-95 transition">
             <span>🥛</span>
             <span>+0.25 L (Bicchiere)</span>
           </button>
-          <button onclick="window.addWaterLiters(1.0)" class="py-3 px-3 rounded-2xl bg-app-card hover:bg-app-cardSubtle border border-teal-500/40 text-teal-300 font-bold text-xs sm:text-sm flex items-center justify-center gap-2 active:scale-95 transition">
+          <button onclick="window.addWaterLiters(1.0)" class="py-3.5 px-3 rounded-2xl bg-app-card hover:bg-app-cardSubtle border border-teal-500/40 text-teal-300 font-bold text-sm flex items-center justify-center gap-2 active:scale-95 transition">
             <span>🍶</span>
             <span>+1.0 L (Bottiglia)</span>
           </button>
-          <button onclick="window.addWaterLiters(-0.5)" class="py-3 px-3 rounded-2xl bg-app-card hover:bg-red-950/30 border border-app-border text-gray-300 hover:text-red-300 font-semibold text-xs flex items-center justify-center gap-1 active:scale-95 transition" title="Rimuovi 0.5L in caso di click errato">
+          <button onclick="window.addWaterLiters(-0.5)" class="py-3.5 px-3 rounded-2xl bg-app-card hover:bg-red-950/30 border border-app-border text-gray-300 hover:text-red-300 font-semibold text-sm flex items-center justify-center gap-1 active:scale-95 transition">
             <span>↩️</span>
             <span>-0.5 L</span>
           </button>
-          <button onclick="window.resetWaterLiters()" class="py-3 px-3 rounded-2xl bg-app-card hover:bg-red-950/40 border border-red-500/30 text-red-300 font-semibold text-xs flex items-center justify-center gap-1 active:scale-95 transition">
+          <button onclick="window.resetWaterLiters()" class="py-3.5 px-3 rounded-2xl bg-app-card hover:bg-red-950/40 border border-red-500/30 text-red-300 font-semibold text-sm flex items-center justify-center gap-1 active:scale-95 transition">
             <span>Azzera</span>
           </button>
         </div>
 
-        <!-- 7 Bicchieri Illuminati da 0.5L Ciascuno -->
         <div class="pt-1">
-          <span class="text-[11px] uppercase font-bold text-app-textMuted block mb-2 font-mono">Dosi da 500ml completate:</span>
-          <div class="grid grid-cols-7 gap-2" id="waterTrackerGrid"></div>
+          <span class="text-xs uppercase font-bold text-app-textMuted block mb-2 font-mono">Dosi da 500ml completate:</span>
+          <div class="grid grid-cols-7 gap-2.5" id="waterTrackerGrid"></div>
         </div>
       </div>
 
       <!-- Frazione Settimanale -->
       <div class="apple-glass-card p-2 rounded-2xl border border-app-border max-w-xl mx-auto">
         <div class="grid grid-cols-2 gap-1.5 text-center font-display">
-          <button onclick="window.selectWeekFraction('block1')" id="btn-fraction-block1" class="py-2.5 px-3 rounded-xl text-xs font-black transition bg-emerald-500 text-black shadow-sm">
+          <button onclick="window.selectWeekFraction('block1')" id="btn-fraction-block1" class="py-3 px-3 rounded-xl text-sm font-black transition bg-emerald-500 text-black shadow-sm">
             Frazione 1: Lun - Gio (~23€)
           </button>
-          <button onclick="window.selectWeekFraction('block2')" id="btn-fraction-block2" class="py-2.5 px-3 rounded-xl text-xs font-semibold transition text-app-textMuted hover:text-white">
+          <button onclick="window.selectWeekFraction('block2')" id="btn-fraction-block2" class="py-3 px-3 rounded-xl text-sm font-semibold transition text-app-textMuted hover:text-white">
             Frazione 2: Ven - Dom (~22€)
           </button>
         </div>
       </div>
 
-      <div id="daySelectorContainer" class="flex gap-2 overflow-x-auto pb-1 no-scrollbar justify-center"></div>
+      <div id="daySelectorContainer" class="flex gap-2.5 overflow-x-auto pb-1 no-scrollbar justify-center"></div>
 
-      <!-- SCHEDA DIETA A DOPPIA COLONNA -->
-      <div class="space-y-4">
+      <!-- SCHEDA DIETA A DOPPIA COLONNA (CONSINGLIATO VS EFFETTIVO CON CESTINO) -->
+      <div class="space-y-5">
         <div class="flex items-center justify-between px-1">
-          <div class="flex items-center gap-2">
-            <h3 id="currentDayTitle" class="font-display font-black text-lg text-white">Lunedì</h3>
-            <span id="currentDayBadge" class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Giorno ON</span>
+          <div class="flex items-center gap-3">
+            <h3 id="currentDayTitle" class="font-display font-black text-xl text-white">Lunedì</h3>
+            <span id="currentDayBadge" class="text-xs sm:text-sm font-bold px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Giorno ON</span>
           </div>
-          <span class="text-xs font-mono text-emerald-400 font-bold">Piano Deficit Ricomposizione</span>
+          <span class="text-xs sm:text-sm font-mono text-emerald-400 font-bold">Piano Deficit Ricomposizione</span>
         </div>
 
         <div id="dualColumnMealGrid" class="space-y-4"></div>
       </div>
 
       <!-- Spesa Lidl Grid -->
-      <div class="apple-glass-card p-5 rounded-2xl border border-app-border space-y-3">
+      <div class="apple-glass-card p-6 rounded-2xl border border-app-border space-y-4">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-2">
-            <span class="text-lg">🛒</span>
-            <h4 id="lidlCardTitle" class="font-display font-bold text-xs uppercase tracking-wider text-white">Spesa Lidl Essenziale</h4>
+            <span class="text-xl">🛒</span>
+            <h4 id="lidlCardTitle" class="font-display font-bold text-sm sm:text-base uppercase tracking-wider text-white">Spesa Lidl Essenziale</h4>
           </div>
-          <span id="lidlFractionTotalDisplay" class="font-mono font-bold text-xs text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-lg border border-emerald-500/20">0.00 €</span>
+          <span id="lidlFractionTotalDisplay" class="font-mono font-bold text-sm text-emerald-400 bg-emerald-500/10 px-3 py-1.5 rounded-lg border border-emerald-500/20">0.00 €</span>
         </div>
-        <div id="lidlItemsContainer" class="space-y-1.5"></div>
+        <div id="lidlItemsContainer" class="space-y-2"></div>
       </div>
     </section>
 
     <!-- ============================================================= -->
-    <!-- TAB 3: SCANNER FOTO & TESTO SCRITTO A MANO                   -->
+    <!-- TAB 3: SCANNER FOTO & TESTO A MANO (CON ELIMINAZIONE SINGOLA) -->
     <!-- ============================================================= -->
-    <section id="view-scanner" class="tab-view hidden space-y-6">
+    <section id="view-scanner" class="tab-view hidden space-y-7">
       
-      <div class="apple-glass-card p-6 rounded-3xl border border-app-border text-center space-y-5 max-w-2xl mx-auto">
-        <div class="w-14 h-14 mx-auto rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-2xl text-emerald-400">
+      <div class="apple-glass-card p-6 sm:p-8 rounded-3xl border border-app-border text-center space-y-5 max-w-3xl mx-auto">
+        <div class="w-16 h-16 mx-auto rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-3xl text-emerald-400">
           🍽️
         </div>
         <div>
-          <h3 class="font-display font-black text-lg text-white">Registra Cibo: Foto o Scrittura a Mano</h3>
-          <p class="text-xs text-app-textSecondary mt-1 max-w-md mx-auto leading-relaxed">
-            Scatta la foto del piatto o scrivi gli ingredienti (es. <em>"1 piatto di riso venere più 200g di gamberetti"</em>): Gemini calcolerà calorie, proteine, carbo e grassi inserendoli nel pasto giusto.
+          <h3 class="font-display font-black text-xl sm:text-2xl text-white">Registra Cibo: Foto o Testo a Mano</h3>
+          <p class="text-sm text-app-textSecondary mt-1.5 max-w-lg mx-auto leading-relaxed">
+            Scatta la foto del piatto o scrivi gli ingredienti (es. <em>"1 piatto di riso venere più 200g di gamberetti"</em>): Gemini calcolerà calorie, proteine, carbo e grassi assegnandoli al pasto giusto.
           </p>
         </div>
 
         <!-- Selettore Fascia Pasto -->
-        <div class="bg-app-dark p-3.5 rounded-2xl border border-app-border flex flex-col sm:flex-row items-center justify-between gap-3 text-left">
-          <div class="flex items-center gap-2.5">
-            <span class="text-lg">🕒</span>
+        <div class="bg-app-dark p-4 rounded-2xl border border-app-border flex flex-col sm:flex-row items-center justify-between gap-3 text-left">
+          <div class="flex items-center gap-3">
+            <span class="text-xl">🕒</span>
             <div>
-              <span class="text-[10px] text-app-textMuted block font-bold uppercase">Rilevamento Orario:</span>
-              <span id="detectedSlotBadge" class="text-xs font-bold text-emerald-400">Cena (20:30)</span>
+              <span class="text-xs text-app-textMuted block font-bold uppercase">Rilevamento Orario:</span>
+              <span id="detectedSlotBadge" class="text-sm font-bold text-emerald-400">Cena (20:30)</span>
             </div>
           </div>
           <div class="flex items-center gap-2">
-            <label class="text-[11px] text-app-textMuted">Pasto:</label>
-            <select id="scannerSlotSelect" class="bg-app-card border border-app-border rounded-xl text-xs text-gray-200 px-3 py-1.5 focus:outline-none focus:border-emerald-500">
+            <label class="text-xs sm:text-sm text-app-textMuted">Pasto:</label>
+            <select id="scannerSlotSelect" class="bg-app-card border border-app-border rounded-xl text-xs sm:text-sm text-gray-200 px-3 py-2 focus:outline-none focus:border-emerald-500">
               <option value="auto">Automatico (in base all'ora)</option>
               <option value="Colazione">Colazione</option>
               <option value="Spuntino">Spuntino</option>
@@ -534,14 +533,14 @@
           </div>
         </div>
 
-        <!-- INPUT SCRITTURA A MANO PIATTO -->
+        <!-- INPUT SCRITTURA A MANO -->
         <div class="space-y-2 text-left">
-          <label class="text-[11px] font-bold uppercase tracking-wider text-teal-300 block flex items-center gap-1.5">
+          <label class="text-xs sm:text-sm font-bold uppercase tracking-wider text-teal-300 block flex items-center gap-2">
             <span>✍️</span> Inserisci Pasto a Testo
           </label>
           <div class="flex gap-2">
-            <input type="text" id="manualDishTextInput" placeholder="es. 1 piatto di riso venere più 200g di gamberetti e zucchine..." class="w-full bg-app-dark border border-app-border focus:border-emerald-500 rounded-2xl px-4 py-3 text-xs sm:text-sm text-white placeholder-app-textMuted focus:outline-none transition">
-            <button onclick="window.processManualFoodText()" class="px-5 py-3 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-black font-black text-xs sm:text-sm active:scale-95 transition shrink-0 flex items-center gap-1.5 shadow-lg">
+            <input type="text" id="manualDishTextInput" placeholder="es. 1 piatto di riso venere più 200g di gamberetti e zucchine..." class="w-full bg-app-dark border border-app-border focus:border-emerald-500 rounded-2xl px-4 py-3.5 text-sm sm:text-base text-white placeholder-app-textMuted focus:outline-none transition">
+            <button onclick="window.processManualFoodText()" class="px-6 py-3.5 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-black font-black text-sm active:scale-95 transition shrink-0 shadow-lg">
               <span>Calcola</span>
             </button>
           </div>
@@ -549,127 +548,127 @@
 
         <div class="flex items-center gap-3 my-2">
           <div class="h-px flex-1 bg-app-border"></div>
-          <span class="text-[11px] text-app-textMuted font-mono uppercase font-bold">Oppure con la Fotocamera</span>
+          <span class="text-xs text-app-textMuted font-mono uppercase font-bold">Oppure con la Fotocamera</span>
           <div class="h-px flex-1 bg-app-border"></div>
         </div>
 
         <!-- PULSANTE FOTO SCANNER -->
-        <label class="cursor-pointer inline-flex items-center gap-2.5 px-6 py-3.5 rounded-2xl bg-app-card hover:bg-app-cardSubtle border border-emerald-500/40 text-emerald-300 font-bold text-xs sm:text-sm shadow-lg active:scale-95 transition">
-          <span class="text-base">📸</span>
+        <label class="cursor-pointer inline-flex items-center gap-3 px-7 py-4 rounded-2xl bg-app-card hover:bg-app-cardSubtle border border-emerald-500/40 text-emerald-300 font-bold text-sm sm:text-base shadow-lg active:scale-95 transition">
+          <span class="text-xl">📸</span>
           <span>Scatta o Carica Foto Piatto</span>
           <input type="file" id="scannerPhotoInput" accept="image/*" class="hidden" onchange="window.processFoodPhoto(event)">
         </label>
 
         <!-- Preview & Live Result -->
-        <div id="scannerResultBox" class="hidden text-left pt-4 border-t border-app-border space-y-3">
-          <div id="foodImgPreviewContainer" class="relative w-full h-56 rounded-2xl overflow-hidden bg-black border border-app-border hidden">
+        <div id="scannerResultBox" class="hidden text-left pt-4 border-t border-app-border space-y-4">
+          <div id="foodImgPreviewContainer" class="relative w-full h-64 rounded-2xl overflow-hidden bg-black border border-app-border hidden">
             <img id="foodPreviewImg" src="" alt="Pasto" class="w-full h-full object-cover">
           </div>
-          <div id="foodLoadingSpinner" class="hidden p-6 rounded-2xl bg-app-dark border border-app-border flex flex-col items-center justify-center text-center space-y-2">
-            <div class="w-7 h-7 border-2 border-emerald-400 border-t-transparent rounded-full animate-spin"></div>
-            <span class="text-xs font-semibold text-emerald-400">Calcolo nutrizionale con Gemini AI in corso...</span>
+          <div id="foodLoadingSpinner" class="hidden p-8 rounded-2xl bg-app-dark border border-app-border flex flex-col items-center justify-center text-center space-y-3">
+            <div class="w-8 h-8 border-3 border-emerald-400 border-t-transparent rounded-full animate-spin"></div>
+            <span class="text-sm font-semibold text-emerald-400">Calcolo nutrizionale con Gemini AI in corso...</span>
           </div>
-          <div id="foodDetailsTarget" class="space-y-2"></div>
+          <div id="foodDetailsTarget" class="space-y-3"></div>
         </div>
       </div>
 
-      <!-- RAGGRUPPAMENTO PASTI CARICATI CON SOMME TOTALI -->
+      <!-- RAGGRUPPAMENTO PASTI CON ELIMINAZIONE SINGOLA (CESTINO) -->
       <div class="space-y-4">
         <div class="flex items-center justify-between px-1">
           <div>
-            <h4 class="font-display font-black text-base text-white">Diario Pasti per Fasce Orarie</h4>
-            <p class="text-xs text-app-textMuted">Somma di calorie e macronutrienti per ogni pasto completato</p>
+            <h4 class="font-display font-black text-lg sm:text-xl text-white">Diario Pasti per Fasce Orarie</h4>
+            <p class="text-xs sm:text-sm text-app-textMuted mt-0.5">Tocca l'icona del cestino 🗑️ per eliminare un singolo piatto</p>
           </div>
-          <button onclick="window.clearFoodLog()" class="text-xs text-app-textMuted hover:text-red-400 px-3 py-1 rounded-xl bg-app-card border border-app-border transition">
+          <button onclick="window.clearFoodLog()" class="text-xs sm:text-sm text-app-textMuted hover:text-red-400 px-3.5 py-1.5 rounded-xl bg-app-card border border-app-border transition">
             Azzera Tutto
           </button>
         </div>
 
-        <div id="groupedMealsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+        <div id="groupedMealsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
       </div>
 
     </section>
 
     <!-- ============================================================= -->
-    <!-- TAB 4: AI COACH (COLLEGATO AI DATI CLOUD FIREBASE REAL-TIME)  -->
+    <!-- TAB 4: AI COACH (STILE RAGAZZO DI 30 ANNI + DATI FIREBASE)    -->
     <!-- ============================================================= -->
-    <section id="view-coach" class="tab-view hidden space-y-4 max-w-4xl mx-auto">
-      <div class="apple-glass-card p-4 rounded-2xl border border-app-border flex items-center justify-between">
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center text-xl font-bold">🧬</div>
+    <section id="view-coach" class="tab-view hidden space-y-5 max-w-4xl mx-auto">
+      <div class="apple-glass-card p-5 rounded-2xl border border-app-border flex items-center justify-between">
+        <div class="flex items-center gap-3.5">
+          <div class="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center text-2xl font-bold">🧬</div>
           <div>
-            <h3 class="font-display font-bold text-sm text-white">AI Coach & Biologo Nutrizionista</h3>
-            <p class="text-[11px] text-teal-400 font-mono">Sincronizzato sui tuoi dati reali di oggi (Pasti, Calorie & Deficit)</p>
+            <h3 class="font-display font-bold text-base sm:text-lg text-white">Coach & Nutrizionista Sportivo</h3>
+            <p class="text-xs sm:text-sm text-teal-400 font-mono">Connesso ai dati reali di oggi • Approccio diretto e senza filtri</p>
           </div>
         </div>
-        <button onclick="window.resetCoachChat()" class="text-xs text-app-textMuted px-3 py-1.5 rounded-xl bg-app-card border border-app-border hover:text-white transition">Azzera</button>
+        <button onclick="window.resetCoachChat()" class="text-xs sm:text-sm text-app-textMuted px-3.5 py-2 rounded-xl bg-app-card border border-app-border hover:text-white transition">Azzera</button>
       </div>
 
       <!-- Widget di Riepilogo Visto dal Coach -->
-      <div id="coachDataPreviewBox" class="p-3.5 rounded-2xl bg-app-dark border border-app-border text-xs text-app-textSecondary flex flex-wrap items-center justify-between gap-2">
+      <div id="coachDataPreviewBox" class="p-4 rounded-2xl bg-app-dark border border-app-border text-xs sm:text-sm text-app-textSecondary flex flex-wrap items-center justify-between gap-2.5">
         <div class="flex items-center gap-2 font-mono">
-          <span class="text-emerald-400 font-bold">📊 Dati Inviati al Coach:</span>
+          <span class="text-emerald-400 font-bold">📊 Dati di Oggi:</span>
           <span id="coachSyncSummaryText">Caricamento stato...</span>
         </div>
-        <span class="text-[10px] text-app-textMuted">Aggiornato in tempo reale dal Cloud</span>
+        <span class="text-xs text-app-textMuted">Sync Cloud attivo</span>
       </div>
 
-      <!-- Pulsanti di Chiedi Rapido Ottimizzati sui Dati -->
-      <div class="flex gap-2 overflow-x-auto no-scrollbar py-0.5">
-        <button onclick="window.sendQuickChatMessage('Analizza il mio deficit di oggi, le calorie che ho mangiato e dimmi se sono perfettamente in target per perdere grasso o se devo aggiustare la cena.')" class="whitespace-nowrap px-3 py-1.5 rounded-xl bg-app-card hover:bg-app-cardSubtle border border-emerald-500/30 text-xs text-emerald-300 transition">
-          ⚖️ Valuta il mio Deficit di Oggi
+      <!-- Pulsanti Chiedi Rapido -->
+      <div class="flex gap-2.5 overflow-x-auto no-scrollbar py-0.5">
+        <button onclick="window.sendQuickChatMessage('Dimmi senza troppi giri di parole se con quello che ho mangiato oggi sto spaccando con il deficit o se devo stringere la cinghia stasera.')" class="whitespace-nowrap px-4 py-2 rounded-xl bg-app-card hover:bg-app-cardSubtle border border-emerald-500/30 text-xs sm:text-sm text-emerald-300 transition font-medium">
+          ⚖️ Come sto messo col deficit oggi?
         </button>
-        <button onclick="window.sendQuickChatMessage('In base alle proteine che ho già assunto oggi dai pasti scansionati, quante ne mancano per raggiungere i miei 170g?') border border-app-border" class="whitespace-nowrap px-3 py-1.5 rounded-xl bg-app-card hover:bg-app-cardSubtle border border-app-border text-xs text-app-textSecondary transition">
-          🥩 Quante Proteine mi mancano?
+        <button onclick="window.sendQuickChatMessage('Guarda le proteine che ho registrato oggi: quante me ne mancano per arrivare a 170g e come me le sparo stasera velocemente?')" class="whitespace-nowrap px-4 py-2 rounded-xl bg-app-card hover:bg-app-cardSubtle border border-app-border text-xs sm:text-sm text-app-textSecondary transition font-medium">
+          🥩 Proteine rimanenti
         </button>
-        <button onclick="window.sendQuickChatMessage('Dammi un consiglio pratico per la cena di stasera in friggitrice ad aria considerando i pasti che ho già mangiato oggi.')" class="whitespace-nowrap px-3 py-1.5 rounded-xl bg-app-card hover:bg-app-cardSubtle border border-app-border text-xs text-app-textSecondary transition">
-          🍽️ Consiglio Cena sui pasti di oggi
+        <button onclick="window.sendQuickChatMessage('Cosa mi consigli di buttare in friggitrice ad aria stasera per chiudere la giornata pulito?')" class="whitespace-nowrap px-4 py-2 rounded-xl bg-app-card hover:bg-app-cardSubtle border border-app-border text-xs sm:text-sm text-app-textSecondary transition font-medium">
+          🍽️ Idea cena veloce
         </button>
       </div>
 
-      <div id="coachChatBox" class="h-96 overflow-y-auto space-y-3 p-4 rounded-2xl bg-app-card/70 border border-app-border flex flex-col text-xs sm:text-sm">
+      <div id="coachChatBox" class="h-96 overflow-y-auto space-y-3.5 p-5 rounded-2xl bg-app-card/70 border border-app-border flex flex-col text-sm sm:text-base">
         <div class="bg-app-dark p-4 rounded-2xl border border-app-border text-gray-200 leading-relaxed shadow-sm">
-          Ciao Luca! Sono il tuo Coach e Nutrizionista sportivo. Ho accesso ai tuoi dati salvati su Firebase: so quante calorie hai assunto, quante ne hai bruciate oggi, quanto hai bevuto e quali piatti hai registrato. Fammi qualsiasi domanda!
+          Bella Luca! Sono il tuo coach. Ho sott'occhio tutti i numeri di oggi su Firebase: quello che hai mangiato, le calorie bruciate, i litri d'acqua e i tuoi carichi. Dimmi pure, parliamo chiaro e dritto al punto!
         </div>
       </div>
 
-      <form onsubmit="window.handleCoachSubmit(event)" class="flex gap-2">
-        <input type="text" id="coachInputText" placeholder="Chiedi al coach (es. sono in deficit? cosa mangio stasera?)..." class="w-full bg-app-card border border-app-border focus:border-emerald-500 rounded-xl px-4 py-3 text-xs sm:text-sm text-white placeholder-app-textMuted focus:outline-none transition">
-        <button type="submit" class="px-5 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-black text-xs sm:text-sm transition active:scale-95 shrink-0">Invia</button>
+      <form onsubmit="window.handleCoachSubmit(event)" class="flex gap-2.5">
+        <input type="text" id="coachInputText" placeholder="Chiedi al coach (es. posso mangiare questo? come sto messo oggi?)..." class="w-full bg-app-card border border-app-border focus:border-emerald-500 rounded-xl px-4 py-3.5 text-sm sm:text-base text-white placeholder-app-textMuted focus:outline-none transition">
+        <button type="submit" class="px-6 py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-black text-sm sm:text-base transition active:scale-95 shrink-0">Invia</button>
       </form>
     </section>
 
     <!-- ============================================================= -->
     <!-- TAB 5: PROGRESSI                                              -->
     <!-- ============================================================= -->
-    <section id="view-progress" class="tab-view hidden space-y-5 max-w-3xl mx-auto">
-      <div class="apple-glass-card p-6 rounded-3xl border border-app-border space-y-5">
-        <h3 class="font-display font-bold text-base text-white uppercase tracking-wider">Monitoraggio Ricomposizione</h3>
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <div class="p-3.5 rounded-xl bg-app-card border border-app-border">
-            <div class="text-[10px] uppercase font-bold text-app-textMuted">Peso Start</div>
-            <div class="text-xl font-display font-black text-white mt-0.5">95.0 <span class="text-xs font-normal text-app-textMuted">kg</span></div>
+    <section id="view-progress" class="tab-view hidden space-y-6 max-w-3xl mx-auto">
+      <div class="apple-glass-card p-6 sm:p-8 rounded-3xl border border-app-border space-y-6">
+        <h3 class="font-display font-bold text-lg text-white uppercase tracking-wider">Monitoraggio Ricomposizione</h3>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <div class="p-4 rounded-xl bg-app-card border border-app-border">
+            <div class="text-xs uppercase font-bold text-app-textMuted">Peso Start</div>
+            <div class="text-2xl font-display font-black text-white mt-0.5">95.0 <span class="text-xs font-normal text-app-textMuted">kg</span></div>
           </div>
-          <div class="p-3.5 rounded-xl bg-app-card border border-app-border">
-            <div class="text-[10px] uppercase font-bold text-app-textMuted">Peso Oggi</div>
-            <div id="metricCurrentWeight" class="text-xl font-display font-black text-emerald-400 mt-0.5">95.0 <span class="text-xs font-normal text-app-textMuted">kg</span></div>
+          <div class="p-4 rounded-xl bg-app-card border border-app-border">
+            <div class="text-xs uppercase font-bold text-app-textMuted">Peso Oggi</div>
+            <div id="metricCurrentWeight" class="text-2xl font-display font-black text-emerald-400 mt-0.5">95.0 <span class="text-xs font-normal text-app-textMuted">kg</span></div>
           </div>
-          <div class="p-3.5 rounded-xl bg-app-card border border-app-border">
-            <div class="text-[10px] uppercase font-bold text-app-textMuted">Giro Vita Start</div>
-            <div class="text-xl font-display font-black text-white mt-0.5">104.0 <span class="text-xs font-normal text-app-textMuted">cm</span></div>
+          <div class="p-4 rounded-xl bg-app-card border border-app-border">
+            <div class="text-xs uppercase font-bold text-app-textMuted">Giro Vita Start</div>
+            <div class="text-2xl font-display font-black text-white mt-0.5">104.0 <span class="text-xs font-normal text-app-textMuted">cm</span></div>
           </div>
-          <div class="p-3.5 rounded-xl bg-app-card border border-app-border">
-            <div class="text-[10px] uppercase font-bold text-app-textMuted">Giro Vita Oggi</div>
-            <div id="metricCurrentWaist" class="text-xl font-display font-black text-teal-400 mt-0.5">104.0 <span class="text-xs font-normal text-app-textMuted">cm</span></div>
+          <div class="p-4 rounded-xl bg-app-card border border-app-border">
+            <div class="text-xs uppercase font-bold text-app-textMuted">Giro Vita Oggi</div>
+            <div id="metricCurrentWaist" class="text-2xl font-display font-black text-teal-400 mt-0.5">104.0 <span class="text-xs font-normal text-app-textMuted">cm</span></div>
           </div>
         </div>
 
-        <div class="p-4 rounded-2xl bg-app-dark border border-app-border space-y-3">
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <input type="number" id="quickWeightInput" step="0.1" inputmode="decimal" placeholder="Peso (kg)" class="w-full bg-app-card border border-app-border rounded-xl px-3 py-2 text-sm text-emerald-400 font-mono text-center focus:outline-none">
-            <input type="number" id="quickWaistInput" step="0.5" inputmode="decimal" placeholder="Vita (cm)" class="w-full bg-app-card border border-app-border rounded-xl px-3 py-2 text-sm text-teal-400 font-mono text-center focus:outline-none">
+        <div class="p-5 rounded-2xl bg-app-dark border border-app-border space-y-3.5">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+            <input type="number" id="quickWeightInput" step="0.1" inputmode="decimal" placeholder="Peso (kg)" class="w-full bg-app-card border border-app-border rounded-xl px-4 py-2.5 text-base text-emerald-400 font-mono text-center focus:outline-none">
+            <input type="number" id="quickWaistInput" step="0.5" inputmode="decimal" placeholder="Vita (cm)" class="w-full bg-app-card border border-app-border rounded-xl px-4 py-2.5 text-base text-teal-400 font-mono text-center focus:outline-none">
           </div>
-          <button onclick="window.saveBodyMeasurements()" class="w-full py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black text-xs sm:text-sm font-bold active:scale-95 transition">Salva Misure nel Cloud</button>
+          <button onclick="window.saveBodyMeasurements()" class="w-full py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black text-sm sm:text-base font-bold active:scale-95 transition">Salva Misure nel Cloud</button>
         </div>
       </div>
     </section>
@@ -677,40 +676,40 @@
   </main>
 
   <!-- Navigation Bar Mobile -->
-  <nav class="fixed bottom-0 left-0 right-0 z-40 apple-nav px-3 py-2">
+  <nav class="fixed bottom-0 left-0 right-0 z-40 apple-nav px-3 py-2.5">
     <div class="max-w-md mx-auto grid grid-cols-6 gap-1 text-center">
-      <button onclick="window.navigateToTab('workout')" id="nav-workout" class="py-1 flex flex-col items-center text-emerald-400"><span class="text-base sm:text-lg">🏋️</span><span class="text-[9px] font-bold mt-0.5">Scheda</span></button>
-      <button onclick="window.navigateToTab('walk')" id="nav-walk" class="py-1 flex flex-col items-center text-app-textMuted hover:text-white"><span class="text-base sm:text-lg">👟</span><span class="text-[9px] font-medium mt-0.5">Cammino</span></button>
-      <button onclick="window.navigateToTab('nutrition')" id="nav-nutrition" class="py-1 flex flex-col items-center text-app-textMuted hover:text-white"><span class="text-base sm:text-lg">🥗</span><span class="text-[9px] font-medium mt-0.5">Dieta</span></button>
-      <button onclick="window.navigateToTab('scanner')" id="nav-scanner" class="py-1 flex flex-col items-center text-app-textMuted hover:text-white"><span class="text-base sm:text-lg">📷</span><span class="text-[9px] font-medium mt-0.5">Scanner</span></button>
-      <button onclick="window.navigateToTab('coach')" id="nav-coach" class="py-1 flex flex-col items-center text-app-textMuted hover:text-white"><span class="text-base sm:text-lg">🧬</span><span class="text-[9px] font-medium mt-0.5">Coach</span></button>
-      <button onclick="window.navigateToTab('progress')" id="nav-progress" class="py-1 flex flex-col items-center text-app-textMuted hover:text-white"><span class="text-base sm:text-lg">📈</span><span class="text-[9px] font-medium mt-0.5">Misure</span></button>
+      <button onclick="window.navigateToTab('workout')" id="nav-workout" class="py-1 flex flex-col items-center text-emerald-400"><span class="text-lg">🏋️</span><span class="text-[10px] font-bold mt-0.5">Scheda</span></button>
+      <button onclick="window.navigateToTab('walk')" id="nav-walk" class="py-1 flex flex-col items-center text-app-textMuted hover:text-white"><span class="text-lg">👟</span><span class="text-[10px] font-medium mt-0.5">Cammino</span></button>
+      <button onclick="window.navigateToTab('nutrition')" id="nav-nutrition" class="py-1 flex flex-col items-center text-app-textMuted hover:text-white"><span class="text-lg">🥗</span><span class="text-[10px] font-medium mt-0.5">Dieta</span></button>
+      <button onclick="window.navigateToTab('scanner')" id="nav-scanner" class="py-1 flex flex-col items-center text-app-textMuted hover:text-white"><span class="text-lg">📷</span><span class="text-[10px] font-medium mt-0.5">Scanner</span></button>
+      <button onclick="window.navigateToTab('coach')" id="nav-coach" class="py-1 flex flex-col items-center text-app-textMuted hover:text-white"><span class="text-lg">🧬</span><span class="text-[10px] font-medium mt-0.5">Coach</span></button>
+      <button onclick="window.navigateToTab('progress')" id="nav-progress" class="py-1 flex flex-col items-center text-app-textMuted hover:text-white"><span class="text-lg">📈</span><span class="text-[10px] font-medium mt-0.5">Misure</span></button>
     </div>
   </nav>
 
   <!-- REST TIMER MODAL -->
   <div id="restTimerModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
-    <div class="apple-glass max-w-xs w-full p-5 rounded-3xl border border-app-border text-center relative">
-      <button onclick="window.toggleTimerModal()" class="absolute top-3 right-4 text-app-textMuted text-lg">✕</button>
-      <h3 class="text-sm font-bold text-white mb-1">Timer Recupero Icon</h3>
+    <div class="apple-glass max-w-xs w-full p-6 rounded-3xl border border-app-border text-center relative">
+      <button onclick="window.toggleTimerModal()" class="absolute top-3 right-4 text-app-textMuted text-xl">✕</button>
+      <h3 class="text-base font-bold text-white mb-1">Timer Recupero Icon</h3>
       <div id="modalTimerDigits" class="text-5xl font-mono font-black text-emerald-400 my-4">01:30</div>
       <div class="grid grid-cols-3 gap-2 mb-3">
-        <button onclick="window.startDiscreetTimer(60)" class="py-2 rounded-xl bg-app-card border border-app-border text-xs font-bold active:scale-95 transition">60s</button>
-        <button onclick="window.startDiscreetTimer(90)" class="py-2 rounded-xl bg-emerald-500 text-black text-xs font-black active:scale-95 transition">90s</button>
-        <button onclick="window.startDiscreetTimer(120)" class="py-2 rounded-xl bg-app-card border border-app-border text-xs font-bold active:scale-95 transition">120s</button>
+        <button onclick="window.startDiscreetTimer(60)" class="py-2.5 rounded-xl bg-app-card border border-app-border text-xs font-bold active:scale-95 transition">60s</button>
+        <button onclick="window.startDiscreetTimer(90)" class="py-2.5 rounded-xl bg-emerald-500 text-black text-xs font-black active:scale-95 transition">90s</button>
+        <button onclick="window.startDiscreetTimer(120)" class="py-2.5 rounded-xl bg-app-card border border-app-border text-xs font-bold active:scale-95 transition">120s</button>
       </div>
-      <button onclick="window.stopDiscreetTimer()" class="w-full py-2 rounded-xl bg-red-950/40 text-red-300 text-xs font-bold border border-red-500/30">Ferma</button>
+      <button onclick="window.stopDiscreetTimer()" class="w-full py-2.5 rounded-xl bg-red-950/40 text-red-300 text-xs font-bold border border-red-500/30">Ferma</button>
     </div>
   </div>
 
   <!-- API KEY MODAL -->
   <div id="apiKeyModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
-    <div class="apple-glass max-w-xs w-full p-5 rounded-3xl border border-app-border space-y-3">
-      <h3 class="text-sm font-bold text-white">Chiave Gemini API</h3>
-      <input type="password" id="userApiKeyInput" placeholder="AIzaSy..." class="w-full bg-app-dark border border-app-border rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500 font-mono">
+    <div class="apple-glass max-w-sm w-full p-6 rounded-3xl border border-app-border space-y-4">
+      <h3 class="text-base font-bold text-white">Chiave Gemini API</h3>
+      <input type="password" id="userApiKeyInput" placeholder="AIzaSy..." class="w-full bg-app-dark border border-app-border rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500 font-mono">
       <div class="flex gap-2 pt-1">
-        <button onclick="window.saveUserApiKey()" class="w-full py-2 bg-emerald-500 text-black font-bold rounded-xl text-xs">Salva</button>
-        <button onclick="window.closeApiKeyModal()" class="w-full py-2 bg-app-card text-white rounded-xl text-xs border border-app-border">Chiudi</button>
+        <button onclick="window.saveUserApiKey()" class="w-full py-2.5 bg-emerald-500 text-black font-bold rounded-xl text-sm">Salva</button>
+        <button onclick="window.closeApiKeyModal()" class="w-full py-2.5 bg-app-card text-white rounded-xl text-sm border border-app-border">Chiudi</button>
       </div>
     </div>
   </div>
@@ -777,7 +776,7 @@
       try {
         await signInWithPopup(auth, provider);
       } catch (err) {
-        console.warn("Popup bloccato, uso redirect:", err);
+        console.warn("Popup bloccato, passo a redirect:", err);
         if (err.code === 'auth/popup-blocked' || err.code === 'auth/popup-closed-by-user') {
           try {
             await signInWithRedirect(auth, provider);
@@ -875,17 +874,17 @@
     }
 
     // =============================================================
-    // GESTIONE IDRATAZIONE ACQUA AUMENTATA E PROGRESSO
+    // GESTIONE IDRATAZIONE ACQUA
     // =============================================================
     window.addWaterLiters = delta => {
       appData.waterLiters = parseFloat(Math.max(0, (appData.waterLiters + delta)).toFixed(2));
-      // Se si aggiunge acqua positiva, incrementa proporzionalmente il contatore borracce per la palestra
       if (delta > 0) {
         appData.gymBottles = Math.round(appData.waterLiters / 0.5);
       }
       updateWaterDisplay();
       updateGymBottleDisplay();
       initWaterGrid();
+      updateCoachSyncSummaryUI();
       triggerCloudSave();
       showNotification(`${delta > 0 ? '+' : ''}${delta}L registrati! Totale: ${appData.waterLiters}L`);
     };
@@ -897,6 +896,7 @@
       updateWaterDisplay();
       updateGymBottleDisplay();
       initWaterGrid();
+      updateCoachSyncSummaryUI();
       triggerCloudSave();
       showNotification("Idratazione azzerata.");
     };
@@ -927,12 +927,12 @@
         const active = i <= filledSteps;
         const btn = document.createElement('button');
         btn.onclick = () => window.selectWaterStep(i);
-        btn.className = `p-2 rounded-xl text-xs font-semibold transition flex flex-col items-center border active:scale-90 ${
+        btn.className = `p-2.5 rounded-xl text-xs font-semibold transition flex flex-col items-center border active:scale-90 ${
           active ? 'water-droplet-glow text-teal-300' : 'bg-app-dark border-app-border text-gray-500 hover:border-gray-400'
         }`;
         btn.innerHTML = `
           <span class="${active ? 'scale-110 drop-shadow-[0_0_8px_rgba(45,212,191,0.8)]' : 'opacity-40'} transition">💧</span>
-          <span class="text-[9px] font-mono mt-0.5 ${(active ? 'font-bold text-teal-200' : '')}">${(i * 0.5).toFixed(1)}L</span>
+          <span class="text-[10px] font-mono mt-0.5 ${(active ? 'font-bold text-teal-200' : '')}">${(i * 0.5).toFixed(1)}L</span>
         `;
         grid.appendChild(btn);
       }
@@ -945,6 +945,7 @@
       updateWaterDisplay();
       updateGymBottleDisplay();
       initWaterGrid();
+      updateCoachSyncSummaryUI();
       triggerCloudSave();
     };
 
@@ -953,7 +954,7 @@
       if (badge) badge.innerText = `${appData.gymBottles} Borracce (${(appData.gymBottles * 0.5).toFixed(1)} L)`;
     }
 
-    // Riconoscimento orario
+    // Riconoscimento orario per 6 fasce
     function detectCurrentMealSlot() {
       const h = new Date().getHours();
       const m = new Date().getMinutes();
@@ -975,7 +976,25 @@
     }
 
     // =============================================================
-    // AI COACH COLLEGATO AI DATI CLOUD FIREBASE
+    // ELIMINAZIONE SINGOLO PASTO (CESTINO 🗑️)
+    // =============================================================
+    window.deleteSingleFoodItem = (indexToDelete) => {
+      const item = appData.foodLogs[indexToDelete];
+      const itemName = item ? item.dishName : "questo piatto";
+      
+      if (!confirm(`Vuoi rimuovere "${itemName}" dal diario?`)) return;
+
+      appData.foodLogs.splice(indexToDelete, 1);
+      renderGroupedMeals();
+      renderDualColumnDiet();
+      updateDeficitCalculations();
+      updateCoachSyncSummaryUI();
+      triggerCloudSave();
+      showNotification(`"${itemName}" eliminato.`);
+    };
+
+    // =============================================================
+    // AI COACH: TONE OF VOICE "RAGAZZO DI 30 ANNI" + DATI CLOUD
     // =============================================================
     function updateCoachSyncSummaryUI() {
       const summaryEl = document.getElementById('coachSyncSummaryText');
@@ -1003,15 +1022,14 @@
 
       input.value = '';
       const box = document.getElementById('coachChatBox');
-      box.innerHTML += `<div class="bg-emerald-500 text-black font-semibold p-3 rounded-2xl rounded-tr-none self-end max-w-[85%] ml-auto">${query}</div>`;
+      box.innerHTML += `<div class="bg-emerald-500 text-black font-bold p-3.5 rounded-2xl rounded-tr-none self-end max-w-[85%] ml-auto text-sm sm:text-base">${query}</div>`;
       box.scrollTop = box.scrollHeight;
 
       const loadingId = 'loading_' + Date.now();
-      box.innerHTML += `<div id="${loadingId}" class="bg-app-dark p-3.5 rounded-2xl border border-app-border max-w-[85%] text-emerald-400 animate-pulse">Il Coach sta leggendo i tuoi dati Cloud ed elaborando...</div>`;
+      box.innerHTML += `<div id="${loadingId}" class="bg-app-dark p-4 rounded-2xl border border-app-border max-w-[85%] text-emerald-400 animate-pulse text-sm">Il Coach sta controllando i tuoi dati...</div>`;
       box.scrollTop = box.scrollHeight;
 
       try {
-        // Estrazione dettagliata dati reali da Firebase
         const totalIntake = appData.foodLogs.reduce((acc, m) => acc + (Number(m.calories) || 0), 0);
         const totalPro = appData.foodLogs.reduce((acc, m) => acc + (Number(m.protein) || 0), 0);
         const totalCarb = appData.foodLogs.reduce((acc, m) => acc + (Number(m.carbs) || 0), 0);
@@ -1020,29 +1038,31 @@
         const netDeficit = 1950 - (totalIntake - burned);
 
         const mealsBreakdown = appData.foodLogs.length > 0 
-          ? appData.foodLogs.map(m => `- [${m.slot} - ${m.time}] ${m.dishName}: ${m.calories} kcal (P: ${m.protein}g, C: ${m.carbs}g, F: ${m.fat}g)`).join('\n')
-          : "Nessun pasto registrato oggi finora.";
+          ? appData.foodLogs.map((m, idx) => `- [${m.slot}] ${m.dishName}: ${m.calories} kcal (${m.protein}g P, ${m.carbs}g C, ${m.fat}g F)`).join('\n')
+          : "Ancora nessun pasto inserito oggi.";
 
         const promptWithCloudContext = `
-Sei il Personal Trainer e Biologo Nutrizionista Sportivo dedicato dell'atleta Luca.
-DATI REALI SALVATI ORA NEL DATABASE FIREBASE DI LUCA:
-- Età: 32 anni | Peso registrato: ${appData.weight} kg | Giro vita: ${appData.waist} cm
-- Target giornaliero standard di ricomposizione: 1.950 kcal in deficit (target proteine: 170g)
-- CALORIE ASSUNTE OGGI DAI PASTI: ${totalIntake} kcal
-- MACRONUTRIENTI ASSUNTI OGGI: ${totalPro}g Proteine | ${totalCarb}g Carboidrati | ${totalFat}g Grassi
-- CALORIE BRUCIATE REGISTRATE OGGI (Smartwatch/Gym): ${burned} kcal
-- BILANCIO / DEFICIT EFFETTIVO ATTUALE: ${netDeficit >= 0 ? `In deficit di ${netDeficit} kcal` : `In surplus di ${Math.abs(netDeficit)} kcal`}
-- ACQUA BEVUTA OGGI: ${appData.waterLiters} Litri su target di 3.5L
-- DETTAGLIO PASTI CONSUMATI OGGI REGISTRATI CON FOTO/TESTO:
+Sei il personal trainer e nutrizionista sportivo di Luca, ma soprattutto parli come un ragazzo di 30 anni, appassionato di palestra e ghisa, molto sveglio, amichevole, diretto e pratico. 
+NON usare un tono da medico precisino, niente formalismi da dottore, niente elenchi lunghi e noiosi con asterischi infiniti. Parla in modo colloquiale, naturale e dritto al punto come faresti con un amico in sala pesi tra una serie e l'altra.
+
+I DATI REALI CHE LUCA HA REGISTRATO OGGI SULL'APP (salvati su Firebase):
+- Età: 32 anni | Peso: ${appData.weight} kg | Giro vita: ${appData.waist} cm
+- Obiettivo giornaliero: 1.950 kcal in deficit (target proteine: 170g)
+- Calorie mangiate oggi: ${totalIntake} kcal
+- Macro mangiati oggi: ${totalPro}g Proteine, ${totalCarb}g Carboidrati, ${totalFat}g Grassi
+- Calorie bruciate registrate (orologio/gym): ${burned} kcal
+- Situazione attuale deficit: ${netDeficit >= 0 ? `Ha ancora un margine di ${netDeficit} kcal per stare nel deficit` : `Ha sforato di ${Math.abs(netDeficit)} kcal rispetto al target`}
+- Acqua bevuta: ${appData.waterLiters}L su 3.5L
+- Cosa ha mangiato oggi finora:
 ${mealsBreakdown}
 
-- REGOLE DELLA SUA DIETA: Friggitrice ad aria (polpette magre morbide a 180°C, patate croccanti a 190°C), Huel Black + 5g creatina post-workout, gamberetti e riso express in busta, salmone e tonno fresco nel weekend, mozzarella light Milbona, cetrioli, peperoni. NO BROCCOLI, NO QUARK.
+- Regole alimentari di Luca: usa la friggitrice ad aria (polpette magre a 180°C, patate croccanti a 190°C), Huel Black + creatina post-palestra, gamberetti e riso express in busta, salmone/tonno fresco, mozzarella light Milbona, cetrioli, peperoni. ODIA broccoli e quark.
+
+DOMANDA DI LUCA:
+"${query}"
 
 ISTRUZIONI PER LA RISPOSTA:
-Rispondi in italiano in massimo 2-3 brevi paragrafi. Usa SEMPRE i numeri reali appena forniti (calorie assunte, bruciate, deficit, grammi di proteine mancanti o acqua bevuta) per rispondere in modo scientifico, personalizzato e pratico alla domanda dell'atleta.
-
-DOMANDA DELL'ATLETA:
-"${query}"
+Rispondi in massimo 2 brevi paragrafi. Usa i suoi dati reali (le calorie che ha mangiato, le proteine che gli mancano, ecc.) ma diglielo in modo super sciolto, pratico e motivante, da coetaneo che conosce la sala pesi!
 `;
 
         const reply = await callGeminiApi({
@@ -1050,11 +1070,11 @@ DOMANDA DELL'ATLETA:
         });
 
         document.getElementById(loadingId)?.remove();
-        box.innerHTML += `<div class="bg-app-dark p-3.5 rounded-2xl border border-app-border max-w-[90%] text-gray-200 leading-relaxed shadow-sm">${reply}</div>`;
+        box.innerHTML += `<div class="bg-app-dark p-4 rounded-2xl border border-app-border max-w-[90%] text-gray-200 leading-relaxed shadow-sm text-sm sm:text-base">${reply}</div>`;
         box.scrollTop = box.scrollHeight;
       } catch (err) {
         document.getElementById(loadingId)?.remove();
-        box.innerHTML += `<div class="text-red-400 p-2">Errore di comunicazione con il Coach: ${err.message}</div>`;
+        box.innerHTML += `<div class="text-red-400 p-2">Errore Coach: ${err.message}</div>`;
       }
     };
 
@@ -1066,8 +1086,8 @@ DOMANDA DELL'ATLETA:
 
     window.resetCoachChat = () => {
       document.getElementById('coachChatBox').innerHTML = `
-        <div class="bg-app-dark p-3.5 rounded-2xl border border-app-border text-gray-200 leading-relaxed shadow-sm">
-          Chat azzerata! Fammi qualsiasi domanda su dieta, deficit di oggi, proteine rimanenti o ricette.
+        <div class="bg-app-dark p-4 rounded-2xl border border-app-border text-gray-200 leading-relaxed shadow-sm text-sm sm:text-base">
+          Chat resettata! Vai pure Luca, dimmi cosa vuoi sapere sulla giornata o sui pasti!
         </div>
       `;
     };
@@ -1105,9 +1125,9 @@ DOMANDA DELL'ATLETA:
 
       try {
         const prompt = `
-          Agisci come Biologo Nutrizionista Sportivo esperto.
-          Descrizione pasto inserita a mano: "${textQuery}".
-          Fascia pasto assegnata: "${targetSlot}".
+          Agisci come Biologo Nutrizionista Sportivo.
+          Descrizione cibo inserita a mano: "${textQuery}".
+          Fascia pasto: "${targetSlot}".
           Profilo atleta: 32 anni, 95kg, deficit 1.950 kcal/die (target 170g proteine).
           
           Calcola o stima con precisione calorie e macronutrienti per le quantità descritte.
@@ -1119,8 +1139,8 @@ DOMANDA DELL'ATLETA:
             "protein": 38,
             "carbs": 48,
             "fat": 6,
-            "verdict": "Giudizio clinico per il deficit a 1.950 kcal",
-            "advice": "Consiglio pratico nutrizionale"
+            "verdict": "Giudizio rapido per il deficit",
+            "advice": "Consiglio pratico"
           }
         `;
 
@@ -1135,8 +1155,8 @@ DOMANDA DELL'ATLETA:
         renderFoodAnalysisResult(data);
       } catch (err) {
         target.innerHTML = `
-          <div class="p-3.5 rounded-2xl bg-red-950/40 text-red-300 text-xs border border-red-500/30">
-            Errore durante l'elaborazione del testo con Gemini. Riprova descrivendo porzioni o ingredienti.
+          <div class="p-4 rounded-2xl bg-red-950/40 text-red-300 text-sm border border-red-500/30">
+            Errore durante l'elaborazione del testo. Riprova descrivendo porzioni o ingredienti.
           </div>
         `;
       } finally {
@@ -1176,19 +1196,19 @@ DOMANDA DELL'ATLETA:
 
         try {
           const prompt = `
-            Agisci come Biologo Nutrizionista Sportivo esperto.
+            Agisci come Biologo Nutrizionista Sportivo.
             Momento del pasto: "${targetSlot}".
             Profilo atleta: 32 anni, 95kg, target deficit 1.950 kcal/die (target 170g proteine).
-            Analizza l'immagine (piatto preparato, singolo ingrediente o tabella nutrizionale) e restituisci ESCLUSIVAMENTE un JSON valido senza blocchi markdown:
+            Analizza l'immagine e restituisci ESCLUSIVAMENTE un JSON valido senza blocchi markdown:
             {
-              "dishName": "Nome descrittivo piatto o pietanza",
+              "dishName": "Nome descrittivo piatto",
               "slot": "${targetSlot}",
               "calories": 250,
               "protein": 24,
               "carbs": 18,
               "fat": 8,
-              "verdict": "Giudizio rapido per il deficit",
-              "advice": "Consiglio pratico di cottura o abbinamento"
+              "verdict": "Giudizio rapido",
+              "advice": "Consiglio pratico"
             }
           `;
 
@@ -1205,7 +1225,7 @@ DOMANDA DELL'ATLETA:
           renderFoodAnalysisResult(data);
         } catch (err) {
           target.innerHTML = `
-            <div class="p-3.5 rounded-2xl bg-red-950/40 text-red-300 text-xs border border-red-500/30">
+            <div class="p-4 rounded-2xl bg-red-950/40 text-red-300 text-sm border border-red-500/30">
               Errore durante l'analisi della foto con Gemini.
             </div>
           `;
@@ -1221,26 +1241,26 @@ DOMANDA DELL'ATLETA:
       target.innerHTML = `
         <div class="flex items-center justify-between">
           <div>
-            <span class="text-[10px] uppercase font-bold text-emerald-400">${data.slot}</span>
-            <h4 class="font-display font-bold text-white text-base">${data.dishName}</h4>
+            <span class="text-xs uppercase font-bold text-emerald-400">${data.slot}</span>
+            <h4 class="font-display font-bold text-white text-base sm:text-lg">${data.dishName}</h4>
           </div>
-          <span class="font-mono font-black text-lg text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-xl border border-emerald-500/20">
+          <span class="font-mono font-black text-xl text-emerald-400 bg-emerald-500/10 px-3.5 py-1 rounded-xl border border-emerald-500/20">
             ${data.calories} kcal
           </span>
         </div>
 
-        <div class="grid grid-cols-3 gap-2 text-center text-xs py-1">
-          <div class="p-2.5 rounded-xl bg-app-card border border-app-border"><span class="text-[10px] text-app-textMuted font-semibold block">PROTEINE</span><span class="text-sm font-bold text-white">${data.protein}g</span></div>
-          <div class="p-2.5 rounded-xl bg-app-card border border-app-border"><span class="text-[10px] text-app-textMuted font-semibold block">CARBOIDRATI</span><span class="text-sm font-bold text-white">${data.carbs}g</span></div>
-          <div class="p-2.5 rounded-xl bg-app-card border border-app-border"><span class="text-[10px] text-app-textMuted font-semibold block">GRASSI</span><span class="text-sm font-bold text-white">${data.fat}g</span></div>
+        <div class="grid grid-cols-3 gap-2.5 text-center text-xs py-1">
+          <div class="p-3 rounded-xl bg-app-card border border-app-border"><span class="text-xs text-app-textMuted font-semibold block">PROTEINE</span><span class="text-base font-bold text-white">${data.protein}g</span></div>
+          <div class="p-3 rounded-xl bg-app-card border border-app-border"><span class="text-xs text-app-textMuted font-semibold block">CARBOIDRATI</span><span class="text-base font-bold text-white">${data.carbs}g</span></div>
+          <div class="p-3 rounded-xl bg-app-card border border-app-border"><span class="text-xs text-app-textMuted font-semibold block">GRASSI</span><span class="text-base font-bold text-white">${data.fat}g</span></div>
         </div>
 
-        <div class="p-3 rounded-xl bg-app-dark border border-app-border text-xs text-app-textSecondary space-y-1">
+        <div class="p-3.5 rounded-xl bg-app-dark border border-app-border text-xs sm:text-sm text-app-textSecondary space-y-1">
           <p><strong class="text-emerald-400">Verdetto:</strong> ${data.verdict}</p>
           <p><strong class="text-teal-400">Consiglio:</strong> ${data.advice}</p>
         </div>
 
-        <button onclick="window.commitMealToLog(${JSON.stringify(data).replace(/"/g, '&quot;')})" class="w-full py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-black text-xs sm:text-sm active:scale-95 transition shadow-lg">
+        <button onclick="window.commitMealToLog(${JSON.stringify(data).replace(/"/g, '&quot;')})" class="w-full py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-black text-sm sm:text-base active:scale-95 transition shadow-lg">
           + Salva nel pasto "${data.slot}" & Sincronizza Cloud
         </button>
       `;
@@ -1259,7 +1279,7 @@ DOMANDA DELL'ATLETA:
     };
 
     window.clearFoodLog = () => {
-      if (!confirm("Vuoi azzerare il diario pasti di oggi?")) return;
+      if (!confirm("Vuoi azzerare l'intero diario pasti di oggi?")) return;
       appData.foodLogs = [];
       renderGroupedMeals();
       renderDualColumnDiet();
@@ -1493,7 +1513,7 @@ DOMANDA DELL'ATLETA:
 
       document.getElementById('metricCurrentWeight').innerHTML = `${appData.weight} <span class="text-xs font-normal text-app-textMuted">kg</span>`;
       document.getElementById('metricCurrentWaist').innerHTML = `${appData.waist} <span class="text-xs font-normal text-app-textMuted">cm</span>`;
-      document.getElementById('apiStatusDot').className = appData.userApiKey ? "w-2.5 h-2.5 rounded-full bg-emerald-400" : "w-2.5 h-2.5 rounded-full bg-amber-500";
+      document.getElementById('apiStatusDot').className = appData.userApiKey ? "w-3 h-3 rounded-full bg-emerald-400" : "w-3 h-3 rounded-full bg-amber-500";
     }
 
     function updateDeficitCalculations() {
@@ -1512,19 +1532,19 @@ DOMANDA DELL'ATLETA:
 
       if (actualDeficit >= 0) {
         netEl.innerText = `-${actualDeficit} kcal`;
-        netEl.className = "text-2xl font-mono font-black text-emerald-400 mt-1";
+        netEl.className = "text-3xl font-mono font-black text-emerald-400 mt-1";
         statusEl.innerText = "in deficit calorico ✓";
-        statusEl.className = "text-[10px] text-emerald-400 font-mono font-bold";
+        statusEl.className = "text-xs text-emerald-400 font-mono font-bold";
         badgeEl.innerText = `DEFICIT -${actualDeficit} KCAL`;
-        badgeEl.className = "self-start sm:self-auto px-3.5 py-1.5 rounded-xl font-mono font-black text-xs sm:text-sm bg-emerald-500/20 text-emerald-300 border border-emerald-500/40";
+        badgeEl.className = "self-start sm:self-auto px-4 py-2 rounded-xl font-mono font-black text-sm sm:text-base bg-emerald-500/20 text-emerald-300 border border-emerald-500/40";
       } else {
         const surplus = Math.abs(actualDeficit);
         netEl.innerText = `+${surplus} kcal`;
-        netEl.className = "text-2xl font-mono font-black text-amber-400 mt-1";
+        netEl.className = "text-3xl font-mono font-black text-amber-400 mt-1";
         statusEl.innerText = "surplus calorico";
-        statusEl.className = "text-[10px] text-amber-400 font-mono font-bold";
+        statusEl.className = "text-xs text-amber-400 font-mono font-bold";
         badgeEl.innerText = `SURPLUS +${surplus} KCAL`;
-        badgeEl.className = "self-start sm:self-auto px-3.5 py-1.5 rounded-xl font-mono font-black text-xs sm:text-sm bg-amber-500/20 text-amber-300 border border-amber-500/40";
+        badgeEl.className = "self-start sm:self-auto px-4 py-2 rounded-xl font-mono font-black text-sm sm:text-base bg-amber-500/20 text-amber-300 border border-amber-500/40";
       }
     }
 
@@ -1551,10 +1571,10 @@ DOMANDA DELL'ATLETA:
 
       const loggedBySlot = {};
       MEAL_SLOTS.forEach(s => loggedBySlot[s] = []);
-      appData.foodLogs.forEach(m => {
+      appData.foodLogs.forEach((m, originalIndex) => {
         const s = m.slot || "Cena";
         if (!loggedBySlot[s]) loggedBySlot[s] = [];
-        loggedBySlot[s].push(m);
+        loggedBySlot[s].push({ ...m, originalIndex });
       });
 
       container.innerHTML = MEAL_SLOTS.map(slotName => {
@@ -1569,39 +1589,44 @@ DOMANDA DELL'ATLETA:
         let actualHTML = '';
         if (actualItems.length === 0) {
           actualHTML = `
-            <div class="h-full flex flex-col items-center justify-center p-4 rounded-2xl bg-app-dark/60 border border-dashed border-app-border text-center space-y-2">
-              <span class="text-xs text-app-textMuted">Nessun piatto registrato in questo pasto.</span>
-              <button onclick="window.triggerScanForSlot('${slotName}')" class="px-3 py-1.5 rounded-xl bg-app-card hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-bold text-xs flex items-center gap-1.5 transition active:scale-95">
+            <div class="h-full flex flex-col items-center justify-center p-5 rounded-2xl bg-app-dark/60 border border-dashed border-app-border text-center space-y-2.5">
+              <span class="text-sm text-app-textMuted">Nessun piatto registrato in questo pasto.</span>
+              <button onclick="window.triggerScanForSlot('${slotName}')" class="px-4 py-2 rounded-xl bg-app-card hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-bold text-xs sm:text-sm flex items-center gap-1.5 transition active:scale-95">
                 <span>📸/✍️</span> Registra ${slotName}
               </button>
             </div>
           `;
         } else {
           const itemsList = actualItems.map(item => `
-            <div class="flex items-center justify-between p-2 rounded-xl bg-app-dark border border-app-border text-xs">
+            <div class="flex items-center justify-between p-2.5 rounded-xl bg-app-dark border border-app-border text-sm group">
               <div class="truncate pr-2">
                 <div class="font-bold text-white truncate">${item.dishName}</div>
-                <div class="text-[10px] text-app-textMuted font-mono">${item.time} • ${item.protein}g Pro | ${item.carbs}g Cho | ${item.fat}g Fat</div>
+                <div class="text-xs text-app-textMuted font-mono mt-0.5">${item.time} • ${item.protein}g Pro | ${item.carbs}g Cho | ${item.fat}g Fat</div>
               </div>
-              <span class="font-mono font-black text-emerald-400 text-xs shrink-0">${item.calories} kcal</span>
+              <div class="flex items-center gap-2.5 shrink-0">
+                <span class="font-mono font-black text-emerald-400 text-sm">${item.calories} kcal</span>
+                <button onclick="window.deleteSingleFoodItem(${item.originalIndex})" class="w-7 h-7 rounded-lg bg-red-950/40 text-red-400 hover:bg-red-500 hover:text-white border border-red-500/30 flex items-center justify-center transition active:scale-90" title="Elimina questo piatto">
+                  🗑️
+                </button>
+              </div>
             </div>
           `).join('');
 
           actualHTML = `
-            <div class="space-y-2">
-              <div class="space-y-1.5 max-h-40 overflow-y-auto pr-1">
+            <div class="space-y-2.5">
+              <div class="space-y-2 max-h-48 overflow-y-auto pr-1">
                 ${itemsList}
               </div>
-              <div class="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-between">
+              <div class="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-between">
                 <div>
-                  <span class="text-[10px] uppercase font-bold text-emerald-400 block">Totale ${slotName}</span>
-                  <div class="text-[11px] font-mono text-gray-300">
+                  <span class="text-xs uppercase font-bold text-emerald-400 block">Totale ${slotName}</span>
+                  <div class="text-xs sm:text-sm font-mono text-gray-300 mt-0.5">
                     <strong>${sumPro}g</strong> Pro • <strong>${sumCarb}g</strong> Cho • <strong>${sumFat}g</strong> Fat
                   </div>
                 </div>
                 <div class="text-right">
-                  <span class="text-base sm:text-lg font-mono font-black text-emerald-300">${sumKcal}</span>
-                  <span class="text-[10px] font-mono text-emerald-400 block">KCAL EFFETTIVE</span>
+                  <span class="text-xl font-mono font-black text-emerald-300">${sumKcal}</span>
+                  <span class="text-xs font-mono text-emerald-400 block font-bold">KCAL EFFETTIVE</span>
                 </div>
               </div>
             </div>
@@ -1609,34 +1634,34 @@ DOMANDA DELL'ATLETA:
         }
 
         return `
-          <div class="apple-glass-card p-4 rounded-2xl border border-app-border space-y-3">
-            <div class="flex items-center justify-between border-b border-app-border pb-2">
-              <div class="flex items-center gap-2">
-                <span class="text-base">${getSlotEmoji(slotName)}</span>
-                <h4 class="font-display font-black text-sm text-white uppercase tracking-wider">${slotName}</h4>
+          <div class="apple-glass-card p-5 rounded-2xl border border-app-border space-y-3.5">
+            <div class="flex items-center justify-between border-b border-app-border pb-2.5">
+              <div class="flex items-center gap-2.5">
+                <span class="text-lg">${getSlotEmoji(slotName)}</span>
+                <h4 class="font-display font-black text-base text-white uppercase tracking-wider">${slotName}</h4>
               </div>
-              <span class="text-xs font-mono text-teal-400 font-semibold">${planned.time}</span>
+              <span class="text-xs sm:text-sm font-mono text-teal-400 font-semibold">${planned.time}</span>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5 items-stretch">
-              <div class="p-3.5 rounded-2xl bg-app-card border border-app-border flex flex-col justify-between space-y-2">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-stretch">
+              <div class="p-4 rounded-2xl bg-app-card border border-app-border flex flex-col justify-between space-y-2">
                 <div>
-                  <div class="flex items-center justify-between text-[11px] text-app-textMuted uppercase font-bold mb-1">
+                  <div class="flex items-center justify-between text-xs text-app-textMuted uppercase font-bold mb-1.5">
                     <span>💡 Consigliato da Piano</span>
                     <span class="text-emerald-400 font-mono">${planned.target}</span>
                   </div>
-                  <h5 class="text-xs font-bold text-white mb-1">${planned.title}</h5>
-                  <p class="text-xs text-app-textSecondary leading-relaxed">${planned.desc}</p>
+                  <h5 class="text-sm font-bold text-white mb-1">${planned.title}</h5>
+                  <p class="text-xs sm:text-sm text-app-textSecondary leading-relaxed">${planned.desc}</p>
                 </div>
-                <div class="text-[10px] text-teal-400/80 font-mono pt-1 border-t border-app-border/40">
+                <div class="text-xs text-teal-400/80 font-mono pt-1.5 border-t border-app-border/40">
                   Target dietetico fissato
                 </div>
               </div>
 
-              <div class="p-3.5 rounded-2xl bg-app-cardSubtle/60 border border-emerald-500/20 flex flex-col justify-between space-y-2">
-                <div class="flex items-center justify-between text-[11px] uppercase font-bold mb-1">
+              <div class="p-4 rounded-2xl bg-app-cardSubtle/60 border border-emerald-500/20 flex flex-col justify-between space-y-2">
+                <div class="flex items-center justify-between text-xs uppercase font-bold mb-1.5">
                   <span class="text-teal-300">🍽️ Effettivamente Mangiato</span>
-                  <span class="text-[10px] text-app-textMuted font-mono">Dati Scanner / Testo</span>
+                  <span class="text-xs text-app-textMuted font-mono">Dati Scanner / Testo</span>
                 </div>
                 ${actualHTML}
               </div>
@@ -1671,7 +1696,7 @@ DOMANDA DELL'ATLETA:
 
       if (appData.foodLogs.length === 0) {
         container.innerHTML = `
-          <div class="col-span-full text-xs text-app-textMuted py-8 text-center bg-app-card rounded-2xl border border-app-border">
+          <div class="col-span-full text-sm text-app-textMuted py-10 text-center bg-app-card rounded-2xl border border-app-border">
             Nessun pasto registrato oggi. Scrivi cosa hai mangiato o scatta una foto per avviare il calcolo!
           </div>
         `;
@@ -1679,10 +1704,10 @@ DOMANDA DELL'ATLETA:
       }
 
       const groups = {};
-      appData.foodLogs.forEach(item => {
+      appData.foodLogs.forEach((item, originalIndex) => {
         const s = item.slot || "Cena";
         if (!groups[s]) groups[s] = [];
-        groups[s].push(item);
+        groups[s].push({ ...item, originalIndex });
       });
 
       container.innerHTML = Object.keys(groups).map(slot => {
@@ -1693,40 +1718,45 @@ DOMANDA DELL'ATLETA:
         const sumFat = items.reduce((acc, x) => acc + (Number(x.fat) || 0), 0);
 
         const itemsHTML = items.map(m => `
-          <div class="flex items-center justify-between p-2 rounded-xl bg-app-dark border border-app-border text-xs">
+          <div class="flex items-center justify-between p-2.5 rounded-xl bg-app-dark border border-app-border text-sm">
             <div class="truncate pr-2">
-              <span class="font-bold text-white truncate block">${m.dishName}</span>
-              <span class="text-[10px] text-app-textMuted font-mono">${m.time} • ${m.protein}g Pro | ${m.carbs}g Cho | ${m.fat}g Fat</span>
+              <span class="font-bold text-white truncate block text-sm sm:text-base">${m.dishName}</span>
+              <span class="text-xs text-app-textMuted font-mono">${m.time} • ${m.protein}g Pro | ${m.carbs}g Cho | ${m.fat}g Fat</span>
             </div>
-            <span class="font-mono font-bold text-emerald-400 text-xs shrink-0">${m.calories} kcal</span>
+            <div class="flex items-center gap-2 shrink-0">
+              <span class="font-mono font-bold text-emerald-400 text-sm">${m.calories} kcal</span>
+              <button onclick="window.deleteSingleFoodItem(${m.originalIndex})" class="w-7 h-7 rounded-lg bg-red-950/40 text-red-400 hover:bg-red-500 hover:text-white border border-red-500/30 flex items-center justify-center transition active:scale-90" title="Elimina questo piatto">
+                🗑️
+              </button>
+            </div>
           </div>
         `).join('');
 
         return `
-          <div class="apple-glass-card p-4 rounded-2xl border border-app-border space-y-3 flex flex-col justify-between">
-            <div class="space-y-2.5">
-              <div class="flex items-center justify-between border-b border-app-border pb-2">
+          <div class="apple-glass-card p-5 rounded-2xl border border-app-border space-y-4 flex flex-col justify-between">
+            <div class="space-y-3">
+              <div class="flex items-center justify-between border-b border-app-border pb-2.5">
                 <div class="flex items-center gap-2">
-                  <span>${getSlotEmoji(slot)}</span>
-                  <h5 class="font-display font-black text-sm text-white uppercase tracking-wider">${slot}</h5>
+                  <span class="text-lg">${getSlotEmoji(slot)}</span>
+                  <h5 class="font-display font-black text-base text-white uppercase tracking-wider">${slot}</h5>
                 </div>
-                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-bold">${items.length} cibi</span>
+                <span class="text-xs font-mono px-2.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-bold">${items.length} cibi</span>
               </div>
-              <div class="space-y-1.5">
+              <div class="space-y-2">
                 ${itemsHTML}
               </div>
             </div>
 
-            <div class="p-3 rounded-xl bg-gradient-to-r from-emerald-500/15 to-teal-500/15 border border-emerald-500/30 flex items-center justify-between mt-2">
+            <div class="p-3.5 rounded-xl bg-gradient-to-r from-emerald-500/15 to-teal-500/15 border border-emerald-500/30 flex items-center justify-between mt-2">
               <div>
-                <span class="text-[10px] uppercase font-black text-emerald-400 block">Somma Valori ${slot}</span>
-                <div class="text-[11px] font-mono text-gray-200">
+                <span class="text-xs uppercase font-black text-emerald-400 block">Somma Valori ${slot}</span>
+                <div class="text-xs sm:text-sm font-mono text-gray-200 mt-0.5">
                   <strong class="text-white">${sumPro}g</strong> P • <strong class="text-white">${sumCarb}g</strong> C • <strong class="text-white">${sumFat}g</strong> F
                 </div>
               </div>
               <div class="text-right">
-                <span class="text-xl font-mono font-black text-emerald-300">${sumKcal}</span>
-                <span class="text-[9px] font-mono text-emerald-400 uppercase block font-bold">KCAL TOTALI</span>
+                <span class="text-2xl font-mono font-black text-emerald-300">${sumKcal}</span>
+                <span class="text-xs font-mono text-emerald-400 uppercase block font-bold">KCAL TOTALI</span>
               </div>
             </div>
           </div>
@@ -1740,8 +1770,8 @@ DOMANDA DELL'ATLETA:
         const btn = document.getElementById(`btn-${key}`);
         if (!btn) return;
         btn.className = key === dayKey
-          ? 'py-2.5 rounded-xl text-xs font-bold transition bg-emerald-500 text-black shadow-sm'
-          : 'py-2.5 rounded-xl text-xs font-medium transition text-app-textMuted hover:text-white';
+          ? 'py-3 rounded-xl text-sm font-bold transition bg-emerald-500 text-black shadow-sm'
+          : 'py-3 rounded-xl text-sm font-medium transition text-app-textMuted hover:text-white';
       });
       renderWorkoutList(dayKey);
     };
@@ -1765,7 +1795,7 @@ DOMANDA DELL'ATLETA:
         for (let s = 1; s <= ex.sets; s++) {
           const isDone = exState.completedSets && exState.completedSets.includes(s);
           setsHTML += `
-            <button onclick="window.handleGymSetClick('${dayKey}', '${ex.id}', ${s}, ${ex.rest})" class="h-12 flex-1 min-w-[56px] rounded-xl text-xs font-black transition border flex items-center justify-center gap-1 active:scale-95 ${
+            <button onclick="window.handleGymSetClick('${dayKey}', '${ex.id}', ${s}, ${ex.rest})" class="h-13 flex-1 min-w-[60px] rounded-xl text-sm font-black transition border flex items-center justify-center gap-1 active:scale-95 ${
               isDone ? 'bg-emerald-500 text-black border-emerald-400 shadow-md' : 'bg-app-dark border-app-border text-gray-300 hover:border-emerald-500/40'
             }">
               ${isDone ? '✓ ' : ''}S${s}
@@ -1774,42 +1804,42 @@ DOMANDA DELL'ATLETA:
         }
 
         const card = document.createElement('div');
-        card.className = "apple-glass-card p-4 rounded-2xl border border-app-border space-y-3";
+        card.className = "apple-glass-card p-5 rounded-2xl border border-app-border space-y-3.5";
         card.innerHTML = `
           <div>
             <div class="flex items-center justify-between gap-2">
               <div class="flex items-center gap-2">
                 <span class="font-mono text-xs font-black px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">${ex.code}</span>
-                <h3 class="font-display font-bold text-sm text-white">${ex.name}</h3>
+                <h3 class="font-display font-bold text-base text-white">${ex.name}</h3>
               </div>
-              <button onclick="window.startDiscreetTimer(${ex.rest})" class="px-2.5 py-1 rounded-xl bg-app-card border border-app-border text-xs font-mono text-emerald-400 flex items-center gap-1 active:scale-95 transition">
+              <button onclick="window.startDiscreetTimer(${ex.rest})" class="px-3 py-1 rounded-xl bg-app-card border border-app-border text-xs sm:text-sm font-mono text-emerald-400 flex items-center gap-1 active:scale-95 transition">
                 <span>⏱️</span><span>${ex.rest}s</span>
               </button>
             </div>
-            <div class="text-[11px] text-app-textMuted font-mono mt-0.5">${ex.model} • ${ex.sets} × ${ex.reps}</div>
+            <div class="text-xs text-app-textMuted font-mono mt-1">${ex.model} • ${ex.sets} × ${ex.reps}</div>
           </div>
 
-          <div class="bg-app-dark/90 p-3 rounded-xl border border-app-border text-xs space-y-1">
-            <div class="flex items-center justify-between text-teal-400 font-medium text-[11px]">
+          <div class="bg-app-dark/90 p-3.5 rounded-xl border border-app-border text-xs sm:text-sm space-y-1">
+            <div class="flex items-center justify-between text-teal-400 font-medium text-xs sm:text-sm">
               <span>⚙️ Seduta: ${ex.seat}</span>
-              <button onclick="window.toggleCue('${ex.id}')" class="text-app-textMuted hover:text-white underline text-[10px]">Info PT</button>
+              <button onclick="window.toggleCue('${ex.id}')" class="text-app-textMuted hover:text-white underline text-xs">Info PT</button>
             </div>
-            <p id="cue-${ex.id}" class="hidden text-app-textSecondary text-[11px] leading-relaxed pt-1.5 border-t border-app-border/40">${ex.cue}</p>
+            <p id="cue-${ex.id}" class="hidden text-app-textSecondary text-xs sm:text-sm leading-relaxed pt-1.5 border-t border-app-border/40">${ex.cue}</p>
           </div>
 
-          <div class="space-y-2">
+          <div class="space-y-2.5">
             <div class="flex items-center justify-between gap-2">
-              ${isCardio ? `<span class="text-xs font-mono text-teal-400 font-bold">Livello 5 (Skillrow)</span>` : `
+              ${isCardio ? `<span class="text-sm font-mono text-teal-400 font-bold">Livello 5 (Skillrow)</span>` : `
                 <div class="flex items-center gap-1 bg-app-dark p-1 rounded-xl border border-app-border">
-                  <button onclick="window.adjustWeight('${dayKey}', '${ex.id}', -2.5)" class="w-8 h-8 rounded-lg bg-app-card text-white font-black text-sm active:scale-90 transition">-</button>
-                  <div class="flex items-center px-1.5">
-                    <input type="number" step="0.5" inputmode="decimal" value="${currentKg}" onchange="window.saveWeightLoadDirect('${dayKey}', '${ex.id}', this.value)" class="w-14 text-center bg-transparent text-emerald-400 font-display font-black text-sm focus:outline-none">
-                    <span class="text-[10px] text-app-textMuted font-bold ml-0.5">kg</span>
+                  <button onclick="window.adjustWeight('${dayKey}', '${ex.id}', -2.5)" class="w-9 h-9 rounded-lg bg-app-card text-white font-black text-base active:scale-90 transition">-</button>
+                  <div class="flex items-center px-2">
+                    <input type="number" step="0.5" inputmode="decimal" value="${currentKg}" onchange="window.saveWeightLoadDirect('${dayKey}', '${ex.id}', this.value)" class="w-16 text-center bg-transparent text-emerald-400 font-display font-black text-base focus:outline-none">
+                    <span class="text-xs text-app-textMuted font-bold ml-0.5">kg</span>
                   </div>
-                  <button onclick="window.adjustWeight('${dayKey}', '${ex.id}', 2.5)" class="w-8 h-8 rounded-lg bg-app-card text-white font-black text-sm active:scale-90 transition">+</button>
+                  <button onclick="window.adjustWeight('${dayKey}', '${ex.id}', 2.5)" class="w-9 h-9 rounded-lg bg-app-card text-white font-black text-base active:scale-90 transition">+</button>
                 </div>
               `}
-              <span class="text-[11px] text-app-textMuted font-medium">Serie completata:</span>
+              <span class="text-xs sm:text-sm text-app-textMuted font-medium">Serie completata:</span>
             </div>
             <div class="flex gap-2 w-full overflow-x-auto pb-0.5">${setsHTML}</div>
           </div>
@@ -1912,8 +1942,8 @@ DOMANDA DELL'ATLETA:
 
           textTarget.innerHTML = `
             <div class="font-bold text-white">${res.name}</div>
-            <div class="text-[10px] text-teal-300 font-mono">${res.calories} kcal • ${res.carbs}g carbo • +${res.hydrationLiters}L idratazione</div>
-            <div class="text-[10px] text-app-textMuted">${res.advice}</div>
+            <div class="text-xs font-mono text-teal-300">${res.calories} kcal • ${res.carbs}g carbo • +${res.hydrationLiters}L idratazione</div>
+            <div class="text-xs text-app-textMuted">${res.advice}</div>
           `;
 
           if (res.hydrationLiters > 0) {
@@ -2035,12 +2065,12 @@ DOMANDA DELL'ATLETA:
       const btn2 = document.getElementById('btn-fraction-block2');
 
       if (fractionKey === 'block1') {
-        btn1.className = 'py-2.5 px-3 rounded-xl text-xs font-black transition bg-emerald-500 text-black shadow-sm';
-        btn2.className = 'py-2.5 px-3 rounded-xl text-xs font-semibold transition text-app-textMuted hover:text-white';
+        btn1.className = 'py-3 px-3 rounded-xl text-sm font-black transition bg-emerald-500 text-black shadow-sm';
+        btn2.className = 'py-3 px-3 rounded-xl text-sm font-semibold transition text-app-textMuted hover:text-white';
         currentSelectedDay = 'Lunedì';
       } else {
-        btn2.className = 'py-2.5 px-3 rounded-xl text-xs font-black transition bg-emerald-500 text-black shadow-sm';
-        btn1.className = 'py-2.5 px-3 rounded-xl text-xs font-semibold transition text-app-textMuted hover:text-white';
+        btn2.className = 'py-3 px-3 rounded-xl text-sm font-black transition bg-emerald-500 text-black shadow-sm';
+        btn1.className = 'py-3 px-3 rounded-xl text-sm font-semibold transition text-app-textMuted hover:text-white';
         currentSelectedDay = 'Venerdì';
       }
 
@@ -2055,7 +2085,7 @@ DOMANDA DELL'ATLETA:
       const days = Object.keys(data.days);
 
       container.innerHTML = days.map(d => `
-        <button onclick="window.selectDay('${d}')" class="whitespace-nowrap px-4 py-2 rounded-xl text-xs font-bold transition ${
+        <button onclick="window.selectDay('${d}')" class="whitespace-nowrap px-4 py-2.5 rounded-xl text-sm font-bold transition ${
           d === currentSelectedDay 
             ? 'bg-emerald-500 text-black shadow-sm' 
             : 'bg-app-card text-app-textMuted hover:text-white border border-app-border'
@@ -2084,14 +2114,14 @@ DOMANDA DELL'ATLETA:
         if (isChecked) currentSum += item.price;
 
         html += `
-          <div onclick="window.toggleLidlCheck(${index})" class="flex items-center justify-between p-2 rounded-xl bg-app-card border border-app-border cursor-pointer hover:border-emerald-500/30 transition">
-            <div class="flex items-center gap-2">
-              <div class="w-4 h-4 rounded border flex items-center justify-center text-[10px] ${
+          <div onclick="window.toggleLidlCheck(${index})" class="flex items-center justify-between p-2.5 rounded-xl bg-app-card border border-app-border cursor-pointer hover:border-emerald-500/30 transition text-sm">
+            <div class="flex items-center gap-2.5">
+              <div class="w-4 h-4 rounded border flex items-center justify-center text-xs ${
                 isChecked ? 'bg-emerald-500 border-emerald-500 text-black font-bold' : 'border-app-border'
               }">${isChecked ? '✓' : ''}</div>
-              <span class="text-xs ${isChecked ? 'line-through text-app-textMuted' : 'text-gray-200'}">${item.name}</span>
+              <span class="${isChecked ? 'line-through text-app-textMuted' : 'text-gray-200'}">${item.name}</span>
             </div>
-            <span class="text-xs font-mono font-bold text-emerald-400">~${item.price.toFixed(2)}€</span>
+            <span class="font-mono font-bold text-emerald-400">~${item.price.toFixed(2)}€</span>
           </div>
         `;
       });
@@ -2195,17 +2225,17 @@ DOMANDA DELL'ATLETA:
       if (!container) return;
 
       if (appData.walkLogs.length === 0) {
-        container.innerHTML = `<div class="col-span-full text-xs text-app-textMuted text-center py-4 bg-app-card rounded-xl border border-app-border">Nessuna camminata registrata.</div>`;
+        container.innerHTML = `<div class="col-span-full text-sm text-app-textMuted text-center py-6 bg-app-card rounded-xl border border-app-border">Nessuna camminata registrata.</div>`;
         return;
       }
 
       container.innerHTML = appData.walkLogs.map(w => `
-        <div class="p-3.5 rounded-xl bg-app-card border border-app-border text-xs space-y-1.5">
+        <div class="p-4 rounded-xl bg-app-card border border-app-border text-sm space-y-2">
           <div class="flex items-center justify-between">
             <span class="font-bold text-white">👟 ${w.km} km (${w.steps.toLocaleString('it-IT')} passi)</span>
             <span class="font-mono font-bold text-amber-400">${w.kcal} kcal</span>
           </div>
-          <div class="flex items-center justify-between text-[11px] text-app-textSecondary">
+          <div class="flex items-center justify-between text-xs text-app-textSecondary">
             <span class="text-app-textMuted">${w.date}</span>
             <div class="flex items-center gap-2 font-mono">
               ${w.bpm ? `<span class="text-red-300">❤️ ${w.bpm} bpm</span>` : ''}
@@ -2244,7 +2274,7 @@ DOMANDA DELL'ATLETA:
       const val = document.getElementById('userApiKeyInput').value.trim();
       appData.userApiKey = val;
       localStorage.setItem('icon_gemini_key', val);
-      document.getElementById('apiStatusDot').className = val ? "w-2.5 h-2.5 rounded-full bg-emerald-400" : "w-2.5 h-2.5 rounded-full bg-amber-500";
+      document.getElementById('apiStatusDot').className = val ? "w-3 h-3 rounded-full bg-emerald-400" : "w-3 h-3 rounded-full bg-amber-500";
       window.closeApiKeyModal();
       triggerCloudSave();
       showNotification("Chiave salvata nel Cloud!");
@@ -2255,7 +2285,7 @@ DOMANDA DELL'ATLETA:
       if (old) old.remove();
       const toast = document.createElement('div');
       toast.id = 'toast';
-      toast.className = `fixed bottom-20 left-1/2 -translate-x-1/2 z-50 px-4 py-2.5 rounded-2xl text-xs font-bold border transition duration-300 shadow-xl flex items-center gap-2 ${
+      toast.className = `fixed bottom-20 left-1/2 -translate-x-1/2 z-50 px-5 py-3 rounded-2xl text-sm font-bold border transition duration-300 shadow-xl flex items-center gap-2.5 ${
         isAlert ? 'bg-red-950 text-red-200 border-red-500/40' : 'bg-app-card text-emerald-400 border-emerald-500/30'
       }`;
       toast.innerHTML = `<span>${isAlert ? '⚠️' : '✓'}</span><span>${msg}</span>`;
