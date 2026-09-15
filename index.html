@@ -11,7 +11,6 @@
   <meta name="apple-mobile-web-app-title" content="ICON RECOMP">
   <meta name="theme-color" content="#080a0d">
 
-  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800;900&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
@@ -37,7 +36,7 @@
             }
           },
           fontFamily: {
-            sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+            sans: ['Inter', '-apple-system', 'sans-serif'],
             display: ['Plus Jakarta Sans', '-apple-system', 'sans-serif'],
             mono: ['JetBrains Mono', 'monospace']
           }
@@ -58,12 +57,6 @@
     ::-webkit-scrollbar-track { background: #080a0d; }
     ::-webkit-scrollbar-thumb { background: #1b222e; border-radius: 9999px; }
 
-    .apple-glass {
-      background: rgba(20, 25, 34, 0.88);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-    }
     .apple-glass-card {
       background: rgba(20, 25, 34, 0.75);
       backdrop-filter: blur(16px);
@@ -77,7 +70,7 @@
       border-top: 1px solid rgba(255, 255, 255, 0.08);
     }
     .water-droplet-glow {
-      box-shadow: 0 0 16px rgba(45, 212, 191, 0.45), inset 0 0 8px rgba(45, 212, 191, 0.3);
+      box-shadow: 0 0 16px rgba(45, 212, 191, 0.45);
       border-color: #2dd4bf !important;
       background: rgba(20, 184, 166, 0.22) !important;
     }
@@ -103,51 +96,42 @@
   </style>
 </head>
 
-<body class="font-sans min-h-screen pb-32 selection:bg-emerald-500/30 selection:text-white">
+<body class="font-sans min-h-screen pb-32">
 
-  <!-- OVERLAY AUTENTICAZIONE GOOGLE FIREBASE -->
   <div id="loginOverlay" class="login-overlay hidden">
     <div class="max-w-md w-11/12 p-8 rounded-3xl bg-app-card border border-app-border text-center space-y-5 shadow-2xl">
-      <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-700 flex items-center justify-center text-black font-display font-black text-2xl shadow-md">
+      <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-700 flex items-center justify-center text-black font-display font-black text-2xl">
         IR
       </div>
       <div>
         <h2 class="font-display font-black text-2xl text-white">ICON RECOMP</h2>
-        <p class="text-sm text-app-textMuted mt-2 leading-relaxed">
-          Accedi con Google per sincronizzare carichi, dieta e deficit in tempo reale sul Cloud Firebase.
+        <p class="text-sm text-app-textMuted mt-2">
+          Accedi con Google per sincronizzare carichi, dieta e deficit sul tuo profilo Cloud.
         </p>
       </div>
-      <button id="loginBtn" onclick="window.handleGoogleLogin()" class="w-full py-4 rounded-2xl bg-white hover:bg-gray-100 text-black font-bold text-sm flex items-center justify-center gap-3 transition active:scale-95 shadow-md cursor-pointer">
-        <svg class="w-5 h-5" viewBox="0 0 24 24">
-          <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-          <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-          <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
-          <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
-        </svg>
+      <button id="loginBtn" onclick="window.handleGoogleLogin()" class="w-full py-4 rounded-2xl bg-white hover:bg-gray-100 text-black font-bold text-sm flex items-center justify-center gap-3 transition active:scale-95 shadow-md">
         <span id="loginBtnLabel">Accedi con Google</span>
       </button>
       <div id="loginStatusMsg" class="text-xs text-red-400 hidden"></div>
     </div>
   </div>
 
-  <!-- Sticky Top Rest Bar -->
-  <div id="activeTimerBar" class="hidden sticky top-0 z-50 bg-gradient-to-r from-emerald-500 to-teal-400 text-black px-6 py-3 shadow-2xl flex items-center justify-between transition-all">
+  <div id="activeTimerBar" class="hidden sticky top-0 z-50 bg-gradient-to-r from-emerald-500 to-teal-400 text-black px-6 py-3 shadow-2xl flex items-center justify-between">
     <div class="flex items-center gap-2.5">
       <span class="inline-block w-3 h-3 rounded-full bg-black animate-ping"></span>
       <span class="text-sm font-black uppercase tracking-wider font-display">Recupero:</span>
       <span id="activeTimerValue" class="text-2xl font-mono font-black ml-1">01:30</span>
     </div>
     <div class="flex items-center gap-2">
-      <button onclick="window.addTimerSeconds(15)" class="px-3 py-1.5 bg-black/15 active:scale-90 hover:bg-black/25 rounded-lg text-xs font-bold transition">+15s</button>
-      <button onclick="window.stopDiscreetTimer()" class="px-3.5 py-1.5 bg-black text-emerald-400 active:scale-90 rounded-lg text-xs font-bold transition">Salta</button>
+      <button onclick="window.addTimerSeconds(15)" class="px-3 py-1.5 bg-black/15 active:scale-90 rounded-lg text-xs font-bold">+15s</button>
+      <button onclick="window.stopDiscreetTimer()" class="px-3.5 py-1.5 bg-black text-emerald-400 active:scale-90 rounded-lg text-xs font-bold">Salta</button>
     </div>
   </div>
 
-  <!-- Header Responsive Wide -->
   <header class="bg-app-black/90 backdrop-blur-xl border-b border-app-border px-4 py-4 sticky z-40 top-0">
     <div class="max-w-7xl mx-auto flex items-center justify-between">
       <div class="flex items-center gap-3.5">
-        <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-700 flex items-center justify-center text-black font-display font-black text-lg shadow-md border border-emerald-400/30">
+        <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-700 flex items-center justify-center text-black font-display font-black text-lg">
           IR
         </div>
         <div>
@@ -172,26 +156,23 @@
       </div>
 
       <div class="flex items-center gap-3">
-        <button onclick="window.toggleTimerModal()" class="px-3.5 py-2 rounded-xl bg-app-card border border-app-border text-sm flex items-center gap-2 text-emerald-400 font-mono active:scale-95 transition">
+        <button onclick="window.toggleTimerModal()" class="px-3.5 py-2 rounded-xl bg-app-card border border-app-border text-sm flex items-center gap-2 text-emerald-400 font-mono">
           <span>⏱️</span>
           <span id="headerTimerReadout">00:00</span>
         </button>
-        <button onclick="window.openApiKeyModal()" class="w-10 h-10 rounded-xl bg-app-card border border-app-border text-sm flex items-center justify-center text-gray-300 transition hover:border-emerald-500/40" title="Configura Gemini API">
+        <button onclick="window.openApiKeyModal()" class="w-10 h-10 rounded-xl bg-app-card border border-app-border text-sm flex items-center justify-center text-gray-300" title="Configura Gemini API">
           <span id="apiStatusDot" class="w-3 h-3 rounded-full bg-emerald-400"></span>
         </button>
-        <button id="headerLogoutBtn" class="w-10 h-10 rounded-xl bg-app-card border border-app-border text-sm flex items-center justify-center text-gray-400 hover:text-red-400 transition" title="Esci dall'account">
+        <button id="headerLogoutBtn" class="w-10 h-10 rounded-xl bg-app-card border border-app-border text-sm flex items-center justify-center text-gray-400 hover:text-red-400" title="Esci">
           ✕
         </button>
       </div>
     </div>
   </header>
 
-  <!-- Container Principale -->
   <main class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
 
-    <!-- ============================================================= -->
-    <!-- TAB 1: SCHEDA PALESTRA                                        -->
-    <!-- ============================================================= -->
+    <!-- TAB 1: SCHEDA PALESTRA -->
     <section id="view-workout" class="tab-view space-y-6">
       <div class="grid grid-cols-4 gap-2.5 p-1.5 bg-app-dark rounded-2xl border border-app-border max-w-2xl mx-auto">
         <button onclick="window.switchWorkoutDay('dayA')" id="btn-dayA" class="py-3 rounded-xl text-sm font-bold transition bg-emerald-500 text-black shadow-sm">Giorno A</button>
@@ -201,7 +182,6 @@
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
-        <!-- Borraccia Live Floor -->
         <div class="apple-glass-card p-5 rounded-2xl border border-teal-500/30 bg-teal-500/[0.03] space-y-4">
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-2.5">
@@ -217,28 +197,18 @@
           </div>
 
           <div class="grid grid-cols-2 gap-3">
-            <button onclick="window.addWaterLiters(0.5)" class="py-3.5 px-3 rounded-xl bg-gradient-to-r from-teal-500/20 to-emerald-500/20 hover:from-teal-500/30 hover:to-emerald-500/30 border border-teal-500/40 text-teal-300 font-bold text-sm flex items-center justify-center gap-2 active:scale-95 transition">
+            <button onclick="window.addWaterLiters(0.5)" class="py-3.5 px-3 rounded-xl bg-gradient-to-r from-teal-500/20 to-emerald-500/20 text-teal-300 font-bold text-sm flex items-center justify-center gap-2 active:scale-95 transition">
               <span class="text-lg">🚰</span>
               <span>+1 Borraccia (0.5L)</span>
             </button>
             <label class="cursor-pointer py-3.5 px-3 rounded-xl bg-app-card hover:bg-app-cardSubtle border border-app-border text-gray-200 font-semibold text-sm flex items-center justify-center gap-2 active:scale-95 transition">
               <span class="text-lg">📸</span>
-              <span>Scan Drink Palestra</span>
+              <span>Scan Drink</span>
               <input type="file" id="gymDrinkPhotoInput" accept="image/*" class="hidden" onchange="window.processGymDrinkPhoto(event)">
             </label>
           </div>
-
-          <div id="gymDrinkResultBox" class="hidden p-3.5 rounded-xl bg-app-dark border border-teal-500/30 space-y-2">
-            <div class="flex items-center gap-3">
-              <img id="gymDrinkPreviewImg" src="" alt="Drink" class="w-16 h-16 rounded-lg object-cover border border-app-border">
-              <div id="gymDrinkAnalysisText" class="text-sm text-app-textSecondary space-y-0.5">
-                <div class="text-teal-400 font-bold">Analisi drink in corso...</div>
-              </div>
-            </div>
-          </div>
         </div>
 
-        <!-- Calorie Bruciate Palestra con Sincronismo Deficit Reale -->
         <div class="apple-glass-card p-5 rounded-2xl border border-amber-500/30 bg-amber-500/[0.03] space-y-4">
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-2.5">
@@ -249,11 +219,11 @@
               </div>
             </div>
             <div class="flex items-center gap-2">
-              <label class="cursor-pointer px-3 py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 text-xs font-bold flex items-center gap-1.5 active:scale-95 transition" title="Scatta foto allo schermo dell'orologio">
+              <label class="cursor-pointer px-3 py-1.5 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/40 text-xs font-bold flex items-center gap-1.5 transition">
                 <span>📸 Scan Orologio</span>
                 <input type="file" accept="image/*" class="hidden" onchange="window.scanWatchCalories(event)">
               </label>
-              <button onclick="window.resetBurnedCalories()" class="text-xs text-app-textMuted hover:text-amber-400 px-2.5 py-1.5 rounded-lg bg-app-dark border border-app-border transition">
+              <button onclick="window.resetBurnedCalories()" class="text-xs text-app-textMuted hover:text-amber-400 px-2.5 py-1.5 rounded-lg bg-app-dark border border-app-border">
                 Azzera ↺
               </button>
             </div>
@@ -279,7 +249,7 @@
             <button onclick="window.addBurnedCalories(200)" class="py-2.5 rounded-xl bg-app-card border border-app-border text-xs font-bold text-gray-200 active:scale-95 transition">+200</button>
             <button onclick="window.addBurnedCalories(350)" class="py-2.5 rounded-xl bg-app-card border border-app-border text-xs font-bold text-amber-300 active:scale-95 transition">+350</button>
             <div class="flex items-center gap-1">
-              <input type="number" id="customKcalInput" placeholder="420" inputmode="numeric" class="w-full bg-app-dark border border-app-border rounded-xl px-2 py-2 text-xs text-center font-mono font-bold text-amber-400 focus:outline-none">
+              <input type="number" id="customKcalInput" placeholder="420" class="w-full bg-app-dark border border-app-border rounded-xl px-2 py-2 text-xs text-center font-mono font-bold text-amber-400 focus:outline-none">
               <button onclick="window.applyCustomKcal()" class="px-2.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-black text-xs active:scale-95 transition">OK</button>
             </div>
           </div>
@@ -291,7 +261,7 @@
           <h2 id="workoutTitle" class="text-base sm:text-lg font-display font-bold text-white leading-snug">Giorno A: Petto, Deltoidi & Tricipiti</h2>
           <div id="workoutSubtitle" class="text-xs sm:text-sm text-app-textMuted mt-0.5">Pausa Pranzo 13:00 - 15:00 • 50 min Technogym</div>
         </div>
-        <button onclick="window.resetCurrentDayChecks()" class="px-3.5 py-2 rounded-xl bg-app-card hover:bg-red-950/40 border border-app-border text-xs sm:text-sm text-app-textMuted hover:text-red-300 transition">
+        <button onclick="window.resetCurrentDayChecks()" class="px-3.5 py-2 rounded-xl bg-app-card hover:bg-red-950/40 border border-app-border text-xs sm:text-sm text-app-textMuted hover:text-red-300">
           Azzera Spunte
         </button>
       </div>
@@ -299,61 +269,7 @@
       <div id="exerciseList" class="grid grid-cols-1 lg:grid-cols-2 gap-4"></div>
     </section>
 
-    <!-- TAB: CAMMINATA -->
-    <section id="view-walk" class="tab-view hidden space-y-6">
-      <div class="apple-glass-card p-5 sm:p-6 rounded-2xl border border-teal-500/30 bg-teal-500/[0.03] space-y-3">
-        <div class="flex items-center justify-between">
-          <div class="flex items-center gap-3.5">
-            <div class="w-12 h-12 rounded-xl bg-teal-500/15 border border-teal-500/30 flex items-center justify-center text-2xl">👟</div>
-            <div>
-              <div class="flex items-center gap-2">
-                <h2 class="text-lg font-display font-black text-white leading-tight">Camminata & Recupero Attivo</h2>
-                <span class="text-xs uppercase font-bold px-2 py-0.5 rounded bg-teal-500/20 text-teal-300">NEAT • Giorni OFF</span>
-              </div>
-              <p class="text-xs sm:text-sm text-app-textMuted mt-0.5">Passeggiata di coppia • Basso impatto articolare</p>
-            </div>
-          </div>
-          <span class="text-xs sm:text-sm font-mono font-bold text-teal-400 bg-teal-500/10 px-3 py-1.5 rounded-lg border border-teal-500/20">Zona 2 Cardio</span>
-        </div>
-      </div>
-
-      <div class="apple-glass-card p-6 rounded-2xl border border-app-border space-y-5">
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
-          <div class="p-4 rounded-xl bg-app-card border border-app-border space-y-1.5">
-            <label class="text-xs uppercase font-bold text-app-textMuted block">Distanza (km)</label>
-            <input type="number" id="inputWalkKm" step="0.1" inputmode="decimal" placeholder="5.2" oninput="window.updateEstimatedSteps()" class="w-full bg-app-dark border border-app-border rounded-lg px-3 py-2 text-base font-mono font-bold text-teal-300 text-center focus:outline-none">
-            <div id="displayEstimatedSteps" class="text-xs text-teal-400/80 font-mono text-center">~0 passi</div>
-          </div>
-          <div class="p-4 rounded-xl bg-app-card border border-app-border space-y-1.5">
-            <label class="text-xs uppercase font-bold text-app-textMuted block">Calorie (kcal)</label>
-            <input type="number" id="inputWalkKcal" inputmode="numeric" placeholder="290" class="w-full bg-app-dark border border-app-border rounded-lg px-3 py-2 text-base font-mono font-bold text-amber-300 text-center focus:outline-none">
-          </div>
-          <div class="p-4 rounded-xl bg-app-card border border-app-border space-y-1.5">
-            <label class="text-xs uppercase font-bold text-app-textMuted block">BPM Medi</label>
-            <input type="number" id="inputWalkBpm" inputmode="numeric" placeholder="110" oninput="window.updateHeartRateZoneBadge()" class="w-full bg-app-dark border border-red-400 rounded-lg px-3 py-2 text-base font-mono font-bold text-red-300 text-center focus:outline-none">
-            <div id="bpmZoneStatus" class="text-xs text-gray-400 font-mono text-center">Zona 2</div>
-          </div>
-          <div class="p-4 rounded-xl bg-app-card border border-teal-500/30 bg-teal-500/[0.04] space-y-1.5">
-            <label class="text-xs uppercase font-bold text-teal-300 block">Acqua (L)</label>
-            <input type="number" id="inputWalkWater" step="0.1" inputmode="decimal" placeholder="0.5" class="w-full bg-app-dark border border-teal-500/40 rounded-lg px-3 py-2 text-base font-mono font-bold text-teal-200 text-center focus:outline-none">
-          </div>
-        </div>
-
-        <button onclick="window.saveWalkSession()" class="w-full py-4 rounded-xl bg-gradient-to-r from-teal-500 to-emerald-500 active:scale-95 text-black font-black text-sm transition shadow-lg">
-          Salva Camminata & Sincronizza Cloud
-        </button>
-      </div>
-
-      <div class="apple-glass-card p-6 rounded-2xl space-y-4">
-        <div class="flex items-center justify-between">
-          <h4 class="font-display font-black text-sm uppercase tracking-wider text-app-textMuted">Storico Camminate</h4>
-          <button onclick="window.clearWalkLogs()" class="text-xs text-app-textMuted hover:text-red-400 transition">Azzera</button>
-        </div>
-        <div id="walkLogContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5"></div>
-      </div>
-    </section>
-
-    <!-- TAB 2: ALIMENTAZIONE & BILANCIO COMPLETO RIPOSO/ATTIVE -->
+    <!-- TAB 2: ALIMENTAZIONE & DIETA -->
     <section id="view-nutrition" class="tab-view hidden space-y-7">
       <div class="apple-glass-card p-6 rounded-3xl border border-emerald-500/30 bg-gradient-to-br from-emerald-500/[0.05] via-teal-500/[0.02] to-transparent space-y-5">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-app-border/60 pb-3">
@@ -409,8 +325,8 @@
               <span class="text-xs text-app-textMuted">Metabolismo basale giornaliero</span>
             </div>
             <div class="flex items-center gap-2">
-              <input type="number" id="nutritionRestingInput" placeholder="es. 1950" class="w-28 bg-app-card border border-app-border rounded-xl px-3 py-2 text-sm text-center font-mono font-bold text-teal-300 focus:outline-none focus:border-teal-400">
-              <button onclick="window.updateRestingFromNutrition()" class="px-4 py-2 rounded-xl bg-teal-500 hover:bg-teal-400 text-black font-bold text-sm active:scale-95 transition">
+              <input type="number" id="nutritionRestingInput" placeholder="es. 1950" class="w-28 bg-app-card border border-app-border rounded-xl px-3 py-2 text-sm text-center font-mono font-bold text-teal-300 focus:outline-none">
+              <button onclick="window.updateRestingFromNutrition()" class="px-4 py-2 rounded-xl bg-teal-500 hover:bg-teal-400 text-black font-bold text-sm">
                 Salva Riposo
               </button>
             </div>
@@ -422,20 +338,15 @@
               <span class="text-xs text-app-textMuted">Dispendio da smartwatch</span>
             </div>
             <div class="flex items-center gap-2">
-              <input type="number" id="nutritionBurnedInput" placeholder="es. 450" class="w-28 bg-app-card border border-app-border rounded-xl px-3 py-2 text-sm text-center font-mono font-bold text-amber-300 focus:outline-none focus:border-amber-400">
-              <button onclick="window.updateBurnedFromNutrition()" class="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-bold text-sm active:scale-95 transition">
+              <input type="number" id="nutritionBurnedInput" placeholder="es. 450" class="w-28 bg-app-card border border-app-border rounded-xl px-3 py-2 text-sm text-center font-mono font-bold text-amber-300 focus:outline-none">
+              <button onclick="window.updateBurnedFromNutrition()" class="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-bold text-sm">
                 Salva Attive
               </button>
-              <label class="cursor-pointer px-3.5 py-2 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 text-sm font-bold flex items-center gap-1.5 active:scale-95 transition" title="Scatta foto allo schermo dell'orologio">
-                <span>📸 Scan Orologio</span>
-                <input type="file" accept="image/*" class="hidden" onchange="window.scanWatchCalories(event)">
-              </label>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- SEZIONE ACQUA AVANZATA -->
       <div class="apple-glass-card p-6 sm:p-7 rounded-3xl border border-teal-500/30 bg-gradient-to-br from-teal-500/[0.06] to-transparent space-y-5">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-app-border/60 pb-3">
           <div class="flex items-center gap-3">
@@ -444,7 +355,7 @@
             </div>
             <div>
               <h3 class="font-display font-black text-lg text-white">Idratazione Giornaliera & Creatina</h3>
-              <p class="text-xs sm:text-sm text-app-textMuted">Supporto muscolare (Target: 3.5 Litri al giorno)</p>
+              <p class="text-xs sm:text-sm text-app-textMuted">Target: 3.5 Litri al giorno</p>
             </div>
           </div>
           <div class="flex items-baseline gap-2 self-end sm:self-auto">
@@ -453,85 +364,41 @@
           </div>
         </div>
 
-        <div class="space-y-2">
-          <div class="flex justify-between text-xs sm:text-sm font-mono">
-            <span class="text-app-textMuted">Progresso Idrico</span>
-            <span id="waterPercentDisplay" class="text-teal-400 font-bold">0%</span>
-          </div>
-          <div class="w-full h-3.5 rounded-full bg-app-dark overflow-hidden border border-app-border p-0.5">
-            <div id="waterProgressBar" class="h-full rounded-full bg-gradient-to-r from-teal-500 to-emerald-400 transition-all duration-300" style="width: 0%"></div>
-          </div>
-        </div>
-
         <div class="grid grid-cols-2 sm:grid-cols-5 gap-3 pt-1">
-          <button onclick="window.addWaterLiters(0.5)" class="py-3.5 px-3 rounded-2xl bg-teal-500 hover:bg-teal-400 text-black font-black text-sm flex items-center justify-center gap-2 active:scale-95 transition shadow-lg">
-            <span>💧</span>
+          <button onclick="window.addWaterLiters(0.5)" class="py-3.5 px-3 rounded-2xl bg-teal-500 hover:bg-teal-400 text-black font-black text-sm active:scale-95 transition shadow-lg">
             <span>+0.5 L (Borraccia)</span>
           </button>
-          <button onclick="window.addWaterLiters(0.25)" class="py-3.5 px-3 rounded-2xl bg-app-card hover:bg-app-cardSubtle border border-teal-500/40 text-teal-300 font-bold text-sm flex items-center justify-center gap-2 active:scale-95 transition">
-            <span>🥛</span>
-            <span>+0.25 L (Bicchiere)</span>
+          <button onclick="window.addWaterLiters(0.25)" class="py-3.5 px-3 rounded-2xl bg-app-card border border-teal-500/40 text-teal-300 font-bold text-sm active:scale-95 transition">
+            <span>+0.25 L</span>
           </button>
-          <button onclick="window.addWaterLiters(1.0)" class="py-3.5 px-3 rounded-2xl bg-app-card hover:bg-app-cardSubtle border border-teal-500/40 text-teal-300 font-bold text-sm flex items-center justify-center gap-2 active:scale-95 transition">
-            <span>🍶</span>
-            <span>+1.0 L (Bottiglia)</span>
+          <button onclick="window.addWaterLiters(1.0)" class="py-3.5 px-3 rounded-2xl bg-app-card border border-teal-500/40 text-teal-300 font-bold text-sm active:scale-95 transition">
+            <span>+1.0 L</span>
           </button>
-          <button onclick="window.addWaterLiters(-0.5)" class="py-3.5 px-3 rounded-2xl bg-app-card hover:bg-red-950/30 border border-app-border text-gray-300 hover:text-red-300 font-semibold text-sm flex items-center justify-center gap-1 active:scale-95 transition">
-            <span>↩️</span>
+          <button onclick="window.addWaterLiters(-0.5)" class="py-3.5 px-3 rounded-2xl bg-app-card border border-app-border text-gray-300 hover:text-red-300 font-semibold text-sm active:scale-95 transition">
             <span>-0.5 L</span>
           </button>
-          <button onclick="window.resetWaterLiters()" class="py-3.5 px-3 rounded-2xl bg-app-card hover:bg-red-950/40 border border-red-500/30 text-red-300 font-semibold text-sm flex items-center justify-center gap-1 active:scale-95 transition">
+          <button onclick="window.resetWaterLiters()" class="py-3.5 px-3 rounded-2xl bg-app-card border border-red-500/30 text-red-300 font-semibold text-sm active:scale-95 transition">
             <span>Azzera</span>
           </button>
         </div>
 
         <div class="pt-1">
-          <span class="text-xs uppercase font-bold text-app-textMuted block mb-2 font-mono">Dosi da 500ml completate:</span>
           <div class="grid grid-cols-7 gap-2.5" id="waterTrackerGrid"></div>
         </div>
       </div>
 
-      <!-- Frazione Settimanale -->
-      <div class="apple-glass-card p-2 rounded-2xl border border-app-border max-w-xl mx-auto">
-        <div class="grid grid-cols-2 gap-1.5 text-center font-display">
-          <button onclick="window.selectWeekFraction('block1')" id="btn-fraction-block1" class="py-3 px-3 rounded-xl text-sm font-black transition bg-emerald-500 text-black shadow-sm">
-            Frazione 1: Lun - Gio (~23€)
-          </button>
-          <button onclick="window.selectWeekFraction('block2')" id="btn-fraction-block2" class="py-3 px-3 rounded-xl text-sm font-semibold transition text-app-textMuted hover:text-white">
-            Frazione 2: Ven - Dom (~22€)
-          </button>
-        </div>
-      </div>
-
-      <div id="daySelectorContainer" class="flex gap-2.5 overflow-x-auto pb-1 no-scrollbar justify-center"></div>
-
-      <!-- SCHEDA DIETA A DOPPIA COLONNA -->
       <div class="space-y-5">
         <div class="flex items-center justify-between px-1">
           <div class="flex items-center gap-3">
             <h3 id="currentDayTitle" class="font-display font-black text-xl text-white">Lunedì</h3>
             <span id="currentDayBadge" class="text-xs sm:text-sm font-bold px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Giorno ON</span>
           </div>
-          <span class="text-xs sm:text-sm font-mono text-emerald-400 font-bold">Piano Deficit Ricomposizione</span>
         </div>
-
         <div id="dualColumnMealGrid" class="space-y-4"></div>
-      </div>
-
-      <!-- Spesa Lidl Grid -->
-      <div class="apple-glass-card p-6 rounded-2xl border border-app-border space-y-4">
-        <div class="flex items-center justify-between">
-          <div class="flex items-center gap-2">
-            <span class="text-xl">🛒</span>
-            <h4 id="lidlCardTitle" class="font-display font-bold text-sm sm:text-base uppercase tracking-wider text-white">Spesa Lidl Essenziale</h4>
-          </div>
-          <span id="lidlFractionTotalDisplay" class="font-mono font-bold text-sm text-emerald-400 bg-emerald-500/10 px-3 py-1.5 rounded-lg border border-emerald-500/20">0.00 €</span>
-        </div>
-        <div id="lidlItemsContainer" class="space-y-2"></div>
       </div>
     </section>
 
-    <!-- TAB 3: SCANNER FOTO & TESTO CON VOCE -->
+    <!-- TAB 3: SCANNER FOTO & TESTO -->
     <section id="view-scanner" class="tab-view hidden space-y-7">
       <div class="apple-glass-card p-6 sm:p-8 rounded-3xl border border-app-border text-center space-y-5 max-w-3xl mx-auto">
         <div class="w-16 h-16 mx-auto rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-3xl text-emerald-400">
@@ -539,8 +406,8 @@
         </div>
         <div>
           <h3 class="font-display font-black text-xl sm:text-2xl text-white">Registra Cibo: Voce, Testo o Foto</h3>
-          <p class="text-sm text-app-textSecondary mt-1.5 max-w-lg mx-auto leading-relaxed">
-            Detta al microfono, scrivi il piatto o carica la foto: Gemini calcolerà calorie e macronutrienti per il giorno selezionato.
+          <p class="text-sm text-app-textSecondary mt-1.5 max-w-lg mx-auto">
+            Detta al microfono, scrivi il piatto o carica la foto per calcolare calorie e macro.
           </p>
         </div>
 
@@ -554,7 +421,7 @@
           </div>
           <div class="flex items-center gap-2">
             <label class="text-xs sm:text-sm text-app-textMuted">Pasto:</label>
-            <select id="scannerSlotSelect" class="bg-app-card border border-app-border rounded-xl text-xs sm:text-sm text-gray-200 px-3 py-2 focus:outline-none focus:border-emerald-500">
+            <select id="scannerSlotSelect" class="bg-app-card border border-app-border rounded-xl text-xs sm:text-sm text-gray-200 px-3 py-2 focus:outline-none">
               <option value="auto">Automatico (in base all'ora)</option>
               <option value="Colazione">Colazione</option>
               <option value="Spuntino">Spuntino</option>
@@ -566,14 +433,10 @@
           </div>
         </div>
 
-        <!-- INPUT VOCALE E TESTO -->
         <div class="space-y-2 text-left">
-          <label class="text-xs sm:text-sm font-bold uppercase tracking-wider text-teal-300 block flex items-center gap-2">
-            <span>✍️</span> Inserisci a Testo o con la Voce
-          </label>
           <div class="flex gap-2">
-            <input type="text" id="manualDishTextInput" placeholder="es. 1 panino con salame..." class="w-full bg-app-dark border border-app-border focus:border-emerald-500 rounded-2xl px-4 py-3.5 text-sm sm:text-base text-white placeholder-app-textMuted focus:outline-none transition">
-            <button id="voiceInputBtn" onclick="window.toggleVoiceInput()" class="px-4 py-3.5 rounded-2xl bg-app-card hover:bg-app-cardSubtle border border-emerald-500/40 text-emerald-300 font-bold text-sm sm:text-base flex items-center justify-center transition active:scale-95" title="Detta a voce">
+            <input type="text" id="manualDishTextInput" placeholder="es. 1 panino con salame..." class="w-full bg-app-dark border border-app-border focus:border-emerald-500 rounded-2xl px-4 py-3.5 text-sm sm:text-base text-white placeholder-app-textMuted focus:outline-none">
+            <button id="voiceInputBtn" onclick="window.toggleVoiceInput()" class="px-4 py-3.5 rounded-2xl bg-app-card hover:bg-app-cardSubtle border border-emerald-500/40 text-emerald-300 font-bold text-sm sm:text-base flex items-center justify-center transition" title="Detta a voce">
               🎙️
             </button>
             <button onclick="window.processManualFoodText()" class="px-6 py-3.5 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-black font-black text-sm active:scale-95 transition shrink-0 shadow-lg">
@@ -584,93 +447,68 @@
 
         <div class="flex items-center gap-3 my-2">
           <div class="h-px flex-1 bg-app-border"></div>
-          <span class="text-xs text-app-textMuted font-mono uppercase font-bold">Oppure con la Fotocamera</span>
+          <span class="text-xs text-app-textMuted font-mono uppercase font-bold">Oppure Foto</span>
           <div class="h-px flex-1 bg-app-border"></div>
         </div>
 
         <label class="cursor-pointer inline-flex items-center gap-3 px-7 py-4 rounded-2xl bg-app-card hover:bg-app-cardSubtle border border-emerald-500/40 text-emerald-300 font-bold text-sm sm:text-base shadow-lg active:scale-95 transition">
           <span class="text-xl">📸</span>
-          <span>Scatta o Carica Foto Piatto</span>
+          <span>Scatta o Carica Foto</span>
           <input type="file" id="scannerPhotoInput" accept="image/*" class="hidden" onchange="window.processFoodPhoto(event)">
         </label>
 
         <div id="scannerResultBox" class="hidden text-left pt-4 border-t border-app-border space-y-4">
-          <div id="foodImgPreviewContainer" class="relative w-full h-64 rounded-2xl overflow-hidden bg-black border border-app-border hidden">
-            <img id="foodPreviewImg" src="" alt="Pasto" class="w-full h-full object-cover">
-          </div>
           <div id="foodLoadingSpinner" class="hidden p-8 rounded-2xl bg-app-dark border border-app-border flex flex-col items-center justify-center text-center space-y-3">
             <div class="w-8 h-8 border-3 border-emerald-400 border-t-transparent rounded-full animate-spin"></div>
-            <span class="text-sm font-semibold text-emerald-400">Calcolo nutrizionale con Gemini AI in corso...</span>
+            <span class="text-sm font-semibold text-emerald-400">Analisi nutrizionale in corso...</span>
           </div>
           <div id="foodDetailsTarget" class="space-y-3"></div>
         </div>
       </div>
 
-      <!-- RAGGRUPPAMENTO PASTI CON CESTINO E AZZERA FUNZIONANTI -->
       <div class="space-y-4">
         <div class="flex items-center justify-between px-1">
           <div>
             <h4 class="font-display font-black text-lg sm:text-xl text-white">Diario Pasti del Giorno</h4>
             <p class="text-xs sm:text-sm text-app-textMuted mt-0.5">Tocca il cestino 🗑️ per eliminare un singolo piatto</p>
           </div>
-          <button onclick="window.clearFoodLog()" class="text-xs sm:text-sm text-app-textMuted hover:text-red-400 px-3.5 py-1.5 rounded-xl bg-app-card border border-app-border transition cursor-pointer">
+          <button onclick="window.clearFoodLog()" class="text-xs sm:text-sm text-app-textMuted hover:text-red-400 px-3.5 py-1.5 rounded-xl bg-app-card border border-app-border transition">
             Azzera Giorno
           </button>
         </div>
-
         <div id="groupedMealsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
       </div>
     </section>
 
-    <!-- TAB 4: AI COACH -->
+    <!-- TAB 4: COACH -->
     <section id="view-coach" class="tab-view hidden space-y-5 max-w-4xl mx-auto">
       <div class="apple-glass-card p-5 rounded-2xl border border-app-border flex items-center justify-between">
         <div class="flex items-center gap-3.5">
           <div class="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center text-2xl font-bold">🧬</div>
           <div>
             <h3 class="font-display font-bold text-base sm:text-lg text-white">Coach & Nutrizionista Sportivo</h3>
-            <p class="text-xs sm:text-sm text-teal-400 font-mono">Dati reali sincronizzati • Tono diretto senza giri di parole</p>
+            <p class="text-xs sm:text-sm text-teal-400 font-mono">Dati reali sincronizzati • Tono diretto</p>
           </div>
         </div>
-        <button onclick="window.resetCoachChat()" class="text-xs sm:text-sm text-app-textMuted px-3.5 py-2 rounded-xl bg-app-card border border-app-border hover:text-white transition">Azzera</button>
-      </div>
-
-      <div id="coachDataPreviewBox" class="p-4 rounded-2xl bg-app-dark border border-app-border text-xs sm:text-sm text-app-textSecondary flex flex-wrap items-center justify-between gap-2.5">
-        <div class="flex items-center gap-2 font-mono">
-          <span class="text-emerald-400 font-bold">📊 Dati di Oggi:</span>
-          <span id="coachSyncSummaryText">Caricamento stato...</span>
-        </div>
-        <span class="text-xs text-app-textMuted">Sync Cloud attivo</span>
-      </div>
-
-      <div class="flex gap-2.5 overflow-x-auto no-scrollbar py-0.5">
-        <button onclick="window.sendQuickChatMessage('Dimmi senza troppi giri di parole se con quello che ho mangiato oggi sto spaccando con il deficit o se devo stringere la cinghia stasera.')" class="whitespace-nowrap px-4 py-2 rounded-xl bg-app-card hover:bg-app-cardSubtle border border-emerald-500/30 text-xs sm:text-sm text-emerald-300 transition font-medium">
-          ⚖️ Come sto messo col deficit oggi?
-        </button>
-        <button onclick="window.sendQuickChatMessage('Guarda le proteine che ho registrato oggi: quante me ne mancano per arrivare a 170g e come me le sparo stasera velocemente?')" class="whitespace-nowrap px-4 py-2 rounded-xl bg-app-card hover:bg-app-cardSubtle border border-app-border text-xs sm:text-sm text-app-textSecondary transition font-medium">
-          🥩 Proteine rimanenti
-        </button>
-        <button onclick="window.sendQuickChatMessage('Cosa mi consigli di buttare in friggitrice ad aria stasera per chiudere la giornata pulito?')" class="whitespace-nowrap px-4 py-2 rounded-xl bg-app-card hover:bg-app-cardSubtle border border-app-border text-xs sm:text-sm text-app-textSecondary transition font-medium">
-          🍽️ Idea cena veloce
-        </button>
+        <button onclick="window.resetCoachChat()" class="text-xs sm:text-sm text-app-textMuted px-3.5 py-2 rounded-xl bg-app-card border border-app-border">Azzera</button>
       </div>
 
       <div id="coachChatBox" class="h-96 overflow-y-auto space-y-3.5 p-5 rounded-2xl bg-app-card/70 border border-app-border flex flex-col text-sm sm:text-base">
-        <div class="bg-app-dark p-4 rounded-2xl border border-app-border text-gray-200 leading-relaxed shadow-sm">
+        <div class="bg-app-dark p-4 rounded-2xl border border-app-border text-gray-200">
           Bella Luca! Ho sott'occhio tutti i numeri di oggi salvati sul Cloud: calorie assunte, spesa a riposo, calorie bruciate, litri d'acqua e serie in palestra. Dimmi pure, parliamo dritto al punto!
         </div>
       </div>
 
       <form onsubmit="window.handleCoachSubmit(event)" class="flex gap-2.5">
-        <input type="text" id="coachInputText" placeholder="Chiedi al coach (es. posso mangiare questo? come sto messo oggi?)..." class="w-full bg-app-card border border-app-border focus:border-emerald-500 rounded-xl px-4 py-3.5 text-sm sm:text-base text-white placeholder-app-textMuted focus:outline-none transition">
-        <button type="submit" class="px-6 py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-black text-sm sm:text-base transition active:scale-95 shrink-0">Invia</button>
+        <input type="text" id="coachInputText" placeholder="Chiedi al coach (es. cosa mangio stasera?)..." class="w-full bg-app-card border border-app-border focus:border-emerald-500 rounded-xl px-4 py-3.5 text-sm text-white focus:outline-none">
+        <button type="submit" class="px-6 py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-black text-sm active:scale-95 transition shrink-0">Invia</button>
       </form>
     </section>
 
     <!-- TAB 5: PROGRESSI -->
     <section id="view-progress" class="tab-view hidden space-y-6 max-w-4xl mx-auto">
       <div class="apple-glass-card p-6 sm:p-8 rounded-3xl border border-app-border space-y-6">
-        <h3 class="font-display font-bold text-lg text-white uppercase tracking-wider">Monitoraggio Ricomposizione Corporea</h3>
+        <h3 class="font-display font-bold text-lg text-white uppercase tracking-wider">Misure Corporee</h3>
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
           <div class="p-4 rounded-xl bg-app-card border border-app-border">
             <div class="text-xs uppercase font-bold text-app-textMuted">Peso Start</div>
@@ -685,24 +523,23 @@
             <div class="text-2xl font-display font-black text-white mt-0.5">104.0 <span class="text-xs font-normal text-app-textMuted">cm</span></div>
           </div>
           <div class="p-4 rounded-xl bg-app-card border border-app-border">
-            <div class="text-xs uppercase font-bold text-app-textMuted Oggi</div>
+            <div class="text-xs uppercase font-bold text-app-textMuted">Giro Vita Oggi</div>
             <div id="metricCurrentWaist" class="text-2xl font-display font-black text-teal-400 mt-0.5">104.0 <span class="text-xs font-normal text-app-textMuted">cm</span></div>
           </div>
         </div>
 
         <div class="p-5 rounded-2xl bg-app-dark border border-app-border space-y-3.5">
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-            <input type="number" id="quickWeightInput" step="0.1" inputmode="decimal" placeholder="Peso (kg)" class="w-full bg-app-card border border-app-border rounded-xl px-4 py-2.5 text-base text-emerald-400 font-mono text-center focus:outline-none">
-            <input type="number" id="quickWaistInput" step="0.5" inputmode="decimal" placeholder="Vita (cm)" class="w-full bg-app-card border border-app-border rounded-xl px-4 py-2.5 text-base text-teal-400 font-mono text-center focus:outline-none">
+            <input type="number" id="quickWeightInput" step="0.1" placeholder="Peso (kg)" class="w-full bg-app-card border border-app-border rounded-xl px-4 py-2.5 text-base text-emerald-400 font-mono text-center focus:outline-none">
+            <input type="number" id="quickWaistInput" step="0.5" placeholder="Vita (cm)" class="w-full bg-app-card border border-app-border rounded-xl px-4 py-2.5 text-base text-teal-400 font-mono text-center focus:outline-none">
           </div>
-          <button onclick="window.saveBodyMeasurements()" class="w-full py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black text-sm sm:text-base font-bold active:scale-95 transition">Salva Misure nel Cloud</button>
+          <button onclick="window.saveBodyMeasurements()" class="w-full py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black text-sm font-bold active:scale-95 transition">Salva Misure</button>
         </div>
       </div>
     </section>
 
   </main>
 
-  <!-- Navigation Bar Mobile -->
   <nav class="fixed bottom-0 left-0 right-0 z-40 apple-nav px-3 py-2.5">
     <div class="max-w-md mx-auto grid grid-cols-6 gap-1 text-center">
       <button onclick="window.navigateToTab('workout')" id="nav-workout" class="py-1 flex flex-col items-center text-emerald-400"><span class="text-lg">🏋️</span><span class="text-[10px] font-bold mt-0.5">Scheda</span></button>
@@ -714,22 +551,20 @@
     </div>
   </nav>
 
-  <!-- REST TIMER MODAL -->
   <div id="restTimerModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
     <div class="apple-glass max-w-xs w-full p-6 rounded-3xl border border-app-border text-center relative">
       <button onclick="window.toggleTimerModal()" class="absolute top-3 right-4 text-app-textMuted text-xl">✕</button>
-      <h3 class="text-base font-bold text-white mb-1">Timer Recupero Icon</h3>
+      <h3 class="text-base font-bold text-white mb-1">Timer Recupero</h3>
       <div id="modalTimerDigits" class="text-5xl font-mono font-black text-emerald-400 my-4">01:30</div>
       <div class="grid grid-cols-3 gap-2 mb-3">
-        <button onclick="window.startDiscreetTimer(60)" class="py-2.5 rounded-xl bg-app-card border border-app-border text-xs font-bold active:scale-95 transition">60s</button>
-        <button onclick="window.startDiscreetTimer(90)" class="py-2.5 rounded-xl bg-emerald-500 text-black text-xs font-black active:scale-95 transition">90s</button>
-        <button onclick="window.startDiscreetTimer(120)" class="py-2.5 rounded-xl bg-app-card border border-app-border text-xs font-bold active:scale-95 transition">120s</button>
+        <button onclick="window.startDiscreetTimer(60)" class="py-2.5 rounded-xl bg-app-card border border-app-border text-xs font-bold">60s</button>
+        <button onclick="window.startDiscreetTimer(90)" class="py-2.5 rounded-xl bg-emerald-500 text-black text-xs font-black">90s</button>
+        <button onclick="window.startDiscreetTimer(120)" class="py-2.5 rounded-xl bg-app-card border border-app-border text-xs font-bold">120s</button>
       </div>
       <button onclick="window.stopDiscreetTimer()" class="w-full py-2.5 rounded-xl bg-red-950/40 text-red-300 text-xs font-bold border border-red-500/30">Ferma</button>
     </div>
   </div>
 
-  <!-- API KEY MODAL -->
   <div id="apiKeyModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
     <div class="apple-glass max-w-sm w-full p-6 rounded-3xl border border-app-border space-y-4">
       <h3 class="text-base font-bold text-white">Chiave Gemini API</h3>
@@ -741,7 +576,40 @@
     </div>
   </div>
 
-  <!-- LOGICA COMPLETA JAVASCRIPT CORRETTA -->
+  <!-- SCRIPT GLOBALE IMMEDIATO (Garantisce che navigateToTab e notifiche siano sempre disponibili) -->
+  <script>
+    window.navigateToTab = function(tabId) {
+      ['workout', 'walk', 'nutrition', 'scanner', 'coach', 'progress'].forEach(t => {
+        const view = document.getElementById(`view-${t}`);
+        const navBtn = document.getElementById(`nav-${t}`);
+        if (view) view.classList.toggle('hidden', t !== tabId);
+        if (navBtn) {
+          navBtn.className = t === tabId
+            ? 'py-1 flex flex-col items-center text-emerald-400'
+            : 'py-1 flex flex-col items-center text-app-textMuted hover:text-white';
+        }
+      });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    window.openApiKeyModal = () => document.getElementById('apiKeyModal').classList.remove('hidden');
+    window.closeApiKeyModal = () => document.getElementById('apiKeyModal').classList.add('hidden');
+
+    function showNotification(msg, isAlert = false) {
+      const old = document.getElementById('toast');
+      if (old) old.remove();
+      const toast = document.createElement('div');
+      toast.id = 'toast';
+      toast.className = `fixed bottom-20 left-1/2 -translate-x-1/2 z-50 px-5 py-3 rounded-2xl text-sm font-bold border transition duration-300 shadow-xl flex items-center gap-2.5 ${
+        isAlert ? 'bg-red-950 text-red-200 border-red-500/40' : 'bg-app-card text-emerald-400 border-emerald-500/30'
+      }`;
+      toast.innerHTML = `<span>${isAlert ? '⚠️' : '✓'}</span><span>${msg}</span>`;
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 2600);
+    }
+  </script>
+
+  <!-- FIREBASE & CORE LOGIC -->
   <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js';
     import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js';
@@ -780,19 +648,58 @@
       defaultRestingCalories: parseInt(localStorage.getItem('icon_resting_calories') || '1950', 10),
       weight: localStorage.getItem('icon_weight_record') || '95.0',
       waist: localStorage.getItem('icon_waist_record') || '104.0',
-      workoutExercises: JSON.parse(localStorage.getItem('icon_workout_exercises') || '{}'),
-      walkLogs: JSON.parse(localStorage.getItem('icon_walk_logs') || '[]'),
-      lidlChecks: {
-        block1: JSON.parse(localStorage.getItem('icon_lidl_block1') || '{}'),
-        block2: JSON.parse(localStorage.getItem('icon_lidl_block2') || '{}')
-      }
+      workoutExercises: JSON.parse(localStorage.getItem('icon_workout_exercises') || '{}')
     };
 
     let currentWorkoutDay = 'dayA';
-    let currentFraction = 'block1';
-    let currentSelectedDay = 'Lunedì';
-    let timerCountdown = null;
-    let secondsRemaining = 0;
+
+    const ROUTINES = {
+      dayA: {
+        title: "Giorno A: Petto, Deltoidi & Tricipiti",
+        subtitle: "Spinta • 50 min • Focus Tensione",
+        exercises: [
+          { id: "ex_A1", code: "M01", name: "Chest Press Orizzontale", model: "Technogym Selection 900", sets: 4, reps: "8-10", rest: 90, defaultKg: 65, seat: "Maniglie a metà altezza petto.", cue: "Scapole addotte. Spinta controllata." },
+          { id: "ex_A2", code: "M02", name: "Incline Chest Press 30°", model: "Technogym Pure Strength", sets: 3, reps: "10-12", rest: 75, defaultKg: 50, seat: "Impugnature ad altezza clavicole.", cue: "Gomiti a 45°." },
+          { id: "ex_A3", code: "M03", name: "Pectoral Machine", model: "Technogym Selection", sets: 3, reps: "12-15", rest: 60, defaultKg: 40, seat: "Gomiti al centro dei cuscinetti.", cue: "Petto aperto." },
+          { id: "ex_A4", code: "M04", name: "Shoulder Press Machine", model: "Technogym Selection", sets: 3, reps: "8-10", rest: 90, defaultKg: 45, seat: "Maniglie ad altezza orecchie.", cue: "Spingi senza inarcare la schiena." },
+          { id: "ex_A5", code: "M05", name: "Alzate Laterali Cavo Basso", model: "Technogym DAP Cavi", sets: 3, reps: "12-15", rest: 60, defaultKg: 7.5, seat: "Carrucola al foro più basso.", cue: "Guida con il gomito." },
+          { id: "ex_A6", code: "M06", name: "Pushdown Tricipiti Corda", model: "Technogym Ercolina", sets: 3, reps: "10-12", rest: 60, defaultKg: 22.5, seat: "Carrucola in alto.", cue: "Gomiti bloccati ai fianchi." }
+        ]
+      },
+      dayB: {
+        title: "Giorno B: Dorso, Spalle Post & Bicipiti",
+        subtitle: "Trazione • 50 min • Spessore V-Taper",
+        exercises: [
+          { id: "ex_B1", code: "M07", name: "Lat Machine Presa Larga", model: "Technogym Selection", sets: 4, reps: "8-10", rest: 90, defaultKg: 55, seat: "Rulli cosce ben saldi.", cue: "Gomiti ai fianchi." },
+          { id: "ex_B2", code: "M08", name: "Vertical Traction Divergente", model: "Technogym Selection", sets: 3, reps: "10-12", rest: 75, defaultKg: 50, seat: "Presa comoda.", cue: "Traiettoria convergente." },
+          { id: "ex_B3", code: "M09", name: "Pulley Basso", model: "Technogym Selection", sets: 3, reps: "10-12", rest: 75, defaultKg: 50, seat: "Ginocchia flesse.", cue: "Tira all'ombelico." },
+          { id: "ex_B4", code: "M10", name: "Reverse Fly", model: "Technogym Selection", sets: 3, reps: "12-15", rest: 60, defaultKg: 35, seat: "Petto contro il cuscino.", cue: "Apri a croce." },
+          { id: "ex_B5", code: "M11", name: "Arm Curl Panca Scott", model: "Technogym Selection", sets: 3, reps: "10-12", rest: 60, defaultKg: 30, seat: "Ascelle sul bordo.", cue: "Fletti isolando il bicipite." },
+          { id: "ex_B6", code: "M12", name: "Hammer Curl Cavo", model: "Technogym Ercolina", sets: 3, reps: "10-12", rest: 60, defaultKg: 20, seat: "Carrucola al suolo.", cue: "Presa neutra." }
+        ]
+      },
+      dayC: {
+        title: "Giorno C: Gambe, Polpacci & Addome",
+        subtitle: "Gambe & Core • 50 min",
+        exercises: [
+          { id: "ex_C1", code: "M13", name: "Leg Press 45° a Slitta", model: "Technogym Pure Strength", sets: 4, reps: "10-12", rest: 90, defaultKg: 130, seat: "Piedi a larghezza spalle.", cue: "Ginocchia a 90°." },
+          { id: "ex_C2", code: "M14", name: "Leg Extension Isolamento", model: "Technogym Selection", sets: 3, reps: "12-15", rest: 60, defaultKg: 40, seat: "Perno sul ginocchio.", cue: "1 secondo di tenuta." },
+          { id: "ex_C3", code: "M15", name: "Seated Leg Curl Femorali", model: "Technogym Selection", sets: 4, reps: "10-12", rest: 75, defaultKg: 45, seat: "Cuscino cosce bloccato.", cue: "Talloni sotto il sedile." },
+          { id: "ex_C4", code: "M16", name: "Calf Machine Polpacci", model: "Technogym Selection", sets: 4, reps: "15", rest: 45, defaultKg: 65, seat: "Solo avampiede sulla pedana.", cue: "Allungamento profondo." },
+          { id: "ex_C5", code: "M17", name: "Abdominal Crunch Machine", model: "Technogym Selection", sets: 3, reps: "15-20", rest: 60, defaultKg: 35, seat: "Piedi vincolati.", cue: "Arrotola la cassa toracica." }
+        ]
+      },
+      dayD: {
+        title: "Giorno D: Upper Body & Cardio",
+        subtitle: "Alta Densità • 50 min",
+        exercises: [
+          { id: "ex_D1", code: "M18", name: "Spinte Panca Inclinata 30°", model: "Technogym Pure Incline", sets: 3, reps: "8-10", rest: 75, defaultKg: 24, seat: "Seduta a 30°.", cue: "Focus parte alta petto." },
+          { id: "ex_D2", code: "M19", name: "Lat Machine Presa Inversa", model: "Technogym Selection", sets: 3, reps: "8-10", rest: 75, defaultKg: 60, seat: "Presa supina.", cue: "Tira fino alle clavicole." },
+          { id: "ex_D3", code: "M20", name: "Crossover Cavi Alti", model: "Technogym DAP Cavi", sets: 3, reps: "12-15", rest: 60, defaultKg: 15, seat: "Carrucole in alto.", cue: "Braccia quasi distese." },
+          { id: "ex_D4", code: "M21", name: "Superset Corda + Curl Cavo", model: "Technogym Ercolina", sets: 3, reps: "10 + 10", rest: 60, defaultKg: 20, seat: "Prima tricipiti, poi bicipiti.", cue: "Zero pause." }
+        ]
+      }
+    };
 
     function getSelectedDayData() {
       const key = getFormattedDateKey(selectedDate);
@@ -805,12 +712,6 @@
           gymBottles: 0
         };
       }
-      if (appData.dailyRecords[key].restingCalories === undefined) {
-        appData.dailyRecords[key].restingCalories = appData.defaultRestingCalories || 1950;
-      }
-      if (!Array.isArray(appData.dailyRecords[key].foodLogs)) {
-        appData.dailyRecords[key].foodLogs = [];
-      }
       return appData.dailyRecords[key];
     }
 
@@ -821,9 +722,6 @@
         localStorage.setItem('icon_weight_record', appData.weight);
         localStorage.setItem('icon_waist_record', appData.waist);
         localStorage.setItem('icon_workout_exercises', JSON.stringify(appData.workoutExercises));
-        localStorage.setItem('icon_walk_logs', JSON.stringify(appData.walkLogs));
-        localStorage.setItem('icon_lidl_block1', JSON.stringify(appData.lidlChecks.block1));
-        localStorage.setItem('icon_lidl_block2', JSON.stringify(appData.lidlChecks.block2));
       } catch (e) {}
 
       if (!currentUser || !cloudDocRef) return;
@@ -837,8 +735,203 @@
       }, 300);
     }
 
+    window.updateDateHeaderUI = function() {
+      const todayKey = getFormattedDateKey(new Date());
+      const currentKey = getFormattedDateKey(selectedDate);
+      const label = document.getElementById('headerCurrentDateLabel');
+      if (!label) return;
+
+      if (todayKey === currentKey) {
+        label.innerText = "Oggi";
+      } else {
+        label.innerText = selectedDate.toLocaleDateString('it-IT', { day: 'numeric', month: 'short' });
+      }
+    };
+
+    window.shiftSelectedDay = delta => {
+      selectedDate.setDate(selectedDate.getDate() + delta);
+      window.updateDateHeaderUI();
+      window.updateUIFromState();
+    };
+
+    window.switchWorkoutDay = dayKey => {
+      currentWorkoutDay = dayKey;
+      ['dayA', 'dayB', 'dayC', 'dayD'].forEach(key => {
+        const btn = document.getElementById(`btn-${key}`);
+        if (!btn) return;
+        btn.className = key === dayKey
+          ? 'py-3 rounded-xl text-sm font-bold transition bg-emerald-500 text-black shadow-sm'
+          : 'py-3 rounded-xl text-sm font-medium transition text-app-textMuted hover:text-white';
+      });
+      renderWorkoutList(dayKey);
+    };
+
+    function renderWorkoutList(dayKey) {
+      const routine = ROUTINES[dayKey];
+      if (!routine) return;
+
+      const titleEl = document.getElementById('workoutTitle');
+      const subEl = document.getElementById('workoutSubtitle');
+      if (titleEl) titleEl.innerText = routine.title;
+      if (subEl) subEl.innerText = routine.subtitle;
+
+      const container = document.getElementById('exerciseList');
+      if (!container) return;
+      container.innerHTML = '';
+
+      if (!appData.workoutExercises) appData.workoutExercises = {};
+
+      routine.exercises.forEach(ex => {
+        const key = `${dayKey}_${ex.id}`;
+        const exState = appData.workoutExercises[key] || { kg: ex.defaultKg, completedSets: [] };
+        const currentKg = (exState.kg !== null && exState.kg !== undefined) ? exState.kg : ex.defaultKg;
+        const completedSets = Array.isArray(exState.completedSets) ? exState.completedSets : [];
+
+        let setsHTML = '';
+        for (let s = 1; s <= ex.sets; s++) {
+          const isDone = completedSets.includes(s);
+          setsHTML += `
+            <button onclick="window.handleGymSetClick('${dayKey}', '${ex.id}', ${s}, ${ex.rest})" class="h-12 flex-1 min-w-[56px] rounded-xl text-sm font-black transition border flex items-center justify-center gap-1 active:scale-95 ${
+              isDone ? 'bg-emerald-500 text-black border-emerald-400 shadow-md' : 'bg-app-dark border-app-border text-gray-300 hover:border-emerald-500/40'
+            }">
+              ${isDone ? '✓ ' : ''}S${s}
+            </button>
+          `;
+        }
+
+        const card = document.createElement('div');
+        card.className = "apple-glass-card p-5 rounded-2xl border border-app-border space-y-3.5";
+        card.innerHTML = `
+          <div>
+            <div class="flex items-center justify-between gap-2">
+              <div class="flex items-center gap-2">
+                <span class="font-mono text-xs font-black px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">${ex.code}</span>
+                <h3 class="font-display font-bold text-base text-white">${ex.name}</h3>
+              </div>
+              <button onclick="window.startDiscreetTimer(${ex.rest})" class="px-3 py-1 rounded-xl bg-app-card border border-app-border text-xs sm:text-sm font-mono text-emerald-400">
+                <span>⏱️</span><span>${ex.rest}s</span>
+              </button>
+            </div>
+            <div class="text-xs text-app-textMuted font-mono mt-1">${ex.model} • ${ex.sets} × ${ex.reps}</div>
+          </div>
+
+          <div class="bg-app-dark/90 p-3 rounded-xl border border-app-border text-xs">
+            <span class="text-teal-400 font-medium">⚙️ Seduta: ${ex.seat}</span>
+          </div>
+
+          <div class="space-y-2.5">
+            <div class="flex items-center justify-between gap-2">
+              <div class="flex items-center gap-1 bg-app-dark p-1 rounded-xl border border-app-border">
+                <button onclick="window.adjustWeight('${dayKey}', '${ex.id}', -2.5)" class="w-9 h-9 rounded-lg bg-app-card text-white font-black text-base active:scale-90">-</button>
+                <div class="flex items-center px-2">
+                  <input type="number" step="0.5" value="${currentKg}" onchange="window.saveWeightLoadDirect('${dayKey}', '${ex.id}', this.value)" class="w-16 text-center bg-transparent text-emerald-400 font-display font-black text-base focus:outline-none">
+                  <span class="text-xs text-app-textMuted font-bold ml-0.5">kg</span>
+                </div>
+                <button onclick="window.adjustWeight('${dayKey}', '${ex.id}', 2.5)" class="w-9 h-9 rounded-lg bg-app-card text-white font-black text-base active:scale-90">+</button>
+              </div>
+              <span class="text-xs sm:text-sm text-app-textMuted font-medium">Serie completata:</span>
+            </div>
+            <div class="flex gap-2 w-full overflow-x-auto pb-0.5">${setsHTML}</div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    window.adjustWeight = (dayKey, exId, delta) => {
+      const key = `${dayKey}_${exId}`;
+      if (!appData.workoutExercises[key]) appData.workoutExercises[key] = { kg: 50, completedSets: [] };
+      appData.workoutExercises[key].kg = Math.max(2.5, parseFloat(((parseFloat(appData.workoutExercises[key].kg) || 0) + delta).toFixed(1)));
+      renderWorkoutList(dayKey);
+      triggerCloudSave();
+    };
+
+    window.saveWeightLoadDirect = (dayKey, exId, val) => {
+      const parsed = parseFloat(val);
+      if (!isNaN(parsed) && parsed > 0) {
+        const key = `${dayKey}_${exId}`;
+        if (!appData.workoutExercises[key]) appData.workoutExercises[key] = { kg: 50, completedSets: [] };
+        appData.workoutExercises[key].kg = parseFloat(parsed.toFixed(1));
+        triggerCloudSave();
+        showNotification(`Carico: ${appData.workoutExercises[key].kg} kg`);
+      }
+    };
+
+    window.handleGymSetClick = (dayKey, exId, setNumber, restSeconds) => {
+      const key = `${dayKey}_${exId}`;
+      if (!appData.workoutExercises[key]) appData.workoutExercises[key] = { kg: null, completedSets: [] };
+      let list = Array.isArray(appData.workoutExercises[key].completedSets) ? appData.workoutExercises[key].completedSets : [];
+
+      if (list.includes(setNumber)) {
+        list = list.filter(n => n !== setNumber);
+      } else {
+        list.push(setNumber);
+        window.startDiscreetTimer(restSeconds);
+        showNotification(`Set ${setNumber} completato!`);
+      }
+
+      appData.workoutExercises[key].completedSets = list;
+      renderWorkoutList(dayKey);
+      triggerCloudSave();
+    };
+
+    window.resetCurrentDayChecks = () => {
+      const routine = ROUTINES[currentWorkoutDay];
+      if (!routine) return;
+      routine.exercises.forEach(ex => {
+        const key = `${currentWorkoutDay}_${ex.id}`;
+        if (appData.workoutExercises[key]) appData.workoutExercises[key].completedSets = [];
+      });
+      renderWorkoutList(currentWorkoutDay);
+      triggerCloudSave();
+      showNotification("Spunte azzerate.");
+    };
+
+    window.startDiscreetTimer = seconds => {
+      clearInterval(timerCountdown);
+      secondsRemaining = seconds;
+      updateTimerDisplay();
+
+      document.getElementById('activeTimerBar').classList.remove('hidden');
+      timerCountdown = setInterval(() => {
+        secondsRemaining--;
+        if (secondsRemaining <= 0) {
+          clearInterval(timerCountdown);
+          secondsRemaining = 0;
+          updateTimerDisplay();
+          window.stopDiscreetTimer();
+          showNotification("Recupero terminato!");
+        } else {
+          updateTimerDisplay();
+        }
+      }, 1000);
+    };
+
+    window.addTimerSeconds = extra => {
+      secondsRemaining += extra;
+      updateTimerDisplay();
+    };
+
+    window.stopDiscreetTimer = () => {
+      clearInterval(timerCountdown);
+      secondsRemaining = 0;
+      updateTimerDisplay();
+      document.getElementById('activeTimerBar').classList.add('hidden');
+    };
+
+    function updateTimerDisplay() {
+      const m = Math.floor(secondsRemaining / 60);
+      const s = secondsRemaining % 60;
+      const str = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+      document.getElementById('activeTimerValue').innerText = str;
+      document.getElementById('headerTimerReadout').innerText = str;
+      document.getElementById('modalTimerDigits').innerText = str;
+    }
+
+    window.toggleTimerModal = () => document.getElementById('restTimerModal').classList.toggle('hidden');
+
     // =============================================================
-    // GESTIONE ELIMINAZIONE PASTI E AZZERA
+    // GESTIONE DIETA, DEFICIT E CANCELLAZIONE
     // =============================================================
     window.deleteSingleFoodItem = function(indexToDelete) {
       const day = getSelectedDayData();
@@ -850,32 +943,27 @@
       if (!confirm(`Vuoi rimuovere "${dishTitle}" dal diario?`)) return;
 
       day.foodLogs.splice(indexToDelete, 1);
-      
       renderGroupedMeals();
       renderDualColumnDiet();
       updateDeficitCalculations();
-      updateCoachSyncSummaryUI();
       triggerCloudSave();
-      showNotification(`"${dishTitle}" rimosso dal diario.`);
+      showNotification(`"${dishTitle}" eliminato.`);
     };
 
     window.clearFoodLog = function() {
       const day = getSelectedDayData();
       if (!day || !day.foodLogs || day.foodLogs.length === 0) {
-        showNotification("Nessun pasto registrato da azzerare.", true);
+        showNotification("Nessun pasto registrato.", true);
         return;
       }
-
-      if (!confirm("Sei sicuro di voler azzerare tutti i pasti registrati per questo giorno?")) return;
+      if (!confirm("Vuoi azzerare i pasti registrati per questo giorno?")) return;
 
       day.foodLogs = [];
-      
       renderGroupedMeals();
       renderDualColumnDiet();
       updateDeficitCalculations();
-      updateCoachSyncSummaryUI();
       triggerCloudSave();
-      showNotification("Diario pasti azzerato per oggi.");
+      showNotification("Diario pasti azzerato.");
     };
 
     function renderGroupedMeals() {
@@ -909,12 +997,12 @@
         const itemsHTML = items.map(m => `
           <div class="flex items-center justify-between p-2.5 rounded-xl bg-app-dark border border-app-border text-sm">
             <div class="truncate pr-2">
-              <span class="font-bold text-white truncate block text-sm sm:text-base">${m.dishName}</span>
+              <span class="font-bold text-white truncate block text-sm">${m.dishName}</span>
               <span class="text-xs text-app-textMuted font-mono">${m.time || ''} • ${m.protein}g Pro | ${m.carbs}g Cho | ${m.fat}g Fat</span>
             </div>
             <div class="flex items-center gap-2 shrink-0">
               <span class="font-mono font-bold text-emerald-400 text-sm">${m.calories} kcal</span>
-              <button type="button" onclick="window.deleteSingleFoodItem(${m.globalIndex})" class="w-8 h-8 rounded-lg bg-red-950/40 text-red-400 hover:bg-red-500 hover:text-white border border-red-500/30 flex items-center justify-center transition active:scale-90 cursor-pointer" title="Elimina questo piatto">
+              <button type="button" onclick="window.deleteSingleFoodItem(${m.globalIndex})" class="w-8 h-8 rounded-lg bg-red-950/40 text-red-400 hover:bg-red-500 hover:text-white border border-red-500/30 flex items-center justify-center transition" title="Elimina">
                 🗑️
               </button>
             </div>
@@ -925,10 +1013,7 @@
           <div class="apple-glass-card p-5 rounded-2xl border border-app-border space-y-4 flex flex-col justify-between">
             <div class="space-y-3">
               <div class="flex items-center justify-between border-b border-app-border pb-2.5">
-                <div class="flex items-center gap-2">
-                  <span class="text-lg">${getSlotEmoji(slot)}</span>
-                  <h5 class="font-display font-black text-base text-white uppercase tracking-wider">${slot}</h5>
-                </div>
+                <h5 class="font-display font-black text-base text-white uppercase tracking-wider">${slot}</h5>
                 <span class="text-xs font-mono px-2.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-bold">${items.length} cibi</span>
               </div>
               <div class="space-y-2">
@@ -938,14 +1023,14 @@
 
             <div class="p-3.5 rounded-xl bg-gradient-to-r from-emerald-500/15 to-teal-500/15 border border-emerald-500/30 flex items-center justify-between mt-2">
               <div>
-                <span class="text-xs uppercase font-black text-emerald-400 block">Somma Valori ${slot}</span>
-                <div class="text-xs sm:text-sm font-mono text-gray-200 mt-0.5">
+                <span class="text-xs uppercase font-black text-emerald-400 block">Totale ${slot}</span>
+                <div class="text-xs font-mono text-gray-200 mt-0.5">
                   <strong class="text-white">${sumPro}g</strong> P • <strong class="text-white">${sumCarb}g</strong> C • <strong class="text-white">${sumFat}g</strong> F
                 </div>
               </div>
               <div class="text-right">
                 <span class="text-2xl font-mono font-black text-emerald-300">${sumKcal}</span>
-                <span class="text-xs font-mono text-emerald-400 uppercase block font-bold">KCAL TOTALI</span>
+                <span class="text-xs font-mono text-emerald-400 uppercase block font-bold">KCAL</span>
               </div>
             </div>
           </div>
@@ -953,96 +1038,223 @@
       }).join('');
     }
 
-    // =============================================================
-    // AUTENTICAZIONE E SYNC
-    // =============================================================
-    window.handleGoogleLogin = async () => {
-      const msg = document.getElementById('loginStatusMsg');
-      const btnLabel = document.getElementById('loginBtnLabel');
-      if (msg) msg.classList.add('hidden');
-      if (btnLabel) btnLabel.innerText = "Accesso in corso...";
+    function renderDualColumnDiet() {
+      const container = document.getElementById('dualColumnMealGrid');
+      if (!container) return;
 
-      try {
-        await signInWithPopup(auth, provider);
-      } catch (err) {
-        if (err.code === 'auth/popup-blocked' || err.code === 'auth/popup-closed-by-user') {
-          try {
-            await signInWithRedirect(auth, provider);
-          } catch (rErr) {
-            if (msg) {
-              msg.innerText = "Errore: " + (rErr.code || rErr.message);
-              msg.classList.remove('hidden');
-            }
-          }
-        } else if (msg) {
-          msg.innerText = "Errore: " + (err.code || err.message);
-          msg.classList.remove('hidden');
-        }
-      } finally {
-        if (btnLabel) btnLabel.innerText = "Accedi con Google";
+      const day = getSelectedDayData();
+      const loggedBySlot = {};
+      MEAL_SLOTS.forEach(s => loggedBySlot[s] = []);
+      (day.foodLogs || []).forEach((m, originalIndex) => {
+        const s = m.slot || "Cena";
+        if (!loggedBySlot[s]) loggedBySlot[s] = [];
+        loggedBySlot[s].push({ ...m, originalIndex });
+      });
+
+      container.innerHTML = MEAL_SLOTS.map(slotName => {
+        const actualItems = loggedBySlot[slotName] || [];
+        const sumKcal = actualItems.reduce((acc, x) => acc + (Number(x.calories) || 0), 0);
+        const sumPro = actualItems.reduce((acc, x) => acc + (Number(x.protein) || 0), 0);
+
+        return `
+          <div class="apple-glass-card p-5 rounded-2xl border border-app-border space-y-3">
+            <div class="flex items-center justify-between border-b border-app-border pb-2">
+              <h4 class="font-display font-black text-base text-white uppercase tracking-wider">${slotName}</h4>
+              <span class="font-mono text-sm text-emerald-400 font-bold">${sumKcal} kcal (${sumPro}g Pro)</span>
+            </div>
+            <div class="space-y-1.5">
+              ${actualItems.length === 0 ? '<p class="text-xs text-app-textMuted">Nessun pasto registrato.</p>' : actualItems.map(item => `
+                <div class="flex items-center justify-between text-xs text-gray-300 bg-app-dark p-2 rounded-xl border border-app-border">
+                  <span>${item.dishName}</span>
+                  <span class="font-mono text-emerald-400 font-bold">${item.calories} kcal</span>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function updateDeficitCalculations() {
+      const day = getSelectedDayData();
+      const totalIntake = (day.foodLogs || []).reduce((acc, m) => acc + (Number(m.calories) || 0), 0);
+      const resting = Number(day.restingCalories) || 1950;
+      const burned = Number(day.burnedCalories) || 0;
+      
+      const totalExpenditure = resting + burned;
+      const actualDeficit = totalExpenditure - totalIntake;
+
+      const intakeEl = document.getElementById('summaryIntakeKcal');
+      const restEl = document.getElementById('summaryRestingKcal');
+      const burnedEl = document.getElementById('summaryBurnedKcal');
+      const totalBurnedEl = document.getElementById('summaryTotalBurnedKcal');
+      const netEl = document.getElementById('summaryNetBalance');
+      const statusEl = document.getElementById('summaryNetStatus');
+      const badgeEl = document.getElementById('deficitSurplusBadge');
+      const gymDeficitEl = document.getElementById('displayTotalDeficit');
+
+      if (intakeEl) intakeEl.innerText = totalIntake;
+      if (restEl) restEl.innerText = resting;
+      if (burnedEl) burnedEl.innerText = burned;
+      if (totalBurnedEl) totalBurnedEl.innerText = totalExpenditure;
+
+      const deficitStr = actualDeficit >= 0 ? `-${actualDeficit} kcal` : `+${Math.abs(actualDeficit)} kcal`;
+
+      if (gymDeficitEl) {
+        gymDeficitEl.innerText = deficitStr;
+        gymDeficitEl.className = actualDeficit >= 0 
+          ? "text-base sm:text-lg font-mono font-black text-emerald-400 mt-1"
+          : "text-base sm:text-lg font-mono font-black text-amber-400 mt-1";
+      }
+
+      if (netEl) {
+        netEl.innerText = deficitStr;
+        netEl.className = actualDeficit >= 0
+          ? "text-3xl font-mono font-black text-emerald-400 mt-1"
+          : "text-3xl font-mono font-black text-amber-400 mt-1";
+      }
+
+      if (statusEl) {
+        statusEl.innerText = actualDeficit >= 0 ? "in deficit calorico ✓" : "surplus calorico";
+        statusEl.className = actualDeficit >= 0 ? "text-xs text-emerald-400 font-mono font-bold" : "text-xs text-amber-400 font-mono font-bold";
+      }
+
+      if (badgeEl) {
+        badgeEl.innerText = actualDeficit >= 0 ? `DEFICIT -${actualDeficit} KCAL` : `SURPLUS +${Math.abs(actualDeficit)} KCAL`;
+        badgeEl.className = actualDeficit >= 0
+          ? "self-start sm:self-auto px-4 py-2 rounded-xl font-mono font-black text-sm sm:text-base bg-emerald-500/20 text-emerald-300 border border-emerald-500/40"
+          : "self-start sm:self-auto px-4 py-2 rounded-xl font-mono font-black text-sm sm:text-base bg-amber-500/20 text-amber-300 border border-amber-500/40";
+      }
+    }
+
+    window.updateRestingFromNutrition = () => {
+      const val = parseInt(document.getElementById('nutritionRestingInput').value, 10);
+      if (!isNaN(val) && val > 0) {
+        const day = getSelectedDayData();
+        day.restingCalories = val;
+        appData.defaultRestingCalories = val;
+        document.getElementById('nutritionRestingInput').value = '';
+        updateDeficitCalculations();
+        triggerCloudSave();
+        showNotification(`Riposo impostato a ${val} kcal!`);
       }
     };
 
-    getRedirectResult(auth).catch(err => {
-      const msg = document.getElementById('loginStatusMsg');
-      if (msg) {
-        msg.innerText = "Errore autenticazione: " + err.message;
-        msg.classList.remove('hidden');
+    window.updateBurnedFromNutrition = () => {
+      const val = parseInt(document.getElementById('nutritionBurnedInput').value, 10);
+      if (!isNaN(val) && val >= 0) {
+        const day = getSelectedDayData();
+        day.burnedCalories = val;
+        document.getElementById('nutritionBurnedInput').value = '';
+        updateBurnedCaloriesUI();
+        updateDeficitCalculations();
+        triggerCloudSave();
+        showNotification(`Attive impostate a ${val} kcal!`);
       }
-    });
+    };
 
-    document.getElementById('headerLogoutBtn').onclick = () => signOut(auth);
+    window.addBurnedCalories = amount => {
+      const day = getSelectedDayData();
+      day.burnedCalories = (day.burnedCalories || 0) + amount;
+      updateBurnedCaloriesUI();
+      updateDeficitCalculations();
+      triggerCloudSave();
+      showNotification(`+${amount} kcal!`);
+    };
 
-    onAuthStateChanged(auth, user => {
-      currentUser = user;
-      const overlay = document.getElementById('loginOverlay');
-      const cloudStatus = document.getElementById('cloudStatusReadout');
-
-      if (!user) {
-        overlay.classList.remove('hidden');
-        if (unsubCloud) unsubCloud();
-        cloudStatus.innerText = "Offline / Locale";
-        return;
+    window.applyCustomKcal = () => {
+      const val = parseInt(document.getElementById('customKcalInput').value, 10);
+      if (!isNaN(val) && val > 0) {
+        const day = getSelectedDayData();
+        day.burnedCalories = val;
+        document.getElementById('customKcalInput').value = '';
+        updateBurnedCaloriesUI();
+        updateDeficitCalculations();
+        triggerCloudSave();
+        showNotification(`Calorie attive: ${val} kcal!`);
       }
+    };
 
-      overlay.classList.add('hidden');
-      cloudDocRef = doc(db, 'users', user.uid, 'gym_recomp', 'current_state');
-      cloudStatus.innerText = `${user.displayName ? user.displayName.split(' ')[0] : 'Utente'} • Cloud ✓`;
+    window.resetBurnedCalories = () => {
+      const day = getSelectedDayData();
+      day.burnedCalories = 0;
+      updateBurnedCaloriesUI();
+      updateDeficitCalculations();
+      triggerCloudSave();
+      showNotification("Calorie attive azzerate.");
+    };
 
-      // Sincronizzazione automatica chiave Gemini da profilo Firebase
-      const refGeminiProfile = doc(db, 'users', user.uid, 'settings', 'gemini');
-      onSnapshot(refGeminiProfile, s => {
-        if (s.exists() && s.data().apiKey) {
-          appData.userApiKey = s.data().apiKey;
-          localStorage.setItem('icon_gemini_key', s.data().apiKey);
-          document.getElementById('apiStatusDot').className = "w-3 h-3 rounded-full bg-emerald-400";
-        }
-      });
+    function updateBurnedCaloriesUI() {
+      const day = getSelectedDayData();
+      const burned = day.burnedCalories || 0;
+      const displayEl = document.getElementById('displayBurnedKcal');
+      if (displayEl) displayEl.innerText = burned;
+    }
 
-      unsubCloud = onSnapshot(cloudDocRef, snap => {
-        if (snap.exists()) {
-          const data = snap.data();
-          if (data.userApiKey && !appData.userApiKey) {
-            appData.userApiKey = data.userApiKey;
-            localStorage.setItem('icon_gemini_key', data.userApiKey);
-          }
-          if (data.dailyRecords) appData.dailyRecords = data.dailyRecords;
-          if (data.defaultRestingCalories) appData.defaultRestingCalories = data.defaultRestingCalories;
-          if (data.weight) appData.weight = data.weight;
-          if (data.waist) appData.waist = data.waist;
-          if (data.workoutExercises) appData.workoutExercises = data.workoutExercises;
-          if (data.walkLogs) appData.walkLogs = data.walkLogs;
-          if (data.lidlChecks) appData.lidlChecks = data.lidlChecks;
+    // =============================================================
+    // IDRATAZIONE ACQUA
+    // =============================================================
+    window.addWaterLiters = delta => {
+      const day = getSelectedDayData();
+      day.waterLiters = parseFloat(Math.max(0, ((day.waterLiters || 0) + delta)).toFixed(2));
+      if (delta > 0) day.gymBottles = Math.round(day.waterLiters / 0.5);
+      updateWaterDisplay();
+      initWaterGrid();
+      triggerCloudSave();
+      showNotification(`${delta > 0 ? '+' : ''}${delta}L registrati!`);
+    };
 
-          updateUIFromState();
-        }
-      });
-    });
+    window.resetWaterLiters = () => {
+      if (!confirm("Azzera l'idratazione di oggi?")) return;
+      const day = getSelectedDayData();
+      day.waterLiters = 0.0;
+      day.gymBottles = 0;
+      updateWaterDisplay();
+      initWaterGrid();
+      triggerCloudSave();
+      showNotification("Idratazione azzerata.");
+    };
 
+    function updateWaterDisplay() {
+      const day = getSelectedDayData();
+      const liters = day.waterLiters || 0;
+      const readoutBig = document.getElementById('waterValueDisplayBig');
+      if (readoutBig) readoutBig.innerText = liters.toFixed(2);
+      const badge = document.getElementById('gymBottleCountBadge');
+      if (badge) badge.innerText = `${day.gymBottles || 0} Borracce (${((day.gymBottles || 0) * 0.5).toFixed(1)} L)`;
+    }
+
+    function initWaterGrid() {
+      const grid = document.getElementById('waterTrackerGrid');
+      if (!grid) return;
+      grid.innerHTML = '';
+      const day = getSelectedDayData();
+      const filledSteps = Math.floor((day.waterLiters || 0) / 0.5);
+
+      for (let i = 1; i <= 7; i++) {
+        const active = i <= filledSteps;
+        const btn = document.createElement('button');
+        btn.onclick = () => {
+          const target = i * 0.5;
+          day.waterLiters = (day.waterLiters === target) ? (i - 1) * 0.5 : target;
+          day.gymBottles = Math.round(day.waterLiters / 0.5);
+          updateWaterDisplay();
+          initWaterGrid();
+          triggerCloudSave();
+        };
+        btn.className = `p-2.5 rounded-xl text-xs font-semibold transition flex flex-col items-center border ${
+          active ? 'water-droplet-glow text-teal-300' : 'bg-app-dark border-app-border text-gray-500'
+        }`;
+        btn.innerHTML = `<span>💧</span><span class="text-[10px] font-mono mt-0.5">${(i * 0.5).toFixed(1)}L</span>`;
+        grid.appendChild(btn);
+      }
+    }
+
+    // =============================================================
+    // GEMINI FOOD AI
+    // =============================================================
     async function callGeminiApi(payload) {
-      if (!appData.userApiKey) {
-        throw new Error("Chiave Gemini API non presente. Inseriscila toccando l'icona in alto a destra.");
-      }
+      if (!appData.userApiKey) throw new Error("API Key assente. Inseriscila toccando l'icona in alto a destra.");
       for (const model of AI_MODELS) {
         try {
           const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(appData.userApiKey)}`;
@@ -1057,84 +1269,53 @@
           }
         } catch (e) {}
       }
-      throw new Error("Nessun modello Gemini attivo. Verifica i permessi della chiave su Google AI Studio.");
+      throw new Error("Errore chiamata Gemini. Controlla la chiave API.");
     }
 
-    // =============================================================
-    // ANALISI CIBO TESTO A MANO & FOTO
-    // =============================================================
     window.processManualFoodText = async () => {
       const input = document.getElementById('manualDishTextInput');
       const textQuery = input.value.trim();
-      if (!textQuery) {
-        showNotification("Scrivi cosa hai mangiato prima di cliccare Calcola.", true);
-        return;
-      }
+      if (!textQuery) return;
 
       const selVal = document.getElementById('scannerSlotSelect').value;
-      const targetSlot = selVal === 'auto' ? detectCurrentMealSlot() : selVal;
+      const targetSlot = selVal === 'auto' ? "Cena" : selVal;
 
       const resultBox = document.getElementById('scannerResultBox');
       const loading = document.getElementById('foodLoadingSpinner');
       const target = document.getElementById('foodDetailsTarget');
-      const imgContainer = document.getElementById('foodImgPreviewContainer');
 
-      if (imgContainer) imgContainer.classList.add('hidden');
-      if (resultBox) resultBox.classList.remove('hidden');
-      if (loading) loading.classList.remove('hidden');
-      if (target) target.innerHTML = '';
-
-      if (!appData.userApiKey) {
-        window.openApiKeyModal();
-        if (loading) loading.classList.add('hidden');
-        showNotification("Inserisci la chiave API Gemini.", true);
-        return;
-      }
+      resultBox.classList.remove('hidden');
+      loading.classList.remove('hidden');
+      target.innerHTML = '';
 
       try {
-        const prompt = `Agisci come Biologo Nutrizionista Sportivo.
-L'utente ha mangiato: "${textQuery}".
-Momento del pasto: "${targetSlot}".
-Profilo: 32 anni, 95kg, deficit 1.950 kcal/die.
-
-Calcola con precisione calorie e macronutrienti per questa porzione.
-Restituisci ESCLUSIVAMENTE un JSON valido senza blocchi markdown esterni:
-{
-  "dishName": "${textQuery.replace(/"/g, '')}",
-  "slot": "${targetSlot}",
-  "calories": 420,
-  "protein": 38,
-  "carbs": 48,
-  "fat": 6,
-  "verdict": "Giudizio rapido per il deficit",
-  "advice": "Consiglio pratico"
-}`;
-
+        const prompt = `Agisci come Biologo Nutrizionista. Piatto: "${textQuery}". Fascia: "${targetSlot}". Calcola calorie e macro. Restituisci ESCLUSIVAMENTE un JSON: {"dishName":"${textQuery}","slot":"${targetSlot}","calories":350,"protein":25,"carbs":30,"fat":10,"verdict":"Ottimo","advice":"Bilanciato"}`;
         const rawText = await callGeminiApi({
           contents: [{ role: "user", parts: [{ text: prompt }] }],
           generationConfig: { responseMimeType: "application/json" }
         });
 
         const jsonMatch = rawText.match(/\{[\s\S]*\}/);
-        if (!jsonMatch) throw new Error("Risposta non valida dal modello AI");
-
+        if (!jsonMatch) throw new Error("Risposta non valida");
         const data = JSON.parse(jsonMatch[0]);
-        data.slot = targetSlot;
-        data.calories = parseInt(data.calories, 10) || 0;
-        data.protein = parseInt(data.protein, 10) || 0;
-        data.carbs = parseInt(data.carbs, 10) || 0;
-        data.fat = parseInt(data.fat, 10) || 0;
 
-        input.value = '';
-        renderFoodAnalysisResult(data);
-      } catch (err) {
         target.innerHTML = `
-          <div class="p-4 rounded-2xl bg-red-950/40 text-red-300 text-sm border border-red-500/30">
-            ${err.message}
+          <div class="flex items-center justify-between p-3 bg-app-dark rounded-xl border border-app-border">
+            <div>
+              <span class="text-xs text-emerald-400 font-bold uppercase">${data.slot}</span>
+              <h4 class="font-bold text-white text-base">${data.dishName}</h4>
+              <p class="text-xs text-gray-300 font-mono mt-0.5">${data.calories} kcal • ${data.protein}g Pro | ${data.carbs}g Cho | ${data.fat}g Fat</p>
+            </div>
+            <button onclick="window.commitMealToLog(${JSON.stringify(data).replace(/"/g, '&quot;')})" class="px-4 py-2 bg-emerald-500 text-black font-bold text-xs rounded-xl">
+              Salva
+            </button>
           </div>
         `;
+        input.value = '';
+      } catch (err) {
+        target.innerHTML = `<div class="p-3 bg-red-950/40 text-red-300 text-xs rounded-xl border border-red-500/30">${err.message}</div>`;
       } finally {
-        if (loading) loading.classList.add('hidden');
+        loading.classList.add('hidden');
       }
     };
 
@@ -1142,47 +1323,19 @@ Restituisci ESCLUSIVAMENTE un JSON valido senza blocchi markdown esterni:
       const file = event.target.files[0];
       if (!file) return;
 
-      const selVal = document.getElementById('scannerSlotSelect').value;
-      const targetSlot = selVal === 'auto' ? detectCurrentMealSlot() : selVal;
-
       const reader = new FileReader();
       reader.onload = async function(e) {
         const base64Content = e.target.result.split(',')[1];
-        const preview = document.getElementById('foodPreviewImg');
-        const imgContainer = document.getElementById('foodImgPreviewContainer');
         const resultBox = document.getElementById('scannerResultBox');
         const loading = document.getElementById('foodLoadingSpinner');
         const target = document.getElementById('foodDetailsTarget');
 
-        if (preview) preview.src = e.target.result;
-        if (imgContainer) imgContainer.classList.remove('hidden');
-        if (resultBox) resultBox.classList.remove('hidden');
-        if (loading) loading.classList.remove('hidden');
-        if (target) target.innerHTML = '';
-
-        if (!appData.userApiKey) {
-          window.openApiKeyModal();
-          if (loading) loading.classList.add('hidden');
-          showNotification("Inserisci la chiave API Gemini.", true);
-          return;
-        }
+        resultBox.classList.remove('hidden');
+        loading.classList.remove('hidden');
+        target.innerHTML = '';
 
         try {
-          const prompt = `Agisci come Biologo Nutrizionista Sportivo.
-Momento del pasto: "${targetSlot}".
-Profilo: 32 anni, 95kg, target deficit 1.950 kcal/die.
-Analizza l'immagine e restituisci ESCLUSIVAMENTE un JSON:
-{
-  "dishName": "Nome descrittivo piatto",
-  "slot": "${targetSlot}",
-  "calories": 250,
-  "protein": 24,
-  "carbs": 18,
-  "fat": 8,
-  "verdict": "Giudizio rapido",
-  "advice": "Consiglio pratico"
-}`;
-
+          const prompt = `Analizza la foto del piatto. Restituisci ESCLUSIVAMENTE un JSON: {"dishName":"Piatto analizzato","slot":"Cena","calories":400,"protein":30,"carbs":35,"fat":12,"verdict":"Buono","advice":"Nutriente"}`;
           const rawText = await callGeminiApi({
             contents: [{
               role: "user",
@@ -1192,92 +1345,52 @@ Analizza l'immagine e restituisci ESCLUSIVAMENTE un JSON:
           });
 
           const jsonMatch = rawText.match(/\{[\s\S]*\}/);
-          if (!jsonMatch) throw new Error("Formato foto non riconosciuto");
-
+          if (!jsonMatch) throw new Error("Immagine non riconosciuta");
           const data = JSON.parse(jsonMatch[0]);
-          data.slot = targetSlot;
-          data.calories = parseInt(data.calories, 10) || 0;
-          data.protein = parseInt(data.protein, 10) || 0;
-          data.carbs = parseInt(data.carbs, 10) || 0;
-          data.fat = parseInt(data.fat, 10) || 0;
 
-          renderFoodAnalysisResult(data);
-        } catch (err) {
           target.innerHTML = `
-            <div class="p-4 rounded-2xl bg-red-950/40 text-red-300 text-sm border border-red-500/30">
-              ${err.message}
+            <div class="flex items-center justify-between p-3 bg-app-dark rounded-xl border border-app-border">
+              <div>
+                <span class="text-xs text-emerald-400 font-bold uppercase">${data.slot}</span>
+                <h4 class="font-bold text-white text-base">${data.dishName}</h4>
+                <p class="text-xs text-gray-300 font-mono mt-0.5">${data.calories} kcal • ${data.protein}g Pro | ${data.carbs}g Cho | ${data.fat}g Fat</p>
+              </div>
+              <button onclick="window.commitMealToLog(${JSON.stringify(data).replace(/"/g, '&quot;')})" class="px-4 py-2 bg-emerald-500 text-black font-bold text-xs rounded-xl">
+                Salva
+              </button>
             </div>
           `;
+        } catch (err) {
+          target.innerHTML = `<div class="p-3 bg-red-950/40 text-red-300 text-xs rounded-xl border border-red-500/30">${err.message}</div>`;
         } finally {
-          if (loading) loading.classList.add('hidden');
+          loading.classList.add('hidden');
         }
       };
       reader.readAsDataURL(file);
     };
 
-    function renderFoodAnalysisResult(data) {
-      const target = document.getElementById('foodDetailsTarget');
-      target.innerHTML = `
-        <div class="flex items-center justify-between">
-          <div>
-            <span class="text-xs uppercase font-bold text-emerald-400">${data.slot}</span>
-            <h4 class="font-display font-bold text-white text-base sm:text-lg">${data.dishName}</h4>
-          </div>
-          <span class="font-mono font-black text-xl text-emerald-400 bg-emerald-500/10 px-3.5 py-1 rounded-xl border border-emerald-500/20">
-            ${data.calories} kcal
-          </span>
-        </div>
-
-        <div class="grid grid-cols-3 gap-2.5 text-center text-xs py-1">
-          <div class="p-3 rounded-xl bg-app-card border border-app-border"><span class="text-xs text-app-textMuted font-semibold block">PROTEINE</span><span class="text-base font-bold text-white">${data.protein}g</span></div>
-          <div class="p-3 rounded-xl bg-app-card border border-app-border"><span class="text-xs text-app-textMuted font-semibold block">CARBOIDRATI</span><span class="text-base font-bold text-white">${data.carbs}g</span></div>
-          <div class="p-3 rounded-xl bg-app-card border border-app-border"><span class="text-xs text-app-textMuted font-semibold block">GRASSI</span><span class="text-base font-bold text-white">${data.fat}g</span></div>
-        </div>
-
-        <div class="p-3.5 rounded-xl bg-app-dark border border-app-border text-xs sm:text-sm text-app-textSecondary space-y-1">
-          <p><strong class="text-emerald-400">Verdetto:</strong> ${data.verdict}</p>
-          <p><strong class="text-teal-400">Consiglio:</strong> ${data.advice}</p>
-        </div>
-
-        <button onclick="window.commitMealToLog(${JSON.stringify(data).replace(/"/g, '&quot;')})" class="w-full py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-black text-sm sm:text-base active:scale-95 transition shadow-lg cursor-pointer">
-          + Salva nel pasto "${data.slot}" & Sincronizza Cloud
-        </button>
-      `;
-    }
-
-    window.commitMealToLog = meal => {
+    window.commitMealToLog = function(meal) {
       const day = getSelectedDayData();
       meal.time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
       day.foodLogs.unshift(meal);
       renderGroupedMeals();
       renderDualColumnDiet();
       updateDeficitCalculations();
-      updateCoachSyncSummaryUI();
       triggerCloudSave();
-      showNotification(`Pasto registrato in ${meal.slot}!`);
+      showNotification(`Pasto registrato!`);
       document.getElementById('scannerResultBox').classList.add('hidden');
     };
 
-    // Scanner Orologio
     window.scanWatchCalories = async event => {
       const file = event.target.files[0];
       if (!file) return;
 
-      if (!appData.userApiKey) {
-        window.openApiKeyModal();
-        showNotification("Inserisci la chiave API Gemini per scansionare l'orologio.", true);
-        return;
-      }
-
-      showNotification("Analisi display smartwatch con Gemini...");
       const reader = new FileReader();
       reader.onload = async function(e) {
         const base64Content = e.target.result.split(',')[1];
+        showNotification("Analisi display orologio...");
         try {
-          const prompt = `Analizza questa schermata di orologio fitness (es. Mi Fitness, Xiaomi Smart Band o Apple Watch). Identifica:
-1. Calorie attive bruciate (active calories / attività).
-2. Calorie a riposo (resting calories / basale), se visualizzate.
-Restituisci ESCLUSIVAMENTE un JSON: {"burnedKcal": 450, "restingKcal": 1950}`;
+          const prompt = `Analizza lo schermo dell'orologio fitness. Restituisci ESCLUSIVAMENTE un JSON: {"burnedKcal":450,"restingKcal":1950}`;
           const rawText = await callGeminiApi({
             contents: [{
               role: "user",
@@ -1287,319 +1400,34 @@ Restituisci ESCLUSIVAMENTE un JSON: {"burnedKcal": 450, "restingKcal": 1950}`;
           });
 
           const jsonMatch = rawText.match(/\{[\s\S]*\}/);
-          if (!jsonMatch) throw new Error("Formato foto non riconosciuto");
+          if (!jsonMatch) throw new Error("Dati orologio non trovati");
           const res = JSON.parse(jsonMatch[0]);
-          const activeKcal = parseInt(res.burnedKcal, 10);
-          const restKcal = parseInt(res.restingKcal, 10);
 
           const day = getSelectedDayData();
-          let msg = "";
+          if (res.burnedKcal) day.burnedCalories = parseInt(res.burnedKcal, 10);
+          if (res.restingKcal) day.restingCalories = parseInt(res.restingKcal, 10);
 
-          if (!isNaN(activeKcal) && activeKcal > 0) {
-            day.burnedCalories = activeKcal;
-            msg += `Attive: ${activeKcal} kcal `;
-          }
-          if (!isNaN(restKcal) && restKcal > 0) {
-            day.restingCalories = restKcal;
-            msg += `Riposo: ${restKcal} kcal`;
-          }
-
-          if (msg) {
-            updateBurnedCaloriesUI();
-            updateDeficitCalculations();
-            updateCoachSyncSummaryUI();
-            triggerCloudSave();
-            showNotification(`Orologio rilevato: ${msg}!`);
-          } else {
-            showNotification("Impossibile leggere le calorie dal display.", true);
-          }
+          updateBurnedCaloriesUI();
+          updateDeficitCalculations();
+          triggerCloudSave();
+          showNotification("Calorie sincronizzate dall'orologio!");
         } catch (err) {
-          showNotification("Errore lettura foto smartwatch.", true);
+          showNotification("Errore lettura orologio", true);
         }
       };
       reader.readAsDataURL(file);
     };
 
-    // Input Vocale
-    let speechRecognizer = null;
-    let isListening = false;
-
-    window.toggleVoiceInput = () => {
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      if (!SpeechRecognition) {
-        showNotification("Riconoscimento vocale non supportato da questo browser.", true);
-        return;
-      }
-
-      const voiceBtn = document.getElementById('voiceInputBtn');
-      const input = document.getElementById('manualDishTextInput');
-
-      if (isListening && speechRecognizer) {
-        speechRecognizer.stop();
-        return;
-      }
-
-      speechRecognizer = new SpeechRecognition();
-      speechRecognizer.lang = 'it-IT';
-      speechRecognizer.continuous = false;
-      speechRecognizer.interimResults = false;
-
-      speechRecognizer.onstart = () => {
-        isListening = true;
-        voiceBtn.classList.add('mic-active');
-        showNotification("Ascolto in corso... Dì cosa hai mangiato!");
-      };
-
-      speechRecognizer.onresult = event => {
-        const transcript = event.results[0][0].transcript;
-        input.value = transcript;
-        showNotification(`Riconosciuto: "${transcript}"`);
-        window.processManualFoodText();
-      };
-
-      speechRecognizer.onerror = () => {
-        showNotification("Errore microfono.", true);
-      };
-
-      speechRecognizer.onend = () => {
-        isListening = false;
-        voiceBtn.classList.remove('mic-active');
-      };
-
-      speechRecognizer.start();
-    };
-
-    // Idratazione Acqua
-    window.addWaterLiters = delta => {
-      const day = getSelectedDayData();
-      day.waterLiters = parseFloat(Math.max(0, ((day.waterLiters || 0) + delta)).toFixed(2));
-      if (delta > 0) {
-        day.gymBottles = Math.round(day.waterLiters / 0.5);
-      }
-      updateWaterDisplay();
-      updateGymBottleDisplay();
-      initWaterGrid();
-      updateCoachSyncSummaryUI();
+    window.saveBodyMeasurements = () => {
+      const w = parseFloat(document.getElementById('quickWeightInput').value);
+      const waist = parseFloat(document.getElementById('quickWaistInput').value);
+      if (!isNaN(w)) appData.weight = w.toFixed(1);
+      if (!isNaN(waist)) appData.waist = waist.toFixed(1);
+      document.getElementById('metricCurrentWeight').innerHTML = `${appData.weight} <span class="text-xs text-app-textMuted">kg</span>`;
+      document.getElementById('metricCurrentWaist').innerHTML = `${appData.waist} <span class="text-xs text-app-textMuted">cm</span>`;
       triggerCloudSave();
-      showNotification(`${delta > 0 ? '+' : ''}${delta}L registrati! Totale: ${day.waterLiters}L`);
+      showNotification("Misure salvate!");
     };
-
-    window.resetWaterLiters = () => {
-      if (!confirm("Azzera l'idratazione del giorno selezionato?")) return;
-      const day = getSelectedDayData();
-      day.waterLiters = 0.0;
-      day.gymBottles = 0;
-      updateWaterDisplay();
-      updateGymBottleDisplay();
-      initWaterGrid();
-      updateCoachSyncSummaryUI();
-      triggerCloudSave();
-      showNotification("Idratazione azzerata.");
-    };
-
-    function updateWaterDisplay() {
-      const day = getSelectedDayData();
-      const liters = day.waterLiters || 0;
-      const target = 3.5;
-      const pct = Math.min(150, Math.round((liters / target) * 100));
-
-      const readoutBig = document.getElementById('waterValueDisplayBig');
-      if (readoutBig) readoutBig.innerText = liters.toFixed(2);
-
-      const percentEl = document.getElementById('waterPercentDisplay');
-      if (percentEl) percentEl.innerText = `${pct}%`;
-
-      const barEl = document.getElementById('waterProgressBar');
-      if (barEl) barEl.style.width = `${Math.min(100, pct)}%`;
-    }
-
-    function initWaterGrid() {
-      const grid = document.getElementById('waterTrackerGrid');
-      if (!grid) return;
-      grid.innerHTML = '';
-      const day = getSelectedDayData();
-      const totalSteps = 7;
-      const filledSteps = Math.floor((day.waterLiters || 0) / 0.5);
-
-      for (let i = 1; i <= totalSteps; i++) {
-        const active = i <= filledSteps;
-        const btn = document.createElement('button');
-        btn.onclick = () => window.selectWaterStep(i);
-        btn.className = `p-2.5 rounded-xl text-xs font-semibold transition flex flex-col items-center border active:scale-90 ${
-          active ? 'water-droplet-glow text-teal-300' : 'bg-app-dark border-app-border text-gray-500 hover:border-gray-400'
-        }`;
-        btn.innerHTML = `
-          <span class="${active ? 'scale-110 drop-shadow-[0_0_8px_rgba(45,212,191,0.8)]' : 'opacity-40'} transition">💧</span>
-          <span class="text-[10px] font-mono mt-0.5 ${(active ? 'font-bold text-teal-200' : '')}">${(i * 0.5).toFixed(1)}L</span>
-        `;
-        grid.appendChild(btn);
-      }
-    }
-
-    window.selectWaterStep = step => {
-      const day = getSelectedDayData();
-      const target = step * 0.5;
-      day.waterLiters = (day.waterLiters === target) ? (step - 1) * 0.5 : target;
-      day.gymBottles = Math.round(day.waterLiters / 0.5);
-      updateWaterDisplay();
-      updateGymBottleDisplay();
-      initWaterGrid();
-      updateCoachSyncSummaryUI();
-      triggerCloudSave();
-    };
-
-    function updateGymBottleDisplay() {
-      const day = getSelectedDayData();
-      const badge = document.getElementById('gymBottleCountBadge');
-      if (badge) badge.innerText = `${day.gymBottles || 0} Borracce (${((day.gymBottles || 0) * 0.5).toFixed(1)} L)`;
-    }
-
-    function detectCurrentMealSlot() {
-      const h = new Date().getHours();
-      const m = new Date().getMinutes();
-      const timeDecimal = h + m / 60;
-
-      if (timeDecimal >= 6 && timeDecimal < 10.5) return "Colazione";
-      if (timeDecimal >= 10.5 && timeDecimal < 12.5) return "Spuntino";
-      if (timeDecimal >= 12.5 && timeDecimal < 15.5) return "Pranzo";
-      if (timeDecimal >= 15.5 && timeDecimal < 19.0) return "Merenda";
-      if (timeDecimal >= 19.0 && timeDecimal < 23.0) return "Cena";
-      return "Spuntino notturno";
-    }
-
-    function updateDetectedSlotUI() {
-      const slot = detectCurrentMealSlot();
-      const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      const badge = document.getElementById('detectedSlotBadge');
-      if (badge) badge.innerText = `${slot} (${timeStr})`;
-    }
-
-    // =============================================================
-    // COACH SYNC
-    // =============================================================
-    function updateCoachSyncSummaryUI() {
-      const summaryEl = document.getElementById('coachSyncSummaryText');
-      if (!summaryEl) return;
-
-      const day = getSelectedDayData();
-      const totalIntake = (day.foodLogs || []).reduce((acc, m) => acc + (Number(m.calories) || 0), 0);
-      const totalPro = (day.foodLogs || []).reduce((acc, m) => acc + (Number(m.protein) || 0), 0);
-      const resting = Number(day.restingCalories) || 1950;
-      const burned = Number(day.burnedCalories) || 0;
-      const totalExpenditure = resting + burned;
-      const netDeficit = totalExpenditure - totalIntake;
-
-      summaryEl.innerText = `${totalIntake} kcal assunte (${totalPro}g Pro) • ${resting} kcal riposo + ${burned} kcal attive • Deficit: ${netDeficit >= 0 ? '-' : '+'}${Math.abs(netDeficit)} kcal • ${day.waterLiters || 0}L acqua`;
-    }
-
-    window.handleCoachSubmit = async e => {
-      e.preventDefault();
-      const input = document.getElementById('coachInputText');
-      const query = input.value.trim();
-      if (!query) return;
-
-      if (!appData.userApiKey) {
-        window.openApiKeyModal();
-        showNotification("Inserisci la chiave API Gemini.", true);
-        return;
-      }
-
-      input.value = '';
-      const box = document.getElementById('coachChatBox');
-      box.innerHTML += `<div class="bg-emerald-500 text-black font-bold p-3.5 rounded-2xl rounded-tr-none self-end max-w-[85%] ml-auto text-sm sm:text-base">${query}</div>`;
-      box.scrollTop = box.scrollHeight;
-
-      const loadingId = 'loading_' + Date.now();
-      box.innerHTML += `<div id="${loadingId}" class="bg-app-dark p-4 rounded-2xl border border-app-border max-w-[85%] text-emerald-400 animate-pulse text-sm">Il Coach sta controllando i tuoi dati...</div>`;
-      box.scrollTop = box.scrollHeight;
-
-      try {
-        const day = getSelectedDayData();
-        const totalIntake = (day.foodLogs || []).reduce((acc, m) => acc + (Number(m.calories) || 0), 0);
-        const totalPro = (day.foodLogs || []).reduce((acc, m) => acc + (Number(m.protein) || 0), 0);
-        const totalCarb = (day.foodLogs || []).reduce((acc, m) => acc + (Number(m.carbs) || 0), 0);
-        const totalFat = (day.foodLogs || []).reduce((acc, m) => acc + (Number(m.fat) || 0), 0);
-        const resting = Number(day.restingCalories) || 1950;
-        const burned = Number(day.burnedCalories) || 0;
-        const totalExpenditure = resting + burned;
-        const netDeficit = totalExpenditure - totalIntake;
-
-        const mealsBreakdown = (day.foodLogs || []).length > 0 
-          ? day.foodLogs.map(m => `- [${m.slot}] ${m.dishName}: ${m.calories} kcal (${m.protein}g P, ${m.carbs}g C, ${m.fat}g F)`).join('\n')
-          : "Ancora nessun pasto inserito oggi.";
-
-        const promptWithCloudContext = `
-Sei il personal trainer e nutrizionista sportivo di Luca, parli come un ragazzo sveglio di 30 anni, appassionato di palestra, diretto, pratico e amichevole. Zero formalismi medici o tabelle noiose.
-
-DATI REALI DI OGGI SU FIREBASE:
-- Peso: ${appData.weight} kg | Giro vita: ${appData.waist} cm
-- Calorie a Riposo (BMR): ${resting} kcal
-- Calorie Attive Bruciate: ${burned} kcal
-- SPESA ENERGETICA TOTALE (TDEE): ${totalExpenditure} kcal
-- Calorie mangiate: ${totalIntake} kcal (${totalPro}g P, ${totalCarb}g C, ${totalFat}g F)
-- DEFICIT REALE EFFETTIVO: ${netDeficit >= 0 ? `In deficit reale di ${netDeficit} kcal` : `In surplus di ${Math.abs(netDeficit)} kcal`}
-- Acqua: ${day.waterLiters || 0}L su 3.5L
-- Pasti odierni:
-${mealsBreakdown}
-
-- Preferenze: Friggitrice ad aria (polpette magre a 180°C, patate croccanti a 190°C), Huel Black + creatina post-gym, gamberetti e riso express, salmone/tonno fresco, mozzarella light Milbona, cetrioli, peperoni. NO broccoli, NO quark.
-
-DOMANDA DI LUCA:
-"${query}"
-
-Rispondi in massimo 2 brevi paragrafi diretti e motivanti usando i suoi numeri reali.
-`;
-
-        const reply = await callGeminiApi({
-          contents: [{ role: "user", parts: [{ text: promptWithCloudContext }] }]
-        });
-
-        document.getElementById(loadingId)?.remove();
-        box.innerHTML += `<div class="bg-app-dark p-4 rounded-2xl border border-app-border max-w-[90%] text-gray-200 leading-relaxed shadow-sm text-sm sm:text-base">${reply}</div>`;
-        box.scrollTop = box.scrollHeight;
-      } catch (err) {
-        document.getElementById(loadingId)?.remove();
-        box.innerHTML += `<div class="text-red-400 p-2">Errore Coach: ${err.message}</div>`;
-      }
-    };
-
-    window.sendQuickChatMessage = promptText => {
-      window.navigateToTab('coach');
-      document.getElementById('coachInputText').value = promptText;
-      window.handleCoachSubmit(new Event('submit'));
-    };
-
-    window.resetCoachChat = () => {
-      document.getElementById('coachChatBox').innerHTML = `
-        <div class="bg-app-dark p-4 rounded-2xl border border-app-border text-gray-200 leading-relaxed shadow-sm text-sm sm:text-base">
-          Chat resettata! Vai pure Luca, dimmi cosa vuoi sapere sulla giornata o sui pasti!
-        </div>
-      `;
-    };
-
-    // =============================================================
-    // INIZIALIZZAZIONE UI
-    // =============================================================
-    function updateUIFromState() {
-      updateDateHeaderUI();
-      renderWorkoutList(currentWorkoutDay);
-      renderDaySelector();
-      renderDualColumnDiet();
-      renderGroupedMeals();
-      renderLidlFractionShopping();
-      initWaterGrid();
-      updateWaterDisplay();
-      updateBurnedCaloriesUI();
-      updateGymBottleDisplay();
-      renderWalkHistory();
-      updateDeficitCalculations();
-      updateDetectedSlotUI();
-      updateCoachSyncSummaryUI();
-
-      document.getElementById('metricCurrentWeight').innerHTML = `${appData.weight} <span class="text-xs font-normal text-app-textMuted">kg</span>`;
-      document.getElementById('metricCurrentWaist').innerHTML = `${appData.waist} <span class="text-xs font-normal text-app-textMuted">cm</span>`;
-      document.getElementById('apiStatusDot').className = appData.userApiKey ? "w-3 h-3 rounded-full bg-emerald-400" : "w-3 h-3 rounded-full bg-amber-500";
-    }
 
     window.saveUserApiKey = () => {
       const val = document.getElementById('userApiKeyInput').value.trim();
@@ -1608,13 +1436,60 @@ Rispondi in massimo 2 brevi paragrafi diretti e motivanti usando i suoi numeri r
       document.getElementById('apiStatusDot').className = val ? "w-3 h-3 rounded-full bg-emerald-400" : "w-3 h-3 rounded-full bg-amber-500";
       window.closeApiKeyModal();
       triggerCloudSave();
-      showNotification("Chiave salvata nel Cloud!");
+      showNotification("Chiave API salvata!");
     };
 
+    // =============================================================
+    // INIZIALIZZAZIONE COMPLETA STATO UI
+    // =============================================================
+    window.updateUIFromState = function() {
+      window.updateDateHeaderUI();
+      renderWorkoutList(currentWorkoutDay);
+      renderDualColumnDiet();
+      renderGroupedMeals();
+      initWaterGrid();
+      updateWaterDisplay();
+      updateBurnedCaloriesUI();
+      updateDeficitCalculations();
+
+      document.getElementById('metricCurrentWeight').innerHTML = `${appData.weight} <span class="text-xs text-app-textMuted">kg</span>`;
+      document.getElementById('metricCurrentWaist').innerHTML = `${appData.waist} <span class="text-xs text-app-textMuted">cm</span>`;
+      document.getElementById('apiStatusDot').className = appData.userApiKey ? "w-3 h-3 rounded-full bg-emerald-400" : "w-3 h-3 rounded-full bg-amber-500";
+    };
+
+    // Controllo autenticazione iniziale e avvio sicuro
+    onAuthStateChanged(auth, user => {
+      currentUser = user;
+      const overlay = document.getElementById('loginOverlay');
+      const cloudStatus = document.getElementById('cloudStatusReadout');
+
+      if (!user) {
+        overlay.classList.remove('hidden');
+        if (unsubCloud) unsubCloud();
+        cloudStatus.innerText = "Offline / Locale";
+      } else {
+        overlay.classList.add('hidden');
+        cloudDocRef = doc(db, 'users', user.uid, 'gym_recomp', 'current_state');
+        cloudStatus.innerText = `${user.displayName ? user.displayName.split(' ')[0] : 'Utente'} • Cloud ✓`;
+
+        unsubCloud = onSnapshot(cloudDocRef, snap => {
+          if (snap.exists()) {
+            const data = snap.data();
+            if (data.dailyRecords) appData.dailyRecords = data.dailyRecords;
+            if (data.workoutExercises) appData.workoutExercises = data.workoutExercises;
+            if (data.weight) appData.weight = data.weight;
+            if (data.waist) appData.waist = data.waist;
+            window.updateUIFromState();
+          }
+        }, err => {
+          console.warn("Firestore snapshot non autorizzato, rimango in locale:", err);
+        });
+      }
+      window.updateUIFromState();
+    });
+
     window.addEventListener('DOMContentLoaded', () => {
-      window.switchWorkoutDay('dayA');
-      window.selectWeekFraction('block1');
-      updateUIFromState();
+      window.updateUIFromState();
     });
   </script>
 </body>
