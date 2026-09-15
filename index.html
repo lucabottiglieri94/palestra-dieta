@@ -81,7 +81,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: rgba(8, 10, 13, 0.92);
+      background: rgba(8, 10, 13, 0.94);
       backdrop-filter: blur(25px);
       z-index: 999;
     }
@@ -102,14 +102,14 @@
           Accedi con il tuo account Google per salvare carichi, dieta a doppia colonna e deficit calorico sul Cloud Firebase privato.
         </p>
       </div>
-      <button id="loginBtn" class="w-full py-3.5 rounded-2xl bg-white hover:bg-gray-100 text-black font-bold text-xs flex items-center justify-center gap-2.5 transition active:scale-95 shadow-md">
+      <button id="loginBtn" onclick="window.handleGoogleLogin()" class="w-full py-3.5 rounded-2xl bg-white hover:bg-gray-100 text-black font-bold text-xs flex items-center justify-center gap-2.5 transition active:scale-95 shadow-md cursor-pointer">
         <svg class="w-4 h-4" viewBox="0 0 24 24">
           <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
           <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
           <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
           <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
         </svg>
-        <span>Accedi con Google</span>
+        <span id="loginBtnLabel">Accedi con Google</span>
       </button>
       <div id="loginStatusMsg" class="text-[11px] text-red-400 hidden"></div>
     </div>
@@ -165,7 +165,7 @@
     </div>
   </header>
 
-  <!-- Container Principale (Adattato PC fino a 1440px / Mobile fluid) -->
+  <!-- Container Principale Desktop Ultra-Wide -->
   <main class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
 
     <!-- ============================================================= -->
@@ -217,19 +217,25 @@
           </div>
         </div>
 
-        <!-- Calorie Bruciate Palestra -->
+        <!-- Calorie Bruciate Palestra con Scanner Orologio Integrato -->
         <div class="apple-glass-card p-4 rounded-2xl border border-amber-500/30 bg-amber-500/[0.03] space-y-3">
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-2">
               <span class="text-xl">🔥</span>
               <div>
                 <h3 class="font-display font-bold text-xs text-white uppercase tracking-wider">Calorie Bruciate Sessione</h3>
-                <p class="text-[11px] text-app-textMuted">Apple Watch / Technogym</p>
+                <p class="text-[11px] text-app-textMuted">Smartwatch • Orologio • Technogym</p>
               </div>
             </div>
-            <button onclick="window.resetBurnedCalories()" class="text-[10px] text-app-textMuted hover:text-amber-400 px-2 py-1 rounded-lg bg-app-dark border border-app-border transition">
-              Azzera ↺
-            </button>
+            <div class="flex items-center gap-2">
+              <label class="cursor-pointer px-2.5 py-1 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 text-[11px] font-bold flex items-center gap-1 active:scale-95 transition" title="Scatta foto allo schermo dell'orologio o app Mi Fitness">
+                <span>📸 Scan Orologio</span>
+                <input type="file" accept="image/*" class="hidden" onchange="window.scanWatchCalories(event)">
+              </label>
+              <button onclick="window.resetBurnedCalories()" class="text-[10px] text-app-textMuted hover:text-amber-400 px-2 py-1 rounded-lg bg-app-dark border border-app-border transition">
+                Azzera ↺
+              </button>
+            </div>
           </div>
 
           <div class="flex items-baseline justify-between bg-app-dark/80 p-3 rounded-xl border border-app-border">
@@ -342,7 +348,7 @@
             <h3 class="font-display font-black text-base text-white flex items-center gap-2">
               <span>⚖️</span> Bilancio Calorico Giornaliero & Deficit
             </h3>
-            <p class="text-xs text-app-textMuted mt-0.5">Calcolo dinamico: Kcal assunte dallo Scanner vs Kcal bruciate vs Target 1.950 kcal</p>
+            <p class="text-xs text-app-textMuted mt-0.5">Kcal Cibo Scanner vs Kcal Bruciate (Smartwatch/Manuali) vs Obiettivo 1.950 kcal</p>
           </div>
           <div id="deficitSurplusBadge" class="self-start sm:self-auto px-3.5 py-1.5 rounded-xl font-mono font-black text-sm bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
             DEFICIT ATTIVO
@@ -359,7 +365,7 @@
           <div class="p-3.5 rounded-2xl bg-app-card border border-app-border text-center">
             <span class="text-[10px] uppercase font-bold text-app-textMuted block">Bruciate (Attività)</span>
             <div id="summaryBurnedKcal" class="text-2xl font-mono font-black text-amber-400 mt-1">0</div>
-            <span class="text-[10px] text-amber-300/80 font-mono">palestra / cammino</span>
+            <span class="text-[10px] text-amber-300/80 font-mono">palestra / orologio</span>
           </div>
 
           <div class="p-3.5 rounded-2xl bg-app-card border border-app-border text-center">
@@ -369,20 +375,24 @@
           </div>
 
           <div class="p-3.5 rounded-2xl bg-app-dark border border-emerald-500/40 text-center">
-            <span class="text-[10px] uppercase font-bold text-emerald-400 block">Bilancio / Deficit Netto</span>
+            <span class="text-[10px] uppercase font-bold text-emerald-400 block">Bilancio Netto</span>
             <div id="summaryNetBalance" class="text-2xl font-mono font-black text-emerald-300 mt-1">-500</div>
             <span id="summaryNetStatus" class="text-[10px] text-emerald-400 font-mono font-bold">in target deficit</span>
           </div>
         </div>
 
-        <!-- Quick Manual Kcal Burned Input directly in Nutrition Tab -->
+        <!-- Inserimento Kcal Bruciate + Scan Smartwatch -->
         <div class="flex flex-wrap items-center justify-between gap-3 bg-app-dark/80 p-3 rounded-2xl border border-app-border">
-          <span class="text-xs text-app-textSecondary">Aggiorna calorie bruciate oggi (Apple Watch / Cardio):</span>
+          <span class="text-xs text-app-textSecondary">Aggiorna calorie bruciate (Orologio / Mi Fitness / Apple Watch):</span>
           <div class="flex items-center gap-2">
             <input type="number" id="nutritionBurnedInput" placeholder="es. 400" class="w-28 bg-app-card border border-app-border rounded-xl px-3 py-1.5 text-xs text-center font-mono font-bold text-amber-300 focus:outline-none focus:border-amber-400">
             <button onclick="window.updateBurnedFromNutrition()" class="px-3.5 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-bold text-xs active:scale-95 transition">
-              Salva Bruciate
+              Salva
             </button>
+            <label class="cursor-pointer px-3 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 text-xs font-bold flex items-center gap-1 active:scale-95 transition" title="Scatta foto al display dell'orologio">
+              <span>📸 Scan Display Orologio</span>
+              <input type="file" accept="image/*" class="hidden" onchange="window.scanWatchCalories(event)">
+            </label>
           </div>
         </div>
       </div>
@@ -401,7 +411,7 @@
 
       <div id="daySelectorContainer" class="flex gap-2 overflow-x-auto pb-1 no-scrollbar justify-center"></div>
 
-      <!-- SCHEDA DIETA A DOPPIA COLONNA (CONSIGLIATO VS EFFETTIVO SCANNER) -->
+      <!-- SCHEDA DIETA A DOPPIA COLONNA (CONSIGLIATO VS EFFETTIVAMENTE MANGIATO) -->
       <div class="space-y-4">
         <div class="flex items-center justify-between px-1">
           <div class="flex items-center gap-2">
@@ -411,13 +421,11 @@
           <span class="text-xs font-mono text-emerald-400 font-bold">Piano Deficit Ricomposizione</span>
         </div>
 
-        <!-- Dynamic 6 Meals Container: Colazione, Spuntino, Pranzo, Merenda, Cena, Spuntino Notturno -->
         <div id="dualColumnMealGrid" class="space-y-4"></div>
       </div>
 
       <!-- Spesa Lidl & Idratazione Grid (2 colonne su PC) -->
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 pt-2">
-        <!-- Spesa Lidl -->
         <div class="apple-glass-card p-5 rounded-2xl border border-app-border space-y-3">
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-2">
@@ -429,7 +437,6 @@
           <div id="lidlItemsContainer" class="space-y-1.5"></div>
         </div>
 
-        <!-- Idratazione 3.5L -->
         <div class="apple-glass-card p-5 rounded-2xl border border-teal-500/30 space-y-4">
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-2">
@@ -451,7 +458,6 @@
     <!-- ============================================================= -->
     <section id="view-scanner" class="tab-view hidden space-y-6">
       
-      <!-- Scanner Hero Card -->
       <div class="apple-glass-card p-6 rounded-3xl border border-app-border text-center space-y-4 max-w-2xl mx-auto">
         <div class="w-14 h-14 mx-auto rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-2xl text-emerald-400">
           📷
@@ -459,11 +465,10 @@
         <div>
           <h3 class="font-display font-black text-lg text-white">Scanner Pasto o Tabella Nutrizionale</h3>
           <p class="text-xs text-app-textSecondary mt-1 max-w-md mx-auto leading-relaxed">
-            Scatta la foto del piatto o della confezione: Gemini riconosce l'orario e calcola calorie, proteine, carboidrati e grassi aggiungendoli al pasto corretto.
+            Scatta la foto del piatto: Gemini riconosce l'orario e calcola calorie, proteine, carboidrati e grassi inserendoli nel pasto corretto.
           </p>
         </div>
 
-        <!-- Automatic Meal Slot Detector Display & Selector -->
         <div class="bg-app-dark p-3.5 rounded-2xl border border-app-border flex flex-col sm:flex-row items-center justify-between gap-3 text-left">
           <div class="flex items-center gap-2.5">
             <span class="text-lg">🕒</span>
@@ -491,7 +496,6 @@
           <input type="file" id="scannerPhotoInput" accept="image/*" class="hidden" onchange="window.processFoodPhoto(event)">
         </label>
 
-        <!-- Preview & Live Result -->
         <div id="scannerResultBox" class="hidden text-left pt-4 border-t border-app-border space-y-3">
           <div class="relative w-full h-56 rounded-2xl overflow-hidden bg-black border border-app-border">
             <img id="foodPreviewImg" src="" alt="Pasto" class="w-full h-full object-cover">
@@ -508,15 +512,14 @@
       <div class="space-y-4">
         <div class="flex items-center justify-between px-1">
           <div>
-            <h4 class="font-display font-black text-base text-white">Diario Pasti Oggi per Fasce Orarie</h4>
-            <p class="text-xs text-app-textMuted">Somma automatica di calorie e macronutrienti per ogni pasto completato</p>
+            <h4 class="font-display font-black text-base text-white">Diario Pasti per Fasce Orarie</h4>
+            <p class="text-xs text-app-textMuted">Somma di calorie e macronutrienti per ogni pasto completato</p>
           </div>
           <button onclick="window.clearFoodLog()" class="text-xs text-app-textMuted hover:text-red-400 px-3 py-1 rounded-xl bg-app-card border border-app-border transition">
             Azzera Tutto
           </button>
         </div>
 
-        <!-- Rendered dynamically grouped by slot -->
         <div id="groupedMealsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
       </div>
 
@@ -631,10 +634,10 @@
     </div>
   </div>
 
-  <!-- FIREBASE & CORE APPLICATION LOGIC -->
+  <!-- FIREBASE & CORE SCRIPT -->
   <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js';
-    import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js';
+    import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js';
     import { getFirestore, doc, onSnapshot, setDoc } from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js';
 
     const firebaseConfig = {
@@ -659,10 +662,8 @@
     let cloudSaveTimeout = null;
 
     const AI_MODELS = ['gemini-3.6-flash', 'gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-1.5-flash'];
-
     const MEAL_SLOTS = ["Colazione", "Spuntino", "Pranzo", "Merenda", "Cena", "Spuntino notturno"];
 
-    // Stato Globale
     let appData = {
       userApiKey: localStorage.getItem('icon_gemini_key') || '',
       waterLiters: parseFloat(localStorage.getItem('icon_water_liters') || '0.0'),
@@ -685,37 +686,44 @@
     let timerCountdown = null;
     let secondsRemaining = 0;
 
-    // Riconoscimento orario
-    function detectCurrentMealSlot() {
-      const h = new Date().getHours();
-      const m = new Date().getMinutes();
-      const timeDecimal = h + m / 60;
+    // Gestione Login Sicura Anti-Blocco Popup
+    window.handleGoogleLogin = async () => {
+      const msg = document.getElementById('loginStatusMsg');
+      const btnLabel = document.getElementById('loginBtnLabel');
+      if (msg) msg.classList.add('hidden');
+      if (btnLabel) btnLabel.innerText = "Accesso in corso...";
 
-      if (timeDecimal >= 6 && timeDecimal < 10.5) return "Colazione";
-      if (timeDecimal >= 10.5 && timeDecimal < 12.5) return "Spuntino";
-      if (timeDecimal >= 12.5 && timeDecimal < 15.5) return "Pranzo";
-      if (timeDecimal >= 15.5 && timeDecimal < 19.0) return "Merenda";
-      if (timeDecimal >= 19.0 && timeDecimal < 23.0) return "Cena";
-      return "Spuntino notturno";
-    }
-
-    function updateDetectedSlotUI() {
-      const slot = detectCurrentMealSlot();
-      const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      const badge = document.getElementById('detectedSlotBadge');
-      if (badge) badge.innerText = `${slot} (${timeStr})`;
-    }
-
-    // Login & Sync
-    document.getElementById('loginBtn').onclick = async () => {
       try {
         await signInWithPopup(auth, provider);
       } catch (err) {
-        const msg = document.getElementById('loginStatusMsg');
-        msg.innerText = "Errore: " + err.message;
-        msg.classList.remove('hidden');
+        console.warn("Popup bloccato o fallito, passo a redirect...", err);
+        // Se il popup viene bloccato (es. Safari iPhone), usa il redirect nativo
+        if (err.code === 'auth/popup-blocked' || err.code === 'auth/popup-closed-by-user') {
+          try {
+            await signInWithRedirect(auth, provider);
+          } catch (rErr) {
+            if (msg) {
+              msg.innerText = "Errore redirect: " + (rErr.code || rErr.message);
+              msg.classList.remove('hidden');
+            }
+          }
+        } else if (msg) {
+          msg.innerText = "Errore: " + (err.code || err.message);
+          msg.classList.remove('hidden');
+        }
+      } finally {
+        if (btnLabel) btnLabel.innerText = "Accedi con Google";
       }
     };
+
+    // Controlla l'esito di eventuale redirect al caricamento
+    getRedirectResult(auth).catch(err => {
+      const msg = document.getElementById('loginStatusMsg');
+      if (msg) {
+        msg.innerText = "Errore autenticazione: " + err.message;
+        msg.classList.remove('hidden');
+      }
+    });
 
     document.getElementById('headerLogoutBtn').onclick = () => signOut(auth);
 
@@ -786,6 +794,71 @@
       }
       throw new Error("Nessun modello Gemini attivo");
     }
+
+    // Riconoscimento orario per 6 fasce
+    function detectCurrentMealSlot() {
+      const h = new Date().getHours();
+      const m = new Date().getMinutes();
+      const timeDecimal = h + m / 60;
+
+      if (timeDecimal >= 6 && timeDecimal < 10.5) return "Colazione";
+      if (timeDecimal >= 10.5 && timeDecimal < 12.5) return "Spuntino";
+      if (timeDecimal >= 12.5 && timeDecimal < 15.5) return "Pranzo";
+      if (timeDecimal >= 15.5 && timeDecimal < 19.0) return "Merenda";
+      if (timeDecimal >= 19.0 && timeDecimal < 23.0) return "Cena";
+      return "Spuntino notturno";
+    }
+
+    function updateDetectedSlotUI() {
+      const slot = detectCurrentMealSlot();
+      const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const badge = document.getElementById('detectedSlotBadge');
+      if (badge) badge.innerText = `${slot} (${timeStr})`;
+    }
+
+    // Scanner Smartwatch Display per Calorie Bruciate
+    window.scanWatchCalories = async event => {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      if (!appData.userApiKey) {
+        window.openApiKeyModal();
+        showNotification("Inserisci la chiave API Gemini per scansionare l'orologio.", true);
+        return;
+      }
+
+      showNotification("Analisi display smartwatch con Gemini...");
+      const reader = new FileReader();
+      reader.onload = async function(e) {
+        const base64Content = e.target.result.split(',')[1];
+        try {
+          const prompt = `Analizza questa schermata di orologio fitness (es. Mi Fitness, Xiaomi Smart Band o Apple Watch). Identifica il numero di calorie attive bruciate (kcal). Restituisci ESCLUSIVAMENTE un JSON: {"burnedKcal": 380}`;
+          const rawText = await callGeminiApi({
+            contents: [{
+              role: "user",
+              parts: [{ text: prompt }, { inlineData: { mimeType: file.type || "image/jpeg", data: base64Content } }]
+            }]
+          });
+
+          const cleanJson = rawText.replace(/```json/g, '').replace(/```/g, '').trim();
+          const res = JSON.parse(cleanJson);
+          const kcal = parseInt(res.burnedKcal, 10);
+
+          if (!isNaN(kcal) && kcal > 0) {
+            appData.burnedCalories = kcal;
+            updateBurnedCaloriesUI();
+            updateDeficitCalculations();
+            triggerCloudSave();
+            showNotification(`Calorie orologio rilevate: ${kcal} kcal!`);
+          } else {
+            showNotification("Impossibile leggere le calorie dal display.", true);
+          }
+        } catch (err) {
+          showNotification("Errore lettura foto smartwatch.", true);
+        }
+      };
+      reader.readAsDataURL(file);
+    };
 
     const ROUTINES = {
       dayA: {
@@ -967,15 +1040,11 @@
       document.getElementById('apiStatusDot').className = appData.userApiKey ? "w-2.5 h-2.5 rounded-full bg-emerald-400" : "w-2.5 h-2.5 rounded-full bg-amber-500";
     }
 
-    // CALCOLO TOTALE KCAL ASSUNTE E DEFICIT / SURPLUS
     function updateDeficitCalculations() {
       const totalIntake = appData.foodLogs.reduce((acc, m) => acc + (Number(m.calories) || 0), 0);
       const burned = Number(appData.burnedCalories) || 0;
       const target = 1950;
-
-      // Net Balance = Intake - Burned
       const netIntake = totalIntake - burned;
-      // Deficit = Target - Net Intake
       const actualDeficit = target - netIntake;
 
       document.getElementById('summaryIntakeKcal').innerText = totalIntake;
@@ -1009,12 +1078,12 @@
         appData.burnedCalories = val;
         document.getElementById('nutritionBurnedInput').value = '';
         updateBurnedCaloriesUI();
+        updateDeficitCalculations();
         triggerCloudSave();
         showNotification(`Calorie bruciate impostate a ${val} kcal!`);
       }
     };
 
-    // RENDERING DIETA A DOPPIA COLONNA (CONSIGLIATO VS EFFETTIVAMENTE MANGIATO)
     function renderDualColumnDiet() {
       const container = document.getElementById('dualColumnMealGrid');
       const dayData = FRACTION_DATA[currentFraction].days[currentSelectedDay];
@@ -1023,7 +1092,6 @@
       document.getElementById('currentDayTitle').innerText = currentSelectedDay;
       document.getElementById('currentDayBadge').innerText = dayData.badge;
 
-      // Group logged food by slot
       const loggedBySlot = {};
       MEAL_SLOTS.forEach(s => loggedBySlot[s] = []);
       appData.foodLogs.forEach(m => {
@@ -1036,7 +1104,6 @@
         const planned = dayData.meals[slotName] || { title: slotName, time: "--:--", desc: "Pasto libero o non previsto", target: "" };
         const actualItems = loggedBySlot[slotName] || [];
 
-        // Sum actual macros for this slot
         const sumKcal = actualItems.reduce((acc, x) => acc + (Number(x.calories) || 0), 0);
         const sumPro = actualItems.reduce((acc, x) => acc + (Number(x.protein) || 0), 0);
         const sumCarb = actualItems.reduce((acc, x) => acc + (Number(x.carbs) || 0), 0);
@@ -1068,8 +1135,6 @@
               <div class="space-y-1.5 max-h-40 overflow-y-auto pr-1">
                 ${itemsList}
               </div>
-
-              <!-- Subtotale Effettivo Pasto in Evidenza -->
               <div class="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-between">
                 <div>
                   <span class="text-[10px] uppercase font-bold text-emerald-400 block">Totale ${slotName}</span>
@@ -1096,10 +1161,7 @@
               <span class="text-xs font-mono text-teal-400 font-semibold">${planned.time}</span>
             </div>
 
-            <!-- Griglia Split 2 Colonne (Sinistra Consigliato, Destra Effettivo) -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5 items-stretch">
-              
-              <!-- Colonna Sinistra: Consigliato -->
               <div class="p-3.5 rounded-2xl bg-app-card border border-app-border flex flex-col justify-between space-y-2">
                 <div>
                   <div class="flex items-center justify-between text-[11px] text-app-textMuted uppercase font-bold mb-1">
@@ -1114,7 +1176,6 @@
                 </div>
               </div>
 
-              <!-- Colonna Destra: Effettivamente Mangiato -->
               <div class="p-3.5 rounded-2xl bg-app-cardSubtle/60 border border-emerald-500/20 flex flex-col justify-between space-y-2">
                 <div class="flex items-center justify-between text-[11px] uppercase font-bold mb-1">
                   <span class="text-teal-300">🍽️ Effettivamente Mangiato</span>
@@ -1122,7 +1183,6 @@
                 </div>
                 ${actualHTML}
               </div>
-
             </div>
           </div>
         `;
@@ -1148,7 +1208,6 @@
       document.getElementById('scannerPhotoInput').click();
     };
 
-    // RENDERING SCANNER CON RAGGRUPPAMENTO PASTI E SOMME TOTALI
     function renderGroupedMeals() {
       const container = document.getElementById('groupedMealsContainer');
       if (!container) return;
@@ -1162,7 +1221,6 @@
         return;
       }
 
-      // Group items by slot
       const groups = {};
       appData.foodLogs.forEach(item => {
         const s = item.slot || "Cena";
@@ -1197,13 +1255,11 @@
                 </div>
                 <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-bold">${items.length} cibi</span>
               </div>
-
               <div class="space-y-1.5">
                 ${itemsHTML}
               </div>
             </div>
 
-            <!-- Box Somma a fine pasto (Cena, Pranzo, ecc.) -->
             <div class="p-3 rounded-xl bg-gradient-to-r from-emerald-500/15 to-teal-500/15 border border-emerald-500/30 flex items-center justify-between mt-2">
               <div>
                 <span class="text-[10px] uppercase font-black text-emerald-400 block">Somma Valori ${slot}</span>
@@ -1221,7 +1277,6 @@
       }).join('');
     }
 
-    // GESTIONE PROCESSO FOTO PASTI CON DETERMINAZIONE SLOT
     window.processFoodPhoto = async event => {
       const file = event.target.files[0];
       if (!file) return;
@@ -1336,7 +1391,6 @@
       showNotification("Diario pasti azzerato.");
     };
 
-    // FUNZIONI WORKOUT & CAMMINATA
     window.switchWorkoutDay = dayKey => {
       currentWorkoutDay = dayKey;
       ['dayA', 'dayB', 'dayC', 'dayD'].forEach(key => {
@@ -1528,4 +1582,455 @@
             }]
           });
 
-          const cleanJson = rawText.replace(/```json/g, '').replace(/
+          const cleanJson = rawText.replace(/```json/g, '').replace(/```/g, '').trim();
+          const res = JSON.parse(cleanJson);
+
+          textTarget.innerHTML = `
+            <div class="font-bold text-white">${res.name}</div>
+            <div class="text-[10px] text-teal-300 font-mono">${res.calories} kcal • ${res.carbs}g carbo • +${res.hydrationLiters}L idratazione</div>
+            <div class="text-[10px] text-app-textMuted">${res.advice}</div>
+          `;
+
+          if (res.hydrationLiters > 0) {
+            appData.waterLiters = parseFloat((appData.waterLiters + res.hydrationLiters).toFixed(1));
+            updateWaterDisplay();
+            initWaterGrid();
+            triggerCloudSave();
+          }
+        } catch (err) {
+          textTarget.innerHTML = `<div class="text-teal-300 font-bold">Bevanda registrata (+0.5L).</div>`;
+        }
+      };
+      reader.readAsDataURL(file);
+    };
+
+    window.addBurnedCalories = amount => {
+      appData.burnedCalories += amount;
+      updateBurnedCaloriesUI();
+      updateDeficitCalculations();
+      triggerCloudSave();
+      showNotification(`+${amount} kcal!`);
+    };
+
+    window.applyCustomKcal = () => {
+      const val = parseInt(document.getElementById('customKcalInput').value);
+      if (!isNaN(val) && val > 0) {
+        appData.burnedCalories = val;
+        document.getElementById('customKcalInput').value = '';
+        updateBurnedCaloriesUI();
+        updateDeficitCalculations();
+        triggerCloudSave();
+        showNotification(`Calorie: ${val} kcal!`);
+      }
+    };
+
+    window.resetBurnedCalories = () => {
+      appData.burnedCalories = 0;
+      updateBurnedCaloriesUI();
+      updateDeficitCalculations();
+      triggerCloudSave();
+      showNotification("Calorie azzerate.");
+    };
+
+    function updateBurnedCaloriesUI() {
+      const displayEl = document.getElementById('displayBurnedKcal');
+      const deficitEl = document.getElementById('displayTotalDeficit');
+      if (displayEl) displayEl.innerText = appData.burnedCalories;
+      if (deficitEl) deficitEl.innerText = `${-500 - appData.burnedCalories} kcal`;
+    }
+
+    window.startDiscreetTimer = seconds => {
+      clearInterval(timerCountdown);
+      secondsRemaining = seconds;
+      updateTimerDisplay();
+
+      const liveBar = document.getElementById('activeTimerBar');
+      liveBar.classList.remove('hidden');
+
+      timerCountdown = setInterval(() => {
+        secondsRemaining--;
+        if (secondsRemaining <= 0) {
+          clearInterval(timerCountdown);
+          secondsRemaining = 0;
+          updateTimerDisplay();
+          window.stopDiscreetTimer();
+          playDiscreetPing();
+          if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+          showNotification("Recupero terminato! Sotto con la serie!");
+        } else {
+          updateTimerDisplay();
+        }
+      }, 1000);
+    };
+
+    window.addTimerSeconds = extra => {
+      secondsRemaining += extra;
+      updateTimerDisplay();
+    };
+
+    window.stopDiscreetTimer = () => {
+      clearInterval(timerCountdown);
+      secondsRemaining = 0;
+      updateTimerDisplay();
+      document.getElementById('activeTimerBar').classList.add('hidden');
+    };
+
+    function updateTimerDisplay() {
+      const m = Math.floor(secondsRemaining / 60);
+      const s = secondsRemaining % 60;
+      const str = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+      document.getElementById('activeTimerValue').innerText = str;
+      document.getElementById('headerTimerReadout').innerText = str;
+      document.getElementById('modalTimerDigits').innerText = str;
+    }
+
+    window.toggleTimerModal = () => document.getElementById('restTimerModal').classList.toggle('hidden');
+
+    function playDiscreetPing() {
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(587.33, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.15);
+        gain.gain.setValueAtTime(0.25, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.45);
+      } catch (e) {}
+    }
+
+    window.selectWeekFraction = fractionKey => {
+      currentFraction = fractionKey;
+      const btn1 = document.getElementById('btn-fraction-block1');
+      const btn2 = document.getElementById('btn-fraction-block2');
+
+      if (fractionKey === 'block1') {
+        btn1.className = 'py-2.5 px-3 rounded-xl text-xs font-black transition bg-emerald-500 text-black shadow-sm';
+        btn2.className = 'py-2.5 px-3 rounded-xl text-xs font-semibold transition text-app-textMuted hover:text-white';
+        currentSelectedDay = 'Lunedì';
+      } else {
+        btn2.className = 'py-2.5 px-3 rounded-xl text-xs font-black transition bg-emerald-500 text-black shadow-sm';
+        btn1.className = 'py-2.5 px-3 rounded-xl text-xs font-semibold transition text-app-textMuted hover:text-white';
+        currentSelectedDay = 'Venerdì';
+      }
+
+      renderDaySelector();
+      renderDualColumnDiet();
+      renderLidlFractionShopping();
+    };
+
+    function renderDaySelector() {
+      const container = document.getElementById('daySelectorContainer');
+      const data = FRACTION_DATA[currentFraction];
+      const days = Object.keys(data.days);
+
+      container.innerHTML = days.map(d => `
+        <button onclick="window.selectDay('${d}')" class="whitespace-nowrap px-4 py-2 rounded-xl text-xs font-bold transition ${
+          d === currentSelectedDay 
+            ? 'bg-emerald-500 text-black shadow-sm' 
+            : 'bg-app-card text-app-textMuted hover:text-white border border-app-border'
+        }">
+          ${d}
+        </button>
+      `).join('');
+    }
+
+    window.selectDay = dayName => {
+      currentSelectedDay = dayName;
+      renderDaySelector();
+      renderDualColumnDiet();
+    };
+
+    function renderLidlFractionShopping() {
+      const container = document.getElementById('lidlItemsContainer');
+      const data = FRACTION_DATA[currentFraction];
+      const savedChecks = appData.lidlChecks[currentFraction] || {};
+
+      let currentSum = 0;
+      let html = '';
+
+      data.lidlItems.forEach((item, index) => {
+        const isChecked = savedChecks[index] !== undefined ? savedChecks[index] : false;
+        if (isChecked) currentSum += item.price;
+
+        html += `
+          <div onclick="window.toggleLidlCheck(${index})" class="flex items-center justify-between p-2 rounded-xl bg-app-card border border-app-border cursor-pointer hover:border-emerald-500/30 transition">
+            <div class="flex items-center gap-2">
+              <div class="w-4 h-4 rounded border flex items-center justify-center text-[10px] ${
+                isChecked ? 'bg-emerald-500 border-emerald-500 text-black font-bold' : 'border-app-border'
+              }">${isChecked ? '✓' : ''}</div>
+              <span class="text-xs ${isChecked ? 'line-through text-app-textMuted' : 'text-gray-200'}">${item.name}</span>
+            </div>
+            <span class="text-xs font-mono font-bold text-emerald-400">~${item.price.toFixed(2)}€</span>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+      document.getElementById('lidlFractionTotalDisplay').innerText = `${currentSum.toFixed(2)} €`;
+      document.getElementById('lidlCardTitle').innerText = `Spesa Lidl Essenziale (${data.title})`;
+    }
+
+    window.toggleLidlCheck = index => {
+      const savedChecks = appData.lidlChecks[currentFraction] || {};
+      savedChecks[index] = !savedChecks[index];
+      appData.lidlChecks[currentFraction] = savedChecks;
+      renderLidlFractionShopping();
+      triggerCloudSave();
+    };
+
+    function initWaterGrid() {
+      const grid = document.getElementById('waterTrackerGrid');
+      grid.innerHTML = '';
+      const totalSteps = 7;
+      const filledSteps = Math.round(appData.waterLiters / 0.5);
+
+      for (let i = 1; i <= totalSteps; i++) {
+        const active = i <= filledSteps;
+        const btn = document.createElement('button');
+        btn.onclick = () => window.selectWaterStep(i);
+        btn.className = `p-2 rounded-xl text-xs font-semibold transition flex flex-col items-center border active:scale-90 ${
+          active ? 'water-droplet-glow text-teal-300' : 'bg-app-dark border-app-border text-gray-500 hover:border-gray-400'
+        }`;
+        btn.innerHTML = `
+          <span class="${active ? 'scale-110 drop-shadow-[0_0_8px_rgba(45,212,191,0.8)]' : 'opacity-40'} transition">💧</span>
+          <span class="text-[9px] font-mono mt-0.5 ${(active ? 'font-bold text-teal-200' : '')}">${(i * 0.5).toFixed(1)}L</span>
+        `;
+        grid.appendChild(btn);
+      }
+      updateWaterDisplay();
+    }
+
+    window.selectWaterStep = step => {
+      const target = step * 0.5;
+      appData.waterLiters = (appData.waterLiters === target) ? (step - 1) * 0.5 : target;
+      initWaterGrid();
+      triggerCloudSave();
+    };
+
+    function updateWaterDisplay() {
+      const el = document.getElementById('waterValueDisplay');
+      if (el) el.innerText = `${appData.waterLiters.toFixed(1)} / 3.5 L`;
+    }
+
+    window.handleCoachSubmit = async e => {
+      e.preventDefault();
+      const input = document.getElementById('coachInputText');
+      const query = input.value.trim();
+      if (!query) return;
+
+      if (!appData.userApiKey) {
+        window.openApiKeyModal();
+        showNotification("Inserisci la chiave API Gemini.", true);
+        return;
+      }
+
+      input.value = '';
+      const box = document.getElementById('coachChatBox');
+      box.innerHTML += `<div class="bg-emerald-500 text-black font-semibold p-3 rounded-2xl rounded-tr-none self-end max-w-[85%] ml-auto">${query}</div>`;
+      box.scrollTop = box.scrollHeight;
+
+      const loadingId = 'loading_' + Date.now();
+      box.innerHTML += `<div id="${loadingId}" class="bg-app-dark p-3.5 rounded-2xl border border-app-border max-w-[85%] text-emerald-400 animate-pulse">Il Coach sta elaborando...</div>`;
+      box.scrollTop = box.scrollHeight;
+
+      try {
+        const sys = `
+          Sei il PT e Biologo Nutrizionista Sportivo di Luca. Profilo: 32 anni, 95kg, deficit 1.950 kcal/die (target 170g proteine).
+          Post-workout: Huel Black + creatina. Dieta: polpette manzo magro (180°C), patate croccanti (190°C), riso express, gamberetti, salmone, tonno fresco weekend, mozzarella light Milbona, cetrioli, peperoni. NO BROCCOLI, NO QUARK.
+          Rispondi in massimo 2 brevi paragrafi diretti e scientifici in italiano.
+        `;
+
+        const reply = await callGeminiApi({
+          contents: [{ role: "user", parts: [{ text: `${sys}\n\nDomanda: ${query}` }] }]
+        });
+
+        document.getElementById(loadingId)?.remove();
+        box.innerHTML += `<div class="bg-app-dark p-3.5 rounded-2xl border border-app-border max-w-[90%] text-gray-200 leading-relaxed shadow-sm">${reply}</div>`;
+        box.scrollTop = box.scrollHeight;
+      } catch (err) {
+        document.getElementById(loadingId)?.remove();
+        box.innerHTML += `<div class="text-red-400 p-2">Errore di comunicazione con il Coach.</div>`;
+      }
+    };
+
+    window.sendQuickChatMessage = promptText => {
+      window.navigateToTab('coach');
+      document.getElementById('coachInputText').value = promptText;
+      window.handleCoachSubmit(new Event('submit'));
+    };
+
+    window.resetCoachChat = () => {
+      document.getElementById('coachChatBox').innerHTML = `
+        <div class="bg-app-dark p-3.5 rounded-2xl border border-app-border text-gray-200 leading-relaxed shadow-sm">
+          Chat azzerata! Fammi qualsiasi domanda su palestra o ricette.
+        </div>
+      `;
+    };
+
+    window.saveBodyMeasurements = () => {
+      const weightVal = parseFloat(document.getElementById('quickWeightInput').value);
+      const waistVal = parseFloat(document.getElementById('quickWaistInput').value);
+
+      if (!isNaN(weightVal) && weightVal > 40 && weightVal < 200) {
+        appData.weight = weightVal.toFixed(1);
+        document.getElementById('metricCurrentWeight').innerHTML = `${appData.weight} <span class="text-xs font-normal text-app-textMuted">kg</span>`;
+      }
+      if (!isNaN(waistVal) && waistVal > 50 && waistVal < 180) {
+        appData.waist = waistVal.toFixed(1);
+        document.getElementById('metricCurrentWaist').innerHTML = `${appData.waist} <span class="text-xs font-normal text-app-textMuted">cm</span>`;
+      }
+
+      document.getElementById('quickWeightInput').value = '';
+      document.getElementById('quickWaistInput').value = '';
+      triggerCloudSave();
+      showNotification("Misure salvate nel Cloud!");
+    };
+
+    window.updateEstimatedSteps = () => {
+      const km = parseFloat(document.getElementById('inputWalkKm').value) || 0;
+      const steps = Math.round(km * 1320);
+      const display = document.getElementById('displayEstimatedSteps');
+      if (display) display.innerText = km > 0 ? `~${steps.toLocaleString('it-IT')} passi` : '~0 passi';
+    };
+
+    window.updateHeartRateZoneBadge = () => {
+      const bpm = parseInt(document.getElementById('inputWalkBpm').value) || 0;
+      const statusEl = document.getElementById('bpmZoneStatus');
+      if (!statusEl) return;
+      if (bpm === 0) statusEl.innerText = "Zona 2";
+      else if (bpm < 100) statusEl.innerText = "Passeggiata Leggera";
+      else if (bpm <= 128) statusEl.innerText = "Zona 2 • Fat Burn 🔥";
+      else statusEl.innerText = "Soglia Alta";
+    };
+
+    window.saveWalkSession = () => {
+      const kmVal = parseFloat(document.getElementById('inputWalkKm').value);
+      const kcalVal = parseInt(document.getElementById('inputWalkKcal').value);
+      const bpmVal = parseInt(document.getElementById('inputWalkBpm').value);
+      const waterVal = parseFloat(document.getElementById('inputWalkWater').value) || 0;
+
+      if (isNaN(kmVal) || kmVal <= 0) {
+        showNotification("Inserisci almeno i km.", true);
+        return;
+      }
+
+      if (waterVal > 0) {
+        appData.waterLiters = parseFloat((appData.waterLiters + waterVal).toFixed(1));
+        updateWaterDisplay();
+        initWaterGrid();
+      }
+
+      if (!isNaN(kcalVal) && kcalVal > 0) {
+        appData.burnedCalories += kcalVal;
+        updateBurnedCaloriesUI();
+        updateDeficitCalculations();
+      }
+
+      const sessionData = {
+        id: 'walk_' + Date.now(),
+        date: new Date().toLocaleDateString('it-IT', { weekday: 'short', day: 'numeric', month: 'short' }),
+        km: kmVal.toFixed(1),
+        steps: Math.round(kmVal * 1320),
+        kcal: !isNaN(kcalVal) ? kcalVal : Math.round(kmVal * 55),
+        bpm: !isNaN(bpmVal) ? bpmVal : null,
+        water: waterVal > 0 ? waterVal.toFixed(1) : null
+      };
+
+      appData.walkLogs.unshift(sessionData);
+      document.getElementById('inputWalkKm').value = '';
+      document.getElementById('inputWalkKcal').value = '';
+      document.getElementById('inputWalkBpm').value = '';
+      document.getElementById('inputWalkWater').value = '';
+      window.updateEstimatedSteps();
+      window.updateHeartRateZoneBadge();
+      renderWalkHistory();
+      triggerCloudSave();
+      showNotification(`Camminata di ${kmVal} km salvata!`);
+    };
+
+    function renderWalkHistory() {
+      const container = document.getElementById('walkLogContainer');
+      if (!container) return;
+
+      if (appData.walkLogs.length === 0) {
+        container.innerHTML = `<div class="col-span-full text-xs text-app-textMuted text-center py-4 bg-app-card rounded-xl border border-app-border">Nessuna camminata registrata.</div>`;
+        return;
+      }
+
+      container.innerHTML = appData.walkLogs.map(w => `
+        <div class="p-3.5 rounded-xl bg-app-card border border-app-border text-xs space-y-1.5">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-white">👟 ${w.km} km (${w.steps.toLocaleString('it-IT')} passi)</span>
+            <span class="font-mono font-bold text-amber-400">${w.kcal} kcal</span>
+          </div>
+          <div class="flex items-center justify-between text-[11px] text-app-textSecondary">
+            <span class="text-app-textMuted">${w.date}</span>
+            <div class="flex items-center gap-2 font-mono">
+              ${w.bpm ? `<span class="text-red-300">❤️ ${w.bpm} bpm</span>` : ''}
+              ${w.water ? `<span class="text-teal-300">💧 ${w.water}L</span>` : ''}
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    window.clearWalkLogs = () => {
+      appData.walkLogs = [];
+      renderWalkHistory();
+      triggerCloudSave();
+      showNotification("Storico azzerato.");
+    };
+
+    window.navigateToTab = tabId => {
+      ['workout', 'walk', 'nutrition', 'scanner', 'coach', 'progress'].forEach(t => {
+        const view = document.getElementById(`view-${t}`);
+        const navBtn = document.getElementById(`nav-${t}`);
+        if (view) view.classList.toggle('hidden', t !== tabId);
+        if (navBtn) {
+          navBtn.className = t === tabId
+            ? 'py-1 flex flex-col items-center text-emerald-400'
+            : 'py-1 flex flex-col items-center text-app-textMuted hover:text-white';
+        }
+      });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    window.openApiKeyModal = () => document.getElementById('apiKeyModal').classList.remove('hidden');
+    window.closeApiKeyModal = () => document.getElementById('apiKeyModal').classList.add('hidden');
+
+    window.saveUserApiKey = () => {
+      const val = document.getElementById('userApiKeyInput').value.trim();
+      appData.userApiKey = val;
+      localStorage.setItem('icon_gemini_key', val);
+      document.getElementById('apiStatusDot').className = val ? "w-2.5 h-2.5 rounded-full bg-emerald-400" : "w-2.5 h-2.5 rounded-full bg-amber-500";
+      window.closeApiKeyModal();
+      triggerCloudSave();
+      showNotification("Chiave salvata nel Cloud!");
+    };
+
+    function showNotification(msg, isAlert = false) {
+      const old = document.getElementById('toast');
+      if (old) old.remove();
+      const toast = document.createElement('div');
+      toast.id = 'toast';
+      toast.className = `fixed bottom-20 left-1/2 -translate-x-1/2 z-50 px-4 py-2.5 rounded-2xl text-xs font-bold border transition duration-300 shadow-xl flex items-center gap-2 ${
+        isAlert ? 'bg-red-950 text-red-200 border-red-500/40' : 'bg-app-card text-emerald-400 border-emerald-500/30'
+      }`;
+      toast.innerHTML = `<span>${isAlert ? '⚠️' : '✓'}</span><span>${msg}</span>`;
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 2600);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      window.switchWorkoutDay('dayA');
+      window.selectWeekFraction('block1');
+      updateUIFromState();
+    });
+  </script>
+</body>
+</html>
