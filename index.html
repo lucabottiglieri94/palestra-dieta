@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>ICON RECOMP • Gym Floor & Nutrition Dashboard</title>
 
-  <!-- PWA & Apple Web App Meta Tags -->
+  <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="ICON RECOMP">
@@ -147,7 +147,7 @@
     </div>
   </div>
 
-  <!-- Header Responsive Wide -->
+  <!-- Header -->
   <header class="bg-app-black/90 backdrop-blur-xl border-b border-app-border px-4 py-4 sticky z-40 top-0">
     <div class="max-w-7xl mx-auto flex items-center justify-between">
       <div class="flex items-center gap-3.5">
@@ -169,7 +169,6 @@
         </div>
       </div>
 
-      <!-- Selettore Data Quotidiana -->
       <div class="flex items-center gap-2 bg-app-card px-2.5 py-1.5 rounded-2xl border border-app-border">
         <button onclick="window.shiftSelectedDay(-1)" class="w-7 h-7 rounded-xl hover:bg-app-cardSubtle flex items-center justify-center text-sm text-app-textMuted hover:text-white transition">‹</button>
         <span id="headerCurrentDateLabel" class="text-xs sm:text-sm font-mono font-bold text-emerald-400 px-1 select-none">Oggi</span>
@@ -194,9 +193,7 @@
   <!-- Container Principale -->
   <main class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
 
-    <!-- ============================================================= -->
-    <!-- TAB 1: SCHEDA PALESTRA                                        -->
-    <!-- ============================================================= -->
+    <!-- TAB 1: SCHEDA PALESTRA -->
     <section id="view-workout" class="tab-view space-y-6">
       <div class="grid grid-cols-4 gap-2.5 p-1.5 bg-app-dark rounded-2xl border border-app-border max-w-2xl mx-auto">
         <button onclick="window.switchWorkoutDay('dayA')" id="btn-dayA" class="py-3 rounded-xl text-sm font-bold transition bg-emerald-500 text-black shadow-sm">Giorno A</button>
@@ -206,7 +203,6 @@
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
-        <!-- Borraccia Live Floor -->
         <div class="apple-glass-card p-5 rounded-2xl border border-teal-500/30 bg-teal-500/[0.03] space-y-4">
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-2.5">
@@ -243,7 +239,6 @@
           </div>
         </div>
 
-        <!-- Calorie Bruciate Palestra con Scanner Orologio -->
         <div class="apple-glass-card p-5 rounded-2xl border border-amber-500/30 bg-amber-500/[0.03] space-y-4">
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-2.5">
@@ -301,7 +296,6 @@
         </button>
       </div>
 
-      <!-- Elenco Esercizi Robusto -->
       <div id="exerciseList" class="grid grid-cols-1 lg:grid-cols-2 gap-4"></div>
     </section>
 
@@ -361,8 +355,6 @@
 
     <!-- TAB 2: ALIMENTAZIONE & BILANCIO COMPLETO RIPOSO/ATTIVE -->
     <section id="view-nutrition" class="tab-view hidden space-y-7">
-
-      <!-- QUADRO BILANCIO COMPLETO: CIBO vs RIPOSO (BMR) vs ATTIVE -->
       <div class="apple-glass-card p-6 rounded-3xl border border-emerald-500/30 bg-gradient-to-br from-emerald-500/[0.05] via-teal-500/[0.02] to-transparent space-y-5">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-app-border/60 pb-3">
           <div>
@@ -370,7 +362,7 @@
               <span>⚖️</span> Bilancio Calorico & Deficit Reale Giornaliero
             </h3>
             <p class="text-xs sm:text-sm text-app-textMuted mt-1">
-              Formula reale: Spesa Totale (Riposo + Attive) - Cibo Assunto = Deficit Reale Effettivo
+              Formula: Spesa Totale (Riposo + Attive) - Cibo Assunto = Deficit Reale Effettivo
             </p>
           </div>
           <div id="deficitSurplusBadge" class="self-start sm:self-auto px-4 py-2 rounded-xl font-mono font-black text-sm sm:text-base bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
@@ -410,7 +402,6 @@
           </div>
         </div>
 
-        <!-- CONTROLLI: AGGIORNA CALORIE A RIPOSO & ATTIVE -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 pt-1">
           <div class="flex flex-wrap items-center justify-between gap-3 bg-app-dark/80 p-4 rounded-2xl border border-teal-500/30">
             <div>
@@ -760,9 +751,7 @@
     </div>
   </div>
 
-  <!-- INIZIALIZZAZIONE GLOBALE -->
   <script>
-    // Esposizione rapida tabs e timer nel window object prima del modulo
     window.navigateToTab = tabId => {
       ['workout', 'walk', 'nutrition', 'scanner', 'coach', 'progress'].forEach(t => {
         const view = document.getElementById(`view-${t}`);
