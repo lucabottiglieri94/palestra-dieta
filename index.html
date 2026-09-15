@@ -99,7 +99,7 @@
       <div>
         <h2 class="font-display font-black text-xl text-white">ICON RECOMP</h2>
         <p class="text-xs text-app-textMuted mt-1.5 leading-relaxed">
-          Accedi con il tuo account Google per salvare carichi, pasti scritti a mano o scansionati e deficit sul Cloud privato.
+          Accedi con Google per sincronizzare scheda pesi, idratazione a incrementi e AI Coach connesso ai dati reali del Cloud Firebase.
         </p>
       </div>
       <button id="loginBtn" onclick="window.handleGoogleLogin()" class="w-full py-3.5 rounded-2xl bg-white hover:bg-gray-100 text-black font-bold text-xs flex items-center justify-center gap-2.5 transition active:scale-95 shadow-md cursor-pointer">
@@ -180,14 +180,14 @@
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <!-- Borraccia & Drink Scanner -->
+        <!-- Borraccia Live Floor -->
         <div class="apple-glass-card p-4 rounded-2xl border border-teal-500/30 bg-teal-500/[0.03] space-y-3">
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-2">
               <span class="text-xl">💧</span>
               <div>
-                <h3 class="font-display font-bold text-xs text-white uppercase tracking-wider">Borraccia Icon (500ml) & Drink Scanner</h3>
-                <p class="text-[11px] text-app-textMuted">Ricarica idrica & bibite sala pesi</p>
+                <h3 class="font-display font-bold text-xs text-white uppercase tracking-wider">Borraccia Icon Sala Pesi</h3>
+                <p class="text-[11px] text-app-textMuted">Ricarica rapida +0.5L sincronizzata</p>
               </div>
             </div>
             <span id="gymBottleCountBadge" class="text-xs font-mono font-bold text-teal-300 bg-teal-500/15 px-2.5 py-1 rounded-xl border border-teal-500/30">
@@ -196,9 +196,9 @@
           </div>
 
           <div class="grid grid-cols-2 gap-2">
-            <button onclick="window.addGymBottle()" class="py-3 px-3 rounded-xl bg-gradient-to-r from-teal-500/20 to-emerald-500/20 hover:from-teal-500/30 hover:to-emerald-500/30 border border-teal-500/40 text-teal-300 font-bold text-xs flex items-center justify-center gap-2 active:scale-95 transition">
+            <button onclick="window.addWaterLiters(0.5)" class="py-3 px-3 rounded-xl bg-gradient-to-r from-teal-500/20 to-emerald-500/20 hover:from-teal-500/30 hover:to-emerald-500/30 border border-teal-500/40 text-teal-300 font-bold text-xs flex items-center justify-center gap-2 active:scale-95 transition">
               <span class="text-base">🚰</span>
-              <span>+1 Borraccia (500ml)</span>
+              <span>+1 Borraccia (+0.5L)</span>
             </button>
             <label class="cursor-pointer py-3 px-3 rounded-xl bg-app-card hover:bg-app-cardSubtle border border-app-border text-gray-200 font-semibold text-xs flex items-center justify-center gap-2 active:scale-95 transition">
               <span class="text-base">📸</span>
@@ -336,7 +336,7 @@
     </section>
 
     <!-- ============================================================= -->
-    <!-- TAB 2: ALIMENTAZIONE (DOPPIA COLONNA & BILANCIO DEFICIT)       -->
+    <!-- TAB 2: ALIMENTAZIONE (DOPPIA COLONNA, ACQUA & DEFICIT)       -->
     <!-- ============================================================= -->
     <section id="view-nutrition" class="tab-view hidden space-y-6">
 
@@ -396,6 +396,65 @@
         </div>
       </div>
 
+      <!-- SEZIONE ACQUA AVANZATA CON PULSANTI DA 0.5L E PROGRESSO VISIVO -->
+      <div class="apple-glass-card p-5 sm:p-6 rounded-3xl border border-teal-500/30 bg-gradient-to-br from-teal-500/[0.06] to-transparent space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-app-border/60 pb-3">
+          <div class="flex items-center gap-2.5">
+            <div class="w-10 h-10 rounded-2xl bg-teal-500/15 border border-teal-500/30 flex items-center justify-center text-xl">
+              💧
+            </div>
+            <div>
+              <h3 class="font-display font-black text-base text-white">Idratazione Giornaliera & Creatina</h3>
+              <p class="text-xs text-app-textMuted">Supporto ritenzione intracellulare muscolare (Target: 3.5 Litri)</p>
+            </div>
+          </div>
+          <div class="flex items-baseline gap-1.5 self-end sm:self-auto">
+            <span id="waterValueDisplayBig" class="text-3xl font-mono font-black text-teal-300">0.0</span>
+            <span class="text-sm font-mono font-bold text-app-textMuted">/ 3.5 L</span>
+          </div>
+        </div>
+
+        <!-- Barra di Avanzamento Dinamica -->
+        <div class="space-y-1.5">
+          <div class="flex justify-between text-xs font-mono">
+            <span class="text-app-textMuted">Progresso Idrico</span>
+            <span id="waterPercentDisplay" class="text-teal-400 font-bold">0%</span>
+          </div>
+          <div class="w-full h-3 rounded-full bg-app-dark overflow-hidden border border-app-border p-0.5">
+            <div id="waterProgressBar" class="h-full rounded-full bg-gradient-to-r from-teal-500 to-emerald-400 transition-all duration-300" style="width: 0%"></div>
+          </div>
+        </div>
+
+        <!-- Pulsantiera Rapida: Incrementi da 0.5L, 0.25L, 1.0L, -0.5L e Reset -->
+        <div class="grid grid-cols-2 sm:grid-cols-5 gap-2.5 pt-1">
+          <button onclick="window.addWaterLiters(0.5)" class="py-3 px-3 rounded-2xl bg-teal-500 hover:bg-teal-400 text-black font-black text-xs sm:text-sm flex items-center justify-center gap-2 active:scale-95 transition shadow-lg">
+            <span>💧</span>
+            <span>+0.5 L (Borraccia)</span>
+          </button>
+          <button onclick="window.addWaterLiters(0.25)" class="py-3 px-3 rounded-2xl bg-app-card hover:bg-app-cardSubtle border border-teal-500/40 text-teal-300 font-bold text-xs sm:text-sm flex items-center justify-center gap-2 active:scale-95 transition">
+            <span>🥛</span>
+            <span>+0.25 L (Bicchiere)</span>
+          </button>
+          <button onclick="window.addWaterLiters(1.0)" class="py-3 px-3 rounded-2xl bg-app-card hover:bg-app-cardSubtle border border-teal-500/40 text-teal-300 font-bold text-xs sm:text-sm flex items-center justify-center gap-2 active:scale-95 transition">
+            <span>🍶</span>
+            <span>+1.0 L (Bottiglia)</span>
+          </button>
+          <button onclick="window.addWaterLiters(-0.5)" class="py-3 px-3 rounded-2xl bg-app-card hover:bg-red-950/30 border border-app-border text-gray-300 hover:text-red-300 font-semibold text-xs flex items-center justify-center gap-1 active:scale-95 transition" title="Rimuovi 0.5L in caso di click errato">
+            <span>↩️</span>
+            <span>-0.5 L</span>
+          </button>
+          <button onclick="window.resetWaterLiters()" class="py-3 px-3 rounded-2xl bg-app-card hover:bg-red-950/40 border border-red-500/30 text-red-300 font-semibold text-xs flex items-center justify-center gap-1 active:scale-95 transition">
+            <span>Azzera</span>
+          </button>
+        </div>
+
+        <!-- 7 Bicchieri Illuminati da 0.5L Ciascuno -->
+        <div class="pt-1">
+          <span class="text-[11px] uppercase font-bold text-app-textMuted block mb-2 font-mono">Dosi da 500ml completate:</span>
+          <div class="grid grid-cols-7 gap-2" id="waterTrackerGrid"></div>
+        </div>
+      </div>
+
       <!-- Frazione Settimanale -->
       <div class="apple-glass-card p-2 rounded-2xl border border-app-border max-w-xl mx-auto">
         <div class="grid grid-cols-2 gap-1.5 text-center font-display">
@@ -423,32 +482,16 @@
         <div id="dualColumnMealGrid" class="space-y-4"></div>
       </div>
 
-      <!-- Spesa Lidl & Idratazione Grid -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 pt-2">
-        <div class="apple-glass-card p-5 rounded-2xl border border-app-border space-y-3">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center gap-2">
-              <span class="text-lg">🛒</span>
-              <h4 id="lidlCardTitle" class="font-display font-bold text-xs uppercase tracking-wider text-white">Spesa Lidl Essenziale</h4>
-            </div>
-            <span id="lidlFractionTotalDisplay" class="font-mono font-bold text-xs text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-lg border border-emerald-500/20">0.00 €</span>
+      <!-- Spesa Lidl Grid -->
+      <div class="apple-glass-card p-5 rounded-2xl border border-app-border space-y-3">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="text-lg">🛒</span>
+            <h4 id="lidlCardTitle" class="font-display font-bold text-xs uppercase tracking-wider text-white">Spesa Lidl Essenziale</h4>
           </div>
-          <div id="lidlItemsContainer" class="space-y-1.5"></div>
+          <span id="lidlFractionTotalDisplay" class="font-mono font-bold text-xs text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-lg border border-emerald-500/20">0.00 €</span>
         </div>
-
-        <div class="apple-glass-card p-5 rounded-2xl border border-teal-500/30 space-y-4">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center gap-2">
-              <span class="text-lg">💧</span>
-              <div>
-                <h4 class="font-display font-bold text-xs uppercase tracking-wider text-white">Idratazione & Creatina</h4>
-                <p class="text-[11px] text-app-textMuted">Target 3.5 Litri quotidiani</p>
-              </div>
-            </div>
-            <span id="waterValueDisplay" class="text-xs font-mono font-bold text-teal-300">0.0 / 3.5 L</span>
-          </div>
-          <div class="grid grid-cols-7 gap-2" id="waterTrackerGrid"></div>
-        </div>
+        <div id="lidlItemsContainer" class="space-y-1.5"></div>
       </div>
     </section>
 
@@ -464,7 +507,7 @@
         <div>
           <h3 class="font-display font-black text-lg text-white">Registra Cibo: Foto o Scrittura a Mano</h3>
           <p class="text-xs text-app-textSecondary mt-1 max-w-md mx-auto leading-relaxed">
-            Scatta la foto del piatto oppure scrivi gli ingredienti (es. <em>"1 piatto di riso venere più 200g di gamberetti"</em>): Gemini calcolerà calorie, proteine, carbo e grassi inserendoli nel pasto giusto.
+            Scatta la foto del piatto o scrivi gli ingredienti (es. <em>"1 piatto di riso venere più 200g di gamberetti"</em>): Gemini calcolerà calorie, proteine, carbo e grassi inserendoli nel pasto giusto.
           </p>
         </div>
 
@@ -548,7 +591,7 @@
     </section>
 
     <!-- ============================================================= -->
-    <!-- TAB 4: AI COACH                                               -->
+    <!-- TAB 4: AI COACH (COLLEGATO AI DATI CLOUD FIREBASE REAL-TIME)  -->
     <!-- ============================================================= -->
     <section id="view-coach" class="tab-view hidden space-y-4 max-w-4xl mx-auto">
       <div class="apple-glass-card p-4 rounded-2xl border border-app-border flex items-center justify-between">
@@ -556,26 +599,42 @@
           <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center text-xl font-bold">🧬</div>
           <div>
             <h3 class="font-display font-bold text-sm text-white">AI Coach & Biologo Nutrizionista</h3>
-            <p class="text-[11px] text-app-textMuted">Gemini Flash Fallback • Deficit 1.950 kcal</p>
+            <p class="text-[11px] text-teal-400 font-mono">Sincronizzato sui tuoi dati reali di oggi (Pasti, Calorie & Deficit)</p>
           </div>
         </div>
         <button onclick="window.resetCoachChat()" class="text-xs text-app-textMuted px-3 py-1.5 rounded-xl bg-app-card border border-app-border hover:text-white transition">Azzera</button>
       </div>
 
+      <!-- Widget di Riepilogo Visto dal Coach -->
+      <div id="coachDataPreviewBox" class="p-3.5 rounded-2xl bg-app-dark border border-app-border text-xs text-app-textSecondary flex flex-wrap items-center justify-between gap-2">
+        <div class="flex items-center gap-2 font-mono">
+          <span class="text-emerald-400 font-bold">📊 Dati Inviati al Coach:</span>
+          <span id="coachSyncSummaryText">Caricamento stato...</span>
+        </div>
+        <span class="text-[10px] text-app-textMuted">Aggiornato in tempo reale dal Cloud</span>
+      </div>
+
+      <!-- Pulsanti di Chiedi Rapido Ottimizzati sui Dati -->
       <div class="flex gap-2 overflow-x-auto no-scrollbar py-0.5">
-        <button onclick="window.sendQuickChatMessage('Come preparare le polpette di manzo magro in friggitrice ad aria morbidissime a 180°C?')" class="whitespace-nowrap px-3 py-1.5 rounded-xl bg-app-card hover:bg-app-cardSubtle border border-app-border text-xs text-app-textSecondary transition">🥩 Polpette Friggitrice</button>
-        <button onclick="window.sendQuickChatMessage('Consigli per patate croccanti in friggitrice ad aria senza eccedere con l\'olio?')" class="whitespace-nowrap px-3 py-1.5 rounded-xl bg-app-card hover:bg-app-cardSubtle border border-app-border text-xs text-app-textSecondary transition">🥔 Patate Croccanti</button>
-        <button onclick="window.sendQuickChatMessage('Come cuocere i gamberetti con il riso express in 5 minuti stasera?')" class="whitespace-nowrap px-3 py-1.5 rounded-xl bg-app-card hover:bg-app-cardSubtle border border-app-border text-xs text-app-textSecondary transition">🍤 Gamberetti & Riso</button>
+        <button onclick="window.sendQuickChatMessage('Analizza il mio deficit di oggi, le calorie che ho mangiato e dimmi se sono perfettamente in target per perdere grasso o se devo aggiustare la cena.')" class="whitespace-nowrap px-3 py-1.5 rounded-xl bg-app-card hover:bg-app-cardSubtle border border-emerald-500/30 text-xs text-emerald-300 transition">
+          ⚖️ Valuta il mio Deficit di Oggi
+        </button>
+        <button onclick="window.sendQuickChatMessage('In base alle proteine che ho già assunto oggi dai pasti scansionati, quante ne mancano per raggiungere i miei 170g?') border border-app-border" class="whitespace-nowrap px-3 py-1.5 rounded-xl bg-app-card hover:bg-app-cardSubtle border border-app-border text-xs text-app-textSecondary transition">
+          🥩 Quante Proteine mi mancano?
+        </button>
+        <button onclick="window.sendQuickChatMessage('Dammi un consiglio pratico per la cena di stasera in friggitrice ad aria considerando i pasti che ho già mangiato oggi.')" class="whitespace-nowrap px-3 py-1.5 rounded-xl bg-app-card hover:bg-app-cardSubtle border border-app-border text-xs text-app-textSecondary transition">
+          🍽️ Consiglio Cena sui pasti di oggi
+        </button>
       </div>
 
       <div id="coachChatBox" class="h-96 overflow-y-auto space-y-3 p-4 rounded-2xl bg-app-card/70 border border-app-border flex flex-col text-xs sm:text-sm">
         <div class="bg-app-dark p-4 rounded-2xl border border-app-border text-gray-200 leading-relaxed shadow-sm">
-          Ciao Luca! Sono il tuo Coach e Nutrizionista sportivo. Protocollo attivo: 32 anni, 95kg, deficit 1.950 kcal, Huel Black post-workout, polpette e patate in friggitrice, riso express e gamberetti. Come posso aiutarti oggi?
+          Ciao Luca! Sono il tuo Coach e Nutrizionista sportivo. Ho accesso ai tuoi dati salvati su Firebase: so quante calorie hai assunto, quante ne hai bruciate oggi, quanto hai bevuto e quali piatti hai registrato. Fammi qualsiasi domanda!
         </div>
       </div>
 
       <form onsubmit="window.handleCoachSubmit(event)" class="flex gap-2">
-        <input type="text" id="coachInputText" placeholder="Chiedi al coach (es. ricette friggitrice, carichi macchine)..." class="w-full bg-app-card border border-app-border focus:border-emerald-500 rounded-xl px-4 py-3 text-xs sm:text-sm text-white placeholder-app-textMuted focus:outline-none transition">
+        <input type="text" id="coachInputText" placeholder="Chiedi al coach (es. sono in deficit? cosa mangio stasera?)..." class="w-full bg-app-card border border-app-border focus:border-emerald-500 rounded-xl px-4 py-3 text-xs sm:text-sm text-white placeholder-app-textMuted focus:outline-none transition">
         <button type="submit" class="px-5 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-black text-xs sm:text-sm transition active:scale-95 shrink-0">Invia</button>
       </form>
     </section>
@@ -815,6 +874,86 @@
       throw new Error("Nessun modello Gemini attivo");
     }
 
+    // =============================================================
+    // GESTIONE IDRATAZIONE ACQUA AUMENTATA E PROGRESSO
+    // =============================================================
+    window.addWaterLiters = delta => {
+      appData.waterLiters = parseFloat(Math.max(0, (appData.waterLiters + delta)).toFixed(2));
+      // Se si aggiunge acqua positiva, incrementa proporzionalmente il contatore borracce per la palestra
+      if (delta > 0) {
+        appData.gymBottles = Math.round(appData.waterLiters / 0.5);
+      }
+      updateWaterDisplay();
+      updateGymBottleDisplay();
+      initWaterGrid();
+      triggerCloudSave();
+      showNotification(`${delta > 0 ? '+' : ''}${delta}L registrati! Totale: ${appData.waterLiters}L`);
+    };
+
+    window.resetWaterLiters = () => {
+      if (!confirm("Azzera l'idratazione di oggi?")) return;
+      appData.waterLiters = 0.0;
+      appData.gymBottles = 0;
+      updateWaterDisplay();
+      updateGymBottleDisplay();
+      initWaterGrid();
+      triggerCloudSave();
+      showNotification("Idratazione azzerata.");
+    };
+
+    function updateWaterDisplay() {
+      const liters = appData.waterLiters || 0;
+      const target = 3.5;
+      const pct = Math.min(150, Math.round((liters / target) * 100));
+
+      const readoutBig = document.getElementById('waterValueDisplayBig');
+      if (readoutBig) readoutBig.innerText = liters.toFixed(2);
+
+      const percentEl = document.getElementById('waterPercentDisplay');
+      if (percentEl) percentEl.innerText = `${pct}%`;
+
+      const barEl = document.getElementById('waterProgressBar');
+      if (barEl) barEl.style.width = `${Math.min(100, pct)}%`;
+    }
+
+    function initWaterGrid() {
+      const grid = document.getElementById('waterTrackerGrid');
+      if (!grid) return;
+      grid.innerHTML = '';
+      const totalSteps = 7;
+      const filledSteps = Math.floor(appData.waterLiters / 0.5);
+
+      for (let i = 1; i <= totalSteps; i++) {
+        const active = i <= filledSteps;
+        const btn = document.createElement('button');
+        btn.onclick = () => window.selectWaterStep(i);
+        btn.className = `p-2 rounded-xl text-xs font-semibold transition flex flex-col items-center border active:scale-90 ${
+          active ? 'water-droplet-glow text-teal-300' : 'bg-app-dark border-app-border text-gray-500 hover:border-gray-400'
+        }`;
+        btn.innerHTML = `
+          <span class="${active ? 'scale-110 drop-shadow-[0_0_8px_rgba(45,212,191,0.8)]' : 'opacity-40'} transition">💧</span>
+          <span class="text-[9px] font-mono mt-0.5 ${(active ? 'font-bold text-teal-200' : '')}">${(i * 0.5).toFixed(1)}L</span>
+        `;
+        grid.appendChild(btn);
+      }
+    }
+
+    window.selectWaterStep = step => {
+      const target = step * 0.5;
+      appData.waterLiters = (appData.waterLiters === target) ? (step - 1) * 0.5 : target;
+      appData.gymBottles = Math.round(appData.waterLiters / 0.5);
+      updateWaterDisplay();
+      updateGymBottleDisplay();
+      initWaterGrid();
+      triggerCloudSave();
+    };
+
+    function updateGymBottleDisplay() {
+      const badge = document.getElementById('gymBottleCountBadge');
+      if (badge) badge.innerText = `${appData.gymBottles} Borracce (${(appData.gymBottles * 0.5).toFixed(1)} L)`;
+    }
+
+    // Riconoscimento orario
     function detectCurrentMealSlot() {
       const h = new Date().getHours();
       const m = new Date().getMinutes();
@@ -836,7 +975,105 @@
     }
 
     // =============================================================
-    // ANALISI CIBO: TESTO A MANO (es: "1 piatto riso venere + 200g gamberetti")
+    // AI COACH COLLEGATO AI DATI CLOUD FIREBASE
+    // =============================================================
+    function updateCoachSyncSummaryUI() {
+      const summaryEl = document.getElementById('coachSyncSummaryText');
+      if (!summaryEl) return;
+
+      const totalIntake = appData.foodLogs.reduce((acc, m) => acc + (Number(m.calories) || 0), 0);
+      const totalPro = appData.foodLogs.reduce((acc, m) => acc + (Number(m.protein) || 0), 0);
+      const burned = Number(appData.burnedCalories) || 0;
+      const netDeficit = 1950 - (totalIntake - burned);
+
+      summaryEl.innerText = `${totalIntake} kcal assunte (${totalPro}g Pro) • ${burned} kcal bruciate • Deficit: ${netDeficit >= 0 ? '-' : '+'}${Math.abs(netDeficit)} kcal • ${appData.waterLiters}L acqua`;
+    }
+
+    window.handleCoachSubmit = async e => {
+      e.preventDefault();
+      const input = document.getElementById('coachInputText');
+      const query = input.value.trim();
+      if (!query) return;
+
+      if (!appData.userApiKey) {
+        window.openApiKeyModal();
+        showNotification("Inserisci la chiave API Gemini.", true);
+        return;
+      }
+
+      input.value = '';
+      const box = document.getElementById('coachChatBox');
+      box.innerHTML += `<div class="bg-emerald-500 text-black font-semibold p-3 rounded-2xl rounded-tr-none self-end max-w-[85%] ml-auto">${query}</div>`;
+      box.scrollTop = box.scrollHeight;
+
+      const loadingId = 'loading_' + Date.now();
+      box.innerHTML += `<div id="${loadingId}" class="bg-app-dark p-3.5 rounded-2xl border border-app-border max-w-[85%] text-emerald-400 animate-pulse">Il Coach sta leggendo i tuoi dati Cloud ed elaborando...</div>`;
+      box.scrollTop = box.scrollHeight;
+
+      try {
+        // Estrazione dettagliata dati reali da Firebase
+        const totalIntake = appData.foodLogs.reduce((acc, m) => acc + (Number(m.calories) || 0), 0);
+        const totalPro = appData.foodLogs.reduce((acc, m) => acc + (Number(m.protein) || 0), 0);
+        const totalCarb = appData.foodLogs.reduce((acc, m) => acc + (Number(m.carbs) || 0), 0);
+        const totalFat = appData.foodLogs.reduce((acc, m) => acc + (Number(m.fat) || 0), 0);
+        const burned = Number(appData.burnedCalories) || 0;
+        const netDeficit = 1950 - (totalIntake - burned);
+
+        const mealsBreakdown = appData.foodLogs.length > 0 
+          ? appData.foodLogs.map(m => `- [${m.slot} - ${m.time}] ${m.dishName}: ${m.calories} kcal (P: ${m.protein}g, C: ${m.carbs}g, F: ${m.fat}g)`).join('\n')
+          : "Nessun pasto registrato oggi finora.";
+
+        const promptWithCloudContext = `
+Sei il Personal Trainer e Biologo Nutrizionista Sportivo dedicato dell'atleta Luca.
+DATI REALI SALVATI ORA NEL DATABASE FIREBASE DI LUCA:
+- Età: 32 anni | Peso registrato: ${appData.weight} kg | Giro vita: ${appData.waist} cm
+- Target giornaliero standard di ricomposizione: 1.950 kcal in deficit (target proteine: 170g)
+- CALORIE ASSUNTE OGGI DAI PASTI: ${totalIntake} kcal
+- MACRONUTRIENTI ASSUNTI OGGI: ${totalPro}g Proteine | ${totalCarb}g Carboidrati | ${totalFat}g Grassi
+- CALORIE BRUCIATE REGISTRATE OGGI (Smartwatch/Gym): ${burned} kcal
+- BILANCIO / DEFICIT EFFETTIVO ATTUALE: ${netDeficit >= 0 ? `In deficit di ${netDeficit} kcal` : `In surplus di ${Math.abs(netDeficit)} kcal`}
+- ACQUA BEVUTA OGGI: ${appData.waterLiters} Litri su target di 3.5L
+- DETTAGLIO PASTI CONSUMATI OGGI REGISTRATI CON FOTO/TESTO:
+${mealsBreakdown}
+
+- REGOLE DELLA SUA DIETA: Friggitrice ad aria (polpette magre morbide a 180°C, patate croccanti a 190°C), Huel Black + 5g creatina post-workout, gamberetti e riso express in busta, salmone e tonno fresco nel weekend, mozzarella light Milbona, cetrioli, peperoni. NO BROCCOLI, NO QUARK.
+
+ISTRUZIONI PER LA RISPOSTA:
+Rispondi in italiano in massimo 2-3 brevi paragrafi. Usa SEMPRE i numeri reali appena forniti (calorie assunte, bruciate, deficit, grammi di proteine mancanti o acqua bevuta) per rispondere in modo scientifico, personalizzato e pratico alla domanda dell'atleta.
+
+DOMANDA DELL'ATLETA:
+"${query}"
+`;
+
+        const reply = await callGeminiApi({
+          contents: [{ role: "user", parts: [{ text: promptWithCloudContext }] }]
+        });
+
+        document.getElementById(loadingId)?.remove();
+        box.innerHTML += `<div class="bg-app-dark p-3.5 rounded-2xl border border-app-border max-w-[90%] text-gray-200 leading-relaxed shadow-sm">${reply}</div>`;
+        box.scrollTop = box.scrollHeight;
+      } catch (err) {
+        document.getElementById(loadingId)?.remove();
+        box.innerHTML += `<div class="text-red-400 p-2">Errore di comunicazione con il Coach: ${err.message}</div>`;
+      }
+    };
+
+    window.sendQuickChatMessage = promptText => {
+      window.navigateToTab('coach');
+      document.getElementById('coachInputText').value = promptText;
+      window.handleCoachSubmit(new Event('submit'));
+    };
+
+    window.resetCoachChat = () => {
+      document.getElementById('coachChatBox').innerHTML = `
+        <div class="bg-app-dark p-3.5 rounded-2xl border border-app-border text-gray-200 leading-relaxed shadow-sm">
+          Chat azzerata! Fammi qualsiasi domanda su dieta, deficit di oggi, proteine rimanenti o ricette.
+        </div>
+      `;
+    };
+
+    // =============================================================
+    // ANALISI CIBO: TESTO A MANO
     // =============================================================
     window.processManualFoodText = async () => {
       const input = document.getElementById('manualDishTextInput');
@@ -869,11 +1106,11 @@
       try {
         const prompt = `
           Agisci come Biologo Nutrizionista Sportivo esperto.
-          L'utente ha inserito a mano questa descrizione di cibo mangiato: "${textQuery}".
+          Descrizione pasto inserita a mano: "${textQuery}".
           Fascia pasto assegnata: "${targetSlot}".
           Profilo atleta: 32 anni, 95kg, deficit 1.950 kcal/die (target 170g proteine).
           
-          Calcola o stima con accuratezza le calorie e i macronutrienti per gli ingredienti indicati (es. grammature, porzioni descritte).
+          Calcola o stima con precisione calorie e macronutrienti per le quantità descritte.
           Restituisci ESCLUSIVAMENTE un JSON valido senza blocchi markdown esterni:
           {
             "dishName": "${textQuery}",
@@ -1015,6 +1252,7 @@
       renderGroupedMeals();
       renderDualColumnDiet();
       updateDeficitCalculations();
+      updateCoachSyncSummaryUI();
       triggerCloudSave();
       showNotification(`Pasto registrato in ${meal.slot}!`);
       document.getElementById('scannerResultBox').classList.add('hidden');
@@ -1026,6 +1264,7 @@
       renderGroupedMeals();
       renderDualColumnDiet();
       updateDeficitCalculations();
+      updateCoachSyncSummaryUI();
       triggerCloudSave();
       showNotification("Diario pasti azzerato.");
     };
@@ -1062,6 +1301,7 @@
             appData.burnedCalories = kcal;
             updateBurnedCaloriesUI();
             updateDeficitCalculations();
+            updateCoachSyncSummaryUI();
             triggerCloudSave();
             showNotification(`Calorie orologio rilevate: ${kcal} kcal!`);
           } else {
@@ -1243,11 +1483,13 @@
       renderGroupedMeals();
       renderLidlFractionShopping();
       initWaterGrid();
+      updateWaterDisplay();
       updateBurnedCaloriesUI();
       updateGymBottleDisplay();
       renderWalkHistory();
       updateDeficitCalculations();
       updateDetectedSlotUI();
+      updateCoachSyncSummaryUI();
 
       document.getElementById('metricCurrentWeight').innerHTML = `${appData.weight} <span class="text-xs font-normal text-app-textMuted">kg</span>`;
       document.getElementById('metricCurrentWaist').innerHTML = `${appData.waist} <span class="text-xs font-normal text-app-textMuted">cm</span>`;
@@ -1293,6 +1535,7 @@
         document.getElementById('nutritionBurnedInput').value = '';
         updateBurnedCaloriesUI();
         updateDeficitCalculations();
+        updateCoachSyncSummaryUI();
         triggerCloudSave();
         showNotification(`Calorie bruciate impostate a ${val} kcal!`);
       }
@@ -1634,21 +1877,6 @@
       showNotification("Spunte azzerate.");
     };
 
-    window.addGymBottle = () => {
-      appData.gymBottles++;
-      appData.waterLiters = parseFloat((appData.waterLiters + 0.5).toFixed(1));
-      updateGymBottleDisplay();
-      updateWaterDisplay();
-      initWaterGrid();
-      triggerCloudSave();
-      showNotification(`Borraccia registrata! Totale: ${appData.waterLiters}L`);
-    };
-
-    function updateGymBottleDisplay() {
-      const badge = document.getElementById('gymBottleCountBadge');
-      if (badge) badge.innerText = `${appData.gymBottles} Borracce (${(appData.gymBottles * 0.5).toFixed(1)} L)`;
-    }
-
     window.processGymDrinkPhoto = async event => {
       const file = event.target.files[0];
       if (!file) return;
@@ -1666,10 +1894,7 @@
 
         if (!appData.userApiKey) {
           textTarget.innerHTML = `<div class="text-amber-400 font-bold">+500ml idratazione. Inserisci la chiave API per i dettagli completi.</div>`;
-          appData.waterLiters = parseFloat((appData.waterLiters + 0.5).toFixed(1));
-          updateWaterDisplay();
-          initWaterGrid();
-          triggerCloudSave();
+          window.addWaterLiters(0.5);
           return;
         }
 
@@ -1692,13 +1917,11 @@
           `;
 
           if (res.hydrationLiters > 0) {
-            appData.waterLiters = parseFloat((appData.waterLiters + res.hydrationLiters).toFixed(1));
-            updateWaterDisplay();
-            initWaterGrid();
-            triggerCloudSave();
+            window.addWaterLiters(res.hydrationLiters);
           }
         } catch (err) {
           textTarget.innerHTML = `<div class="text-teal-300 font-bold">Bevanda registrata (+0.5L).</div>`;
+          window.addWaterLiters(0.5);
         }
       };
       reader.readAsDataURL(file);
@@ -1708,6 +1931,7 @@
       appData.burnedCalories += amount;
       updateBurnedCaloriesUI();
       updateDeficitCalculations();
+      updateCoachSyncSummaryUI();
       triggerCloudSave();
       showNotification(`+${amount} kcal!`);
     };
@@ -1719,6 +1943,7 @@
         document.getElementById('customKcalInput').value = '';
         updateBurnedCaloriesUI();
         updateDeficitCalculations();
+        updateCoachSyncSummaryUI();
         triggerCloudSave();
         showNotification(`Calorie: ${val} kcal!`);
       }
@@ -1728,6 +1953,7 @@
       appData.burnedCalories = 0;
       updateBurnedCaloriesUI();
       updateDeficitCalculations();
+      updateCoachSyncSummaryUI();
       triggerCloudSave();
       showNotification("Calorie azzerate.");
     };
@@ -1883,95 +2109,6 @@
       triggerCloudSave();
     };
 
-    function initWaterGrid() {
-      const grid = document.getElementById('waterTrackerGrid');
-      grid.innerHTML = '';
-      const totalSteps = 7;
-      const filledSteps = Math.round(appData.waterLiters / 0.5);
-
-      for (let i = 1; i <= totalSteps; i++) {
-        const active = i <= filledSteps;
-        const btn = document.createElement('button');
-        btn.onclick = () => window.selectWaterStep(i);
-        btn.className = `p-2 rounded-xl text-xs font-semibold transition flex flex-col items-center border active:scale-90 ${
-          active ? 'water-droplet-glow text-teal-300' : 'bg-app-dark border-app-border text-gray-500 hover:border-gray-400'
-        }`;
-        btn.innerHTML = `
-          <span class="${active ? 'scale-110 drop-shadow-[0_0_8px_rgba(45,212,191,0.8)]' : 'opacity-40'} transition">💧</span>
-          <span class="text-[9px] font-mono mt-0.5 ${(active ? 'font-bold text-teal-200' : '')}">${(i * 0.5).toFixed(1)}L</span>
-        `;
-        grid.appendChild(btn);
-      }
-      updateWaterDisplay();
-    }
-
-    window.selectWaterStep = step => {
-      const target = step * 0.5;
-      appData.waterLiters = (appData.waterLiters === target) ? (step - 1) * 0.5 : target;
-      initWaterGrid();
-      triggerCloudSave();
-    };
-
-    function updateWaterDisplay() {
-      const el = document.getElementById('waterValueDisplay');
-      if (el) el.innerText = `${appData.waterLiters.toFixed(1)} / 3.5 L`;
-    }
-
-    window.handleCoachSubmit = async e => {
-      e.preventDefault();
-      const input = document.getElementById('coachInputText');
-      const query = input.value.trim();
-      if (!query) return;
-
-      if (!appData.userApiKey) {
-        window.openApiKeyModal();
-        showNotification("Inserisci la chiave API Gemini.", true);
-        return;
-      }
-
-      input.value = '';
-      const box = document.getElementById('coachChatBox');
-      box.innerHTML += `<div class="bg-emerald-500 text-black font-semibold p-3 rounded-2xl rounded-tr-none self-end max-w-[85%] ml-auto">${query}</div>`;
-      box.scrollTop = box.scrollHeight;
-
-      const loadingId = 'loading_' + Date.now();
-      box.innerHTML += `<div id="${loadingId}" class="bg-app-dark p-3.5 rounded-2xl border border-app-border max-w-[85%] text-emerald-400 animate-pulse">Il Coach sta elaborando...</div>`;
-      box.scrollTop = box.scrollHeight;
-
-      try {
-        const sys = `
-          Sei il PT e Biologo Nutrizionista Sportivo di Luca. Profilo: 32 anni, 95kg, deficit 1.950 kcal/die (target 170g proteine).
-          Post-workout: Huel Black + creatina. Dieta: polpette manzo magro (180°C), patate croccanti (190°C), riso express, gamberetti, salmone, tonno fresco weekend, mozzarella light Milbona, cetrioli, peperoni. NO BROCCOLI, NO QUARK.
-          Rispondi in massimo 2 brevi paragrafi diretti e scientifici in italiano.
-        `;
-
-        const reply = await callGeminiApi({
-          contents: [{ role: "user", parts: [{ text: `${sys}\n\nDomanda: ${query}` }] }]
-        });
-
-        document.getElementById(loadingId)?.remove();
-        box.innerHTML += `<div class="bg-app-dark p-3.5 rounded-2xl border border-app-border max-w-[90%] text-gray-200 leading-relaxed shadow-sm">${reply}</div>`;
-        box.scrollTop = box.scrollHeight;
-      } catch (err) {
-        document.getElementById(loadingId)?.remove();
-        box.innerHTML += `<div class="text-red-400 p-2">Errore di comunicazione con il Coach.</div>`;
-      }
-    };
-
-    window.sendQuickChatMessage = promptText => {
-      window.navigateToTab('coach');
-      document.getElementById('coachInputText').value = promptText;
-      window.handleCoachSubmit(new Event('submit'));
-    };
-
-    window.resetCoachChat = () => {
-      document.getElementById('coachChatBox').innerHTML = `
-        <div class="bg-app-dark p-3.5 rounded-2xl border border-app-border text-gray-200 leading-relaxed shadow-sm">
-          Chat azzerata! Fammi qualsiasi domanda su palestra o ricette.
-        </div>
-      `;
-    };
-
     window.saveBodyMeasurements = () => {
       const weightVal = parseFloat(document.getElementById('quickWeightInput').value);
       const waistVal = parseFloat(document.getElementById('quickWaistInput').value);
@@ -1987,6 +2124,7 @@
 
       document.getElementById('quickWeightInput').value = '';
       document.getElementById('quickWaistInput').value = '';
+      updateCoachSyncSummaryUI();
       triggerCloudSave();
       showNotification("Misure salvate nel Cloud!");
     };
@@ -2020,15 +2158,14 @@
       }
 
       if (waterVal > 0) {
-        appData.waterLiters = parseFloat((appData.waterLiters + waterVal).toFixed(1));
-        updateWaterDisplay();
-        initWaterGrid();
+        window.addWaterLiters(waterVal);
       }
 
       if (!isNaN(kcalVal) && kcalVal > 0) {
         appData.burnedCalories += kcalVal;
         updateBurnedCaloriesUI();
         updateDeficitCalculations();
+        updateCoachSyncSummaryUI();
       }
 
       const sessionData = {
