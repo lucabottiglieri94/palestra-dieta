@@ -1068,7 +1068,7 @@
         }
 
         try {
-          const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${userApiKey}`;
+          const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${userApiKey}`;
           const prompt = `Analizza questa bevanda da palestra o dispenser Icon. Restituisci ESCLUSIVAMENTE un JSON: {"name": "Nome bevanda", "calories": 45, "carbs": 10, "sugars": 8, "hydrationLiters": 0.5, "advice": "Giudizio rapido"}`;
 
           const resp = await fetch(url, {
@@ -1420,7 +1420,7 @@
         }
 
         try {
-          const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${userApiKey}`;
+          const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${userApiKey}`;
           const prompt = `
             Agisci come Biologo Nutrizionista Sportivo.
             Pasto consumato: momento "${targetSlot}".
@@ -1569,7 +1569,7 @@
       box.scrollTop = box.scrollHeight;
 
       try {
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${userApiKey}`;
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${userApiKey}`;
         const sys = `
           Sei il PT e Nutrizionista Sportivo dell'atleta.
           Profilo: 32 anni, 95kg, 177cm, Icon Palestre (4 volte in pausa pranzo 13-15).
