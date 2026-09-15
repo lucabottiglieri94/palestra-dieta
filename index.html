@@ -8,7 +8,7 @@
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800;900&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
 
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -48,7 +48,7 @@
       color: #f1f5f9;
       touch-action: manipulation;
     }
-    ::-webkit-scrollbar { width: 4px; height: 4px; }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: #080a0d; }
     ::-webkit-scrollbar-thumb { background: #1b222e; border-radius: 9999px; }
 
@@ -92,17 +92,17 @@
 
   <!-- OVERLAY AUTENTICAZIONE GOOGLE FIREBASE -->
   <div id="loginOverlay" class="login-overlay">
-    <div class="max-w-xs w-11/12 p-6 rounded-3xl bg-app-card border border-app-border text-center space-y-4 shadow-2xl">
-      <div class="w-12 h-12 mx-auto rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-700 flex items-center justify-center text-black font-display font-black text-base shadow-md">
+    <div class="max-w-sm w-11/12 p-7 rounded-3xl bg-app-card border border-app-border text-center space-y-4 shadow-2xl">
+      <div class="w-14 h-14 mx-auto rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-700 flex items-center justify-center text-black font-display font-black text-xl shadow-md">
         IR
       </div>
       <div>
-        <h2 class="font-display font-black text-lg text-white">ICON RECOMP</h2>
-        <p class="text-xs text-app-textMuted mt-1 leading-relaxed">
-          Accedi con il tuo account Google per salvare carichi, dieta e progressi sul Cloud Firebase privato.
+        <h2 class="font-display font-black text-xl text-white">ICON RECOMP</h2>
+        <p class="text-xs text-app-textMuted mt-1.5 leading-relaxed">
+          Accedi con il tuo account Google per salvare carichi, dieta a doppia colonna e deficit calorico sul Cloud Firebase privato.
         </p>
       </div>
-      <button id="loginBtn" class="w-full py-3 rounded-2xl bg-white hover:bg-gray-100 text-black font-bold text-xs flex items-center justify-center gap-2 transition active:scale-95 shadow-md">
+      <button id="loginBtn" class="w-full py-3.5 rounded-2xl bg-white hover:bg-gray-100 text-black font-bold text-xs flex items-center justify-center gap-2.5 transition active:scale-95 shadow-md">
         <svg class="w-4 h-4" viewBox="0 0 24 24">
           <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
           <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
@@ -119,7 +119,7 @@
   <div id="activeTimerBar" class="hidden sticky top-0 z-50 bg-gradient-to-r from-emerald-500 to-teal-400 text-black px-4 py-2.5 shadow-2xl flex items-center justify-between transition-all">
     <div class="flex items-center gap-2">
       <span class="inline-block w-2.5 h-2.5 rounded-full bg-black animate-ping"></span>
-      <span class="text-xs font-black uppercase tracking-wider font-display">Recupero Serie:</span>
+      <span class="text-xs font-black uppercase tracking-wider font-display">Recupero:</span>
       <span id="activeTimerValue" class="text-xl font-mono font-black ml-1">01:30</span>
     </div>
     <div class="flex items-center gap-2">
@@ -128,344 +128,483 @@
     </div>
   </div>
 
-  <!-- Header -->
-  <header class="bg-app-black/90 backdrop-blur-xl border-b border-app-border px-4 py-3 sticky z-40 top-0">
-    <div class="max-w-4xl mx-auto flex items-center justify-between">
+  <!-- Header Responsive Wide -->
+  <header class="bg-app-black/90 backdrop-blur-xl border-b border-app-border px-4 py-3.5 sticky z-40 top-0">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <div class="w-9 h-9 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-700 flex items-center justify-center text-black font-display font-black text-sm shadow-md border border-emerald-400/30">
+        <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-700 flex items-center justify-center text-black font-display font-black text-base shadow-md border border-emerald-400/30">
           IR
         </div>
         <div>
           <div class="flex items-center gap-2">
-            <h1 class="font-display font-black text-sm text-white tracking-tight">ICON RECOMP</h1>
-            <span class="text-[9px] font-bold uppercase px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+            <h1 class="font-display font-black text-base text-white tracking-tight">ICON RECOMP</h1>
+            <span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
               32a • 95kg
             </span>
           </div>
-          <p class="text-[11px] text-app-textMuted flex items-center gap-1.5 font-mono mt-0.5">
+          <p class="text-[11px] text-app-textMuted flex items-center gap-2 font-mono mt-0.5">
             <span id="cloudStatusReadout" class="text-teal-400">Cloud Connesso ✓</span>
             <span class="text-gray-600">•</span>
-            <span class="text-gray-400">1.950 kcal</span>
+            <span class="text-gray-300">Target Deficit 1.950 kcal</span>
           </p>
         </div>
       </div>
 
-      <div class="flex items-center gap-2">
-        <button onclick="window.toggleTimerModal()" class="px-2.5 py-1.5 rounded-xl bg-app-card border border-app-border text-xs flex items-center gap-1.5 text-emerald-400 font-mono active:scale-95 transition">
+      <div class="flex items-center gap-2.5">
+        <button onclick="window.toggleTimerModal()" class="px-3 py-1.5 rounded-xl bg-app-card border border-app-border text-xs flex items-center gap-1.5 text-emerald-400 font-mono active:scale-95 transition">
           <span>⏱️</span>
           <span id="headerTimerReadout">00:00</span>
         </button>
-        <button onclick="window.openApiKeyModal()" class="w-8 h-8 rounded-xl bg-app-card border border-app-border text-xs flex items-center justify-center text-gray-300 transition hover:border-emerald-500/40" title="Configura Gemini API">
+        <button onclick="window.openApiKeyModal()" class="w-9 h-9 rounded-xl bg-app-card border border-app-border text-xs flex items-center justify-center text-gray-300 transition hover:border-emerald-500/40" title="Configura Gemini API">
           <span id="apiStatusDot" class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
         </button>
-        <button id="headerLogoutBtn" class="w-8 h-8 rounded-xl bg-app-card border border-app-border text-xs flex items-center justify-center text-gray-400 hover:text-red-400 transition" title="Esci dall'account">
+        <button id="headerLogoutBtn" class="w-9 h-9 rounded-xl bg-app-card border border-app-border text-xs flex items-center justify-center text-gray-400 hover:text-red-400 transition" title="Esci dall'account">
           ✕
         </button>
       </div>
     </div>
   </header>
 
-  <main class="max-w-4xl mx-auto px-3.5 py-4 sm:px-6">
+  <!-- Container Principale (Adattato PC fino a 1440px / Mobile fluid) -->
+  <main class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
 
-    <!-- TAB 1: SCHEDA PALESTRA -->
-    <section id="view-workout" class="tab-view space-y-4">
-      <div class="grid grid-cols-4 gap-1 p-1 bg-app-dark rounded-2xl border border-app-border">
+    <!-- ============================================================= -->
+    <!-- TAB 1: SCHEDA PALESTRA                                        -->
+    <!-- ============================================================= -->
+    <section id="view-workout" class="tab-view space-y-5">
+      <div class="grid grid-cols-4 gap-2 p-1.5 bg-app-dark rounded-2xl border border-app-border max-w-xl mx-auto">
         <button onclick="window.switchWorkoutDay('dayA')" id="btn-dayA" class="py-2.5 rounded-xl text-xs font-bold transition bg-emerald-500 text-black shadow-sm">Giorno A</button>
         <button onclick="window.switchWorkoutDay('dayB')" id="btn-dayB" class="py-2.5 rounded-xl text-xs font-medium transition text-app-textMuted hover:text-white">Giorno B</button>
         <button onclick="window.switchWorkoutDay('dayC')" id="btn-dayC" class="py-2.5 rounded-xl text-xs font-medium transition text-app-textMuted hover:text-white">Giorno C</button>
         <button onclick="window.switchWorkoutDay('dayD')" id="btn-dayD" class="py-2.5 rounded-xl text-xs font-medium transition text-app-textMuted hover:text-white">Giorno D</button>
       </div>
 
-      <div class="apple-glass-card p-4 rounded-2xl border border-teal-500/30 bg-teal-500/[0.03] space-y-3">
-        <div class="flex items-center justify-between">
-          <div class="flex items-center gap-2">
-            <span class="text-lg">💧</span>
-            <div>
-              <h3 class="font-display font-bold text-xs text-white uppercase tracking-wider">Borraccia Icon (500ml) & Drink Scanner</h3>
-              <p class="text-[11px] text-app-textMuted">Ricarica idrica & bibite sala pesi</p>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <!-- Borraccia & Drink Scanner -->
+        <div class="apple-glass-card p-4 rounded-2xl border border-teal-500/30 bg-teal-500/[0.03] space-y-3">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="text-xl">💧</span>
+              <div>
+                <h3 class="font-display font-bold text-xs text-white uppercase tracking-wider">Borraccia Icon (500ml) & Drink Scanner</h3>
+                <p class="text-[11px] text-app-textMuted">Ricarica idrica & bibite sala pesi</p>
+              </div>
+            </div>
+            <span id="gymBottleCountBadge" class="text-xs font-mono font-bold text-teal-300 bg-teal-500/15 px-2.5 py-1 rounded-xl border border-teal-500/30">
+              0 Borracce (0.0 L)
+            </span>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2">
+            <button onclick="window.addGymBottle()" class="py-3 px-3 rounded-xl bg-gradient-to-r from-teal-500/20 to-emerald-500/20 hover:from-teal-500/30 hover:to-emerald-500/30 border border-teal-500/40 text-teal-300 font-bold text-xs flex items-center justify-center gap-2 active:scale-95 transition">
+              <span class="text-base">🚰</span>
+              <span>+1 Borraccia (500ml)</span>
+            </button>
+            <label class="cursor-pointer py-3 px-3 rounded-xl bg-app-card hover:bg-app-cardSubtle border border-app-border text-gray-200 font-semibold text-xs flex items-center justify-center gap-2 active:scale-95 transition">
+              <span class="text-base">📸</span>
+              <span>Foto Bevanda Palestra</span>
+              <input type="file" id="gymDrinkPhotoInput" accept="image/*" class="hidden" onchange="window.processGymDrinkPhoto(event)">
+            </label>
+          </div>
+
+          <div id="gymDrinkResultBox" class="hidden p-3 rounded-xl bg-app-dark border border-teal-500/30 space-y-2">
+            <div class="flex items-center gap-3">
+              <img id="gymDrinkPreviewImg" src="" alt="Drink" class="w-14 h-14 rounded-lg object-cover border border-app-border">
+              <div id="gymDrinkAnalysisText" class="text-xs text-app-textSecondary space-y-0.5">
+                <div class="text-teal-400 font-bold">Analisi drink in corso...</div>
+              </div>
             </div>
           </div>
-          <span id="gymBottleCountBadge" class="text-xs font-mono font-bold text-teal-300 bg-teal-500/15 px-2.5 py-1 rounded-xl border border-teal-500/30">
-            0 Borracce (0.0 L)
-          </span>
         </div>
 
-        <div class="grid grid-cols-2 gap-2">
-          <button onclick="window.addGymBottle()" class="py-3 px-3 rounded-xl bg-gradient-to-r from-teal-500/20 to-emerald-500/20 hover:from-teal-500/30 hover:to-emerald-500/30 border border-teal-500/40 text-teal-300 font-bold text-xs flex items-center justify-center gap-2 active:scale-95 transition">
-            <span class="text-base">🚰</span>
-            <span>+1 Borraccia (500ml)</span>
-          </button>
+        <!-- Calorie Bruciate Palestra -->
+        <div class="apple-glass-card p-4 rounded-2xl border border-amber-500/30 bg-amber-500/[0.03] space-y-3">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="text-xl">🔥</span>
+              <div>
+                <h3 class="font-display font-bold text-xs text-white uppercase tracking-wider">Calorie Bruciate Sessione</h3>
+                <p class="text-[11px] text-app-textMuted">Apple Watch / Technogym</p>
+              </div>
+            </div>
+            <button onclick="window.resetBurnedCalories()" class="text-[10px] text-app-textMuted hover:text-amber-400 px-2 py-1 rounded-lg bg-app-dark border border-app-border transition">
+              Azzera ↺
+            </button>
+          </div>
 
-          <label class="cursor-pointer py-3 px-3 rounded-xl bg-app-card hover:bg-app-cardSubtle border border-app-border text-gray-200 font-semibold text-xs flex items-center justify-center gap-2 active:scale-95 transition">
-            <span class="text-base">📸</span>
-            <span>Foto Bevanda Palestra</span>
-            <input type="file" id="gymDrinkPhotoInput" accept="image/*" class="hidden" onchange="window.processGymDrinkPhoto(event)">
-          </label>
-        </div>
+          <div class="flex items-baseline justify-between bg-app-dark/80 p-3 rounded-xl border border-app-border">
+            <div>
+              <span class="text-[10px] uppercase font-bold text-app-textMuted block">Dispendio Allenamento</span>
+              <div class="flex items-baseline gap-1">
+                <span id="displayBurnedKcal" class="text-2xl font-display font-black text-amber-400">0</span>
+                <span class="text-xs font-mono font-bold text-app-textMuted">kcal bruciate</span>
+              </div>
+            </div>
+            <div class="text-right">
+              <span class="text-[10px] uppercase font-bold text-app-textMuted block">Deficit Netto</span>
+              <div id="displayTotalDeficit" class="text-sm font-mono font-black text-emerald-400">-500 kcal</div>
+            </div>
+          </div>
 
-        <div id="gymDrinkResultBox" class="hidden p-3 rounded-xl bg-app-dark border border-teal-500/30 space-y-2">
-          <div class="flex items-center gap-3">
-            <img id="gymDrinkPreviewImg" src="" alt="Drink" class="w-14 h-14 rounded-lg object-cover border border-app-border">
-            <div id="gymDrinkAnalysisText" class="text-xs text-app-textSecondary space-y-0.5">
-              <div class="text-teal-400 font-bold">Analisi drink in corso...</div>
+          <div class="grid grid-cols-5 gap-1.5">
+            <button onclick="window.addBurnedCalories(50)" class="py-2 rounded-xl bg-app-card border border-app-border text-xs font-bold text-gray-200 active:scale-95 transition">+50</button>
+            <button onclick="window.addBurnedCalories(100)" class="py-2 rounded-xl bg-app-card border border-app-border text-xs font-bold text-gray-200 active:scale-95 transition">+100</button>
+            <button onclick="window.addBurnedCalories(200)" class="py-2 rounded-xl bg-app-card border border-app-border text-xs font-bold text-gray-200 active:scale-95 transition">+200</button>
+            <button onclick="window.addBurnedCalories(350)" class="py-2 rounded-xl bg-app-card border border-app-border text-xs font-bold text-amber-300 active:scale-95 transition">+350</button>
+            <div class="flex items-center gap-1">
+              <input type="number" id="customKcalInput" placeholder="420" inputmode="numeric" class="w-full bg-app-dark border border-app-border rounded-xl px-2 py-2 text-xs text-center font-mono font-bold text-amber-400 focus:outline-none">
+              <button onclick="window.applyCustomKcal()" class="px-2 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-black text-xs active:scale-95 transition">OK</button>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="apple-glass-card p-4 rounded-2xl border border-amber-500/30 bg-amber-500/[0.03] space-y-3">
-        <div class="flex items-center justify-between">
-          <div class="flex items-center gap-2">
-            <span class="text-lg">🔥</span>
-            <div>
-              <h3 class="font-display font-bold text-xs text-white uppercase tracking-wider">Calorie Bruciate Sessione</h3>
-              <p class="text-[11px] text-app-textMuted">Apple Watch / Technogym</p>
-            </div>
-          </div>
-          <button onclick="window.resetBurnedCalories()" class="text-[10px] text-app-textMuted hover:text-amber-400 px-2 py-1 rounded-lg bg-app-dark border border-app-border transition">
-            Azzera ↺
-          </button>
-        </div>
-
-        <div class="flex items-baseline justify-between bg-app-dark/80 p-3 rounded-xl border border-app-border">
-          <div>
-            <span class="text-[10px] uppercase font-bold text-app-textMuted block">Dispendio Allenamento</span>
-            <div class="flex items-baseline gap-1">
-              <span id="displayBurnedKcal" class="text-2xl font-display font-black text-amber-400">0</span>
-              <span class="text-xs font-mono font-bold text-app-textMuted">kcal bruciate</span>
-            </div>
-          </div>
-          <div class="text-right">
-            <span class="text-[10px] uppercase font-bold text-app-textMuted block">Deficit Netto</span>
-            <div id="displayTotalDeficit" class="text-sm font-mono font-black text-emerald-400">-500 kcal</div>
-          </div>
-        </div>
-
-        <div class="grid grid-cols-5 gap-1.5">
-          <button onclick="window.addBurnedCalories(50)" class="py-2 rounded-xl bg-app-card border border-app-border text-xs font-bold text-gray-200 active:scale-95 transition">+50</button>
-          <button onclick="window.addBurnedCalories(100)" class="py-2 rounded-xl bg-app-card border border-app-border text-xs font-bold text-gray-200 active:scale-95 transition">+100</button>
-          <button onclick="window.addBurnedCalories(200)" class="py-2 rounded-xl bg-app-card border border-app-border text-xs font-bold text-gray-200 active:scale-95 transition">+200</button>
-          <button onclick="window.addBurnedCalories(350)" class="py-2 rounded-xl bg-app-card border border-app-border text-xs font-bold text-amber-300 active:scale-95 transition">+350</button>
-          <div class="flex items-center gap-1">
-            <input type="number" id="customKcalInput" placeholder="420" inputmode="numeric" class="w-full bg-app-dark border border-app-border rounded-xl px-2 py-2 text-xs text-center font-mono font-bold text-amber-400 focus:outline-none">
-            <button onclick="window.applyCustomKcal()" class="px-2 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-black text-xs active:scale-95 transition">OK</button>
-          </div>
-        </div>
-      </div>
-
+      <!-- Intestazione Giorno -->
       <div class="apple-glass-card px-4 py-3 rounded-2xl flex items-center justify-between">
         <div>
-          <h2 id="workoutTitle" class="text-sm font-display font-bold text-white leading-snug">Giorno A: Petto, Deltoidi & Tricipiti</h2>
-          <div id="workoutSubtitle" class="text-[11px] text-app-textMuted">Pausa Pranzo 13:00 - 15:00 • 50 min Technogym</div>
+          <h2 id="workoutTitle" class="text-sm sm:text-base font-display font-bold text-white leading-snug">Giorno A: Petto, Deltoidi & Tricipiti</h2>
+          <div id="workoutSubtitle" class="text-xs text-app-textMuted">Pausa Pranzo 13:00 - 15:00 • 50 min Technogym</div>
         </div>
-        <button onclick="window.resetCurrentDayChecks()" class="px-2.5 py-1.5 rounded-xl bg-app-card hover:bg-red-950/40 border border-app-border text-[11px] text-app-textMuted hover:text-red-300 transition">
+        <button onclick="window.resetCurrentDayChecks()" class="px-3 py-1.5 rounded-xl bg-app-card hover:bg-red-950/40 border border-app-border text-xs text-app-textMuted hover:text-red-300 transition">
           Azzera Spunte
         </button>
       </div>
 
-      <div id="exerciseList" class="space-y-3.5"></div>
+      <!-- Griglia Esercizi (2 colonne su Desktop) -->
+      <div id="exerciseList" class="grid grid-cols-1 lg:grid-cols-2 gap-4"></div>
     </section>
 
-    <!-- TAB: CAMMINATA -->
-    <section id="view-walk" class="tab-view hidden space-y-4">
-      <div class="apple-glass-card p-4 rounded-2xl border border-teal-500/30 bg-teal-500/[0.03] space-y-3">
+    <!-- ============================================================= -->
+    <!-- TAB: CAMMINATA                                                -->
+    <!-- ============================================================= -->
+    <section id="view-walk" class="tab-view hidden space-y-5">
+      <div class="apple-glass-card p-4 sm:p-5 rounded-2xl border border-teal-500/30 bg-teal-500/[0.03] space-y-3">
         <div class="flex items-center justify-between">
-          <div class="flex items-center gap-2.5">
-            <div class="w-10 h-10 rounded-xl bg-teal-500/15 border border-teal-500/30 flex items-center justify-center text-xl">👟</div>
+          <div class="flex items-center gap-3">
+            <div class="w-11 h-11 rounded-xl bg-teal-500/15 border border-teal-500/30 flex items-center justify-center text-2xl">👟</div>
             <div>
-              <div class="flex items-center gap-1.5">
-                <h2 class="text-sm font-display font-black text-white leading-tight">Camminata & Recupero Attivo</h2>
-                <span class="text-[9px] uppercase font-bold px-1.5 py-0.2 rounded bg-teal-500/20 text-teal-300">NEAT • Giorni OFF</span>
+              <div class="flex items-center gap-2">
+                <h2 class="text-base font-display font-black text-white leading-tight">Camminata & Recupero Attivo</h2>
+                <span class="text-[10px] uppercase font-bold px-2 py-0.5 rounded bg-teal-500/20 text-teal-300">NEAT • Giorni OFF</span>
               </div>
-              <p class="text-[11px] text-app-textMuted mt-0.5">Passeggiata • Basso impatto articolare</p>
+              <p class="text-xs text-app-textMuted mt-0.5">Passeggiata di coppia • Basso impatto articolare</p>
             </div>
           </div>
-          <span class="text-[10px] font-mono font-bold text-teal-400 bg-teal-500/10 px-2 py-1 rounded-lg border border-teal-500/20">Zona 2</span>
+          <span class="text-xs font-mono font-bold text-teal-400 bg-teal-500/10 px-2.5 py-1 rounded-lg border border-teal-500/20">Zona 2 Cardio</span>
         </div>
       </div>
 
-      <div class="apple-glass-card p-4 rounded-2xl border border-app-border space-y-4">
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-          <div class="p-3 rounded-xl bg-app-card border border-app-border space-y-1">
-            <label class="text-[10px] uppercase font-bold text-app-textMuted block">Distanza (km)</label>
-            <input type="number" id="inputWalkKm" step="0.1" inputmode="decimal" placeholder="5.2" oninput="window.updateEstimatedSteps()" class="w-full bg-app-dark border border-app-border rounded-lg px-2 py-1.5 text-sm font-mono font-bold text-teal-300 text-center focus:outline-none">
-            <div id="displayEstimatedSteps" class="text-[9px] text-teal-400/80 font-mono text-center">~0 passi</div>
+      <div class="apple-glass-card p-5 rounded-2xl border border-app-border space-y-4">
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div class="p-3.5 rounded-xl bg-app-card border border-app-border space-y-1">
+            <label class="text-[11px] uppercase font-bold text-app-textMuted block">Distanza (km)</label>
+            <input type="number" id="inputWalkKm" step="0.1" inputmode="decimal" placeholder="5.2" oninput="window.updateEstimatedSteps()" class="w-full bg-app-dark border border-app-border rounded-lg px-2.5 py-2 text-sm font-mono font-bold text-teal-300 text-center focus:outline-none">
+            <div id="displayEstimatedSteps" class="text-[10px] text-teal-400/80 font-mono text-center">~0 passi</div>
           </div>
-          <div class="p-3 rounded-xl bg-app-card border border-app-border space-y-1">
-            <label class="text-[10px] uppercase font-bold text-app-textMuted block">Calorie (kcal)</label>
-            <input type="number" id="inputWalkKcal" inputmode="numeric" placeholder="290" class="w-full bg-app-dark border border-app-border rounded-lg px-2 py-1.5 text-sm font-mono font-bold text-amber-300 text-center focus:outline-none">
+          <div class="p-3.5 rounded-xl bg-app-card border border-app-border space-y-1">
+            <label class="text-[11px] uppercase font-bold text-app-textMuted block">Calorie (kcal)</label>
+            <input type="number" id="inputWalkKcal" inputmode="numeric" placeholder="290" class="w-full bg-app-dark border border-app-border rounded-lg px-2.5 py-2 text-sm font-mono font-bold text-amber-300 text-center focus:outline-none">
           </div>
-          <div class="p-3 rounded-xl bg-app-card border border-app-border space-y-1">
-            <label class="text-[10px] uppercase font-bold text-app-textMuted block">BPM Medi</label>
-            <input type="number" id="inputWalkBpm" inputmode="numeric" placeholder="110" oninput="window.updateHeartRateZoneBadge()" class="w-full bg-app-dark border border-red-400 rounded-lg px-2 py-1.5 text-sm font-mono font-bold text-red-300 text-center focus:outline-none">
-            <div id="bpmZoneStatus" class="text-[9px] text-gray-400 font-mono text-center">Zona 2</div>
+          <div class="p-3.5 rounded-xl bg-app-card border border-app-border space-y-1">
+            <label class="text-[11px] uppercase font-bold text-app-textMuted block">BPM Medi</label>
+            <input type="number" id="inputWalkBpm" inputmode="numeric" placeholder="110" oninput="window.updateHeartRateZoneBadge()" class="w-full bg-app-dark border border-red-400 rounded-lg px-2.5 py-2 text-sm font-mono font-bold text-red-300 text-center focus:outline-none">
+            <div id="bpmZoneStatus" class="text-[10px] text-gray-400 font-mono text-center">Zona 2</div>
           </div>
-          <div class="p-3 rounded-xl bg-app-card border border-teal-500/30 bg-teal-500/[0.04] space-y-1">
-            <label class="text-[10px] uppercase font-bold text-teal-300 block">Acqua (L)</label>
-            <input type="number" id="inputWalkWater" step="0.1" inputmode="decimal" placeholder="0.5" class="w-full bg-app-dark border border-teal-500/40 rounded-lg px-2 py-1.5 text-sm font-mono font-bold text-teal-200 text-center focus:outline-none">
+          <div class="p-3.5 rounded-xl bg-app-card border border-teal-500/30 bg-teal-500/[0.04] space-y-1">
+            <label class="text-[11px] uppercase font-bold text-teal-300 block">Acqua (L)</label>
+            <input type="number" id="inputWalkWater" step="0.1" inputmode="decimal" placeholder="0.5" class="w-full bg-app-dark border border-teal-500/40 rounded-lg px-2.5 py-2 text-sm font-mono font-bold text-teal-200 text-center focus:outline-none">
           </div>
         </div>
 
-        <button onclick="window.saveWalkSession()" class="w-full py-3 rounded-xl bg-gradient-to-r from-teal-500 to-emerald-500 active:scale-95 text-black font-black text-xs transition shadow-lg">
-          Salva Camminata & Sincronizza
+        <button onclick="window.saveWalkSession()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-teal-500 to-emerald-500 active:scale-95 text-black font-black text-xs sm:text-sm transition shadow-lg">
+          Salva Camminata & Sincronizza Cloud
         </button>
       </div>
 
-      <div class="apple-glass-card p-4 rounded-2xl space-y-3">
+      <div class="apple-glass-card p-5 rounded-2xl space-y-3">
         <div class="flex items-center justify-between">
           <h4 class="font-display font-black text-xs uppercase tracking-wider text-app-textMuted">Storico Camminate</h4>
-          <button onclick="window.clearWalkLogs()" class="text-[10px] text-app-textMuted hover:text-red-400 transition">Azzera</button>
+          <button onclick="window.clearWalkLogs()" class="text-[11px] text-app-textMuted hover:text-red-400 transition">Azzera</button>
         </div>
-        <div id="walkLogContainer" class="space-y-2"></div>
+        <div id="walkLogContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"></div>
       </div>
     </section>
 
-    <!-- TAB 2: ALIMENTAZIONE & LIDL 45€ -->
-    <section id="view-nutrition" class="tab-view hidden space-y-4">
-      <div class="apple-glass-card p-2 rounded-2xl border border-app-border">
-        <div class="grid grid-cols-2 gap-1 text-center font-display">
-          <button onclick="window.selectWeekFraction('block1')" id="btn-fraction-block1" class="py-2.5 px-2 rounded-xl text-xs font-black transition bg-emerald-500 text-black shadow-sm">
+    <!-- ============================================================= -->
+    <!-- TAB 2: ALIMENTAZIONE (DOPPIA COLONNA & BILANCIO DEFICIT)       -->
+    <!-- ============================================================= -->
+    <section id="view-nutrition" class="tab-view hidden space-y-6">
+
+      <!-- QUADRO DEFICIT / SURPLUS E CALORIE BRUCIATE -->
+      <div class="apple-glass-card p-5 rounded-3xl border border-emerald-500/30 bg-gradient-to-br from-emerald-500/[0.05] via-teal-500/[0.02] to-transparent space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-app-border/60 pb-3">
+          <div>
+            <h3 class="font-display font-black text-base text-white flex items-center gap-2">
+              <span>⚖️</span> Bilancio Calorico Giornaliero & Deficit
+            </h3>
+            <p class="text-xs text-app-textMuted mt-0.5">Calcolo dinamico: Kcal assunte dallo Scanner vs Kcal bruciate vs Target 1.950 kcal</p>
+          </div>
+          <div id="deficitSurplusBadge" class="self-start sm:self-auto px-3.5 py-1.5 rounded-xl font-mono font-black text-sm bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+            DEFICIT ATTIVO
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div class="p-3.5 rounded-2xl bg-app-card border border-app-border text-center">
+            <span class="text-[10px] uppercase font-bold text-app-textMuted block">Assunte (Scanner)</span>
+            <div id="summaryIntakeKcal" class="text-2xl font-mono font-black text-white mt-1">0</div>
+            <span class="text-[10px] text-teal-400 font-mono">kcal totali cibo</span>
+          </div>
+
+          <div class="p-3.5 rounded-2xl bg-app-card border border-app-border text-center">
+            <span class="text-[10px] uppercase font-bold text-app-textMuted block">Bruciate (Attività)</span>
+            <div id="summaryBurnedKcal" class="text-2xl font-mono font-black text-amber-400 mt-1">0</div>
+            <span class="text-[10px] text-amber-300/80 font-mono">palestra / cammino</span>
+          </div>
+
+          <div class="p-3.5 rounded-2xl bg-app-card border border-app-border text-center">
+            <span class="text-[10px] uppercase font-bold text-app-textMuted block">Target Nutrizionale</span>
+            <div class="text-2xl font-mono font-black text-gray-300 mt-1">1.950</div>
+            <span class="text-[10px] text-app-textMuted font-mono">kcal obiettivo</span>
+          </div>
+
+          <div class="p-3.5 rounded-2xl bg-app-dark border border-emerald-500/40 text-center">
+            <span class="text-[10px] uppercase font-bold text-emerald-400 block">Bilancio / Deficit Netto</span>
+            <div id="summaryNetBalance" class="text-2xl font-mono font-black text-emerald-300 mt-1">-500</div>
+            <span id="summaryNetStatus" class="text-[10px] text-emerald-400 font-mono font-bold">in target deficit</span>
+          </div>
+        </div>
+
+        <!-- Quick Manual Kcal Burned Input directly in Nutrition Tab -->
+        <div class="flex flex-wrap items-center justify-between gap-3 bg-app-dark/80 p-3 rounded-2xl border border-app-border">
+          <span class="text-xs text-app-textSecondary">Aggiorna calorie bruciate oggi (Apple Watch / Cardio):</span>
+          <div class="flex items-center gap-2">
+            <input type="number" id="nutritionBurnedInput" placeholder="es. 400" class="w-28 bg-app-card border border-app-border rounded-xl px-3 py-1.5 text-xs text-center font-mono font-bold text-amber-300 focus:outline-none focus:border-amber-400">
+            <button onclick="window.updateBurnedFromNutrition()" class="px-3.5 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-bold text-xs active:scale-95 transition">
+              Salva Bruciate
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Frazione Settimanale -->
+      <div class="apple-glass-card p-2 rounded-2xl border border-app-border max-w-xl mx-auto">
+        <div class="grid grid-cols-2 gap-1.5 text-center font-display">
+          <button onclick="window.selectWeekFraction('block1')" id="btn-fraction-block1" class="py-2.5 px-3 rounded-xl text-xs font-black transition bg-emerald-500 text-black shadow-sm">
             Frazione 1: Lun - Gio (~23€)
           </button>
-          <button onclick="window.selectWeekFraction('block2')" id="btn-fraction-block2" class="py-2.5 px-2 rounded-xl text-xs font-semibold transition text-app-textMuted hover:text-white">
+          <button onclick="window.selectWeekFraction('block2')" id="btn-fraction-block2" class="py-2.5 px-3 rounded-xl text-xs font-semibold transition text-app-textMuted hover:text-white">
             Frazione 2: Ven - Dom (~22€)
           </button>
         </div>
       </div>
 
-      <div id="daySelectorContainer" class="flex gap-1.5 overflow-x-auto pb-1 no-scrollbar"></div>
-      <div id="dailyMealPlanContainer" class="space-y-3"></div>
+      <div id="daySelectorContainer" class="flex gap-2 overflow-x-auto pb-1 no-scrollbar justify-center"></div>
 
-      <div class="apple-glass-card p-4 rounded-2xl border border-app-border space-y-3">
-        <div class="flex items-center justify-between">
+      <!-- SCHEDA DIETA A DOPPIA COLONNA (CONSIGLIATO VS EFFETTIVO SCANNER) -->
+      <div class="space-y-4">
+        <div class="flex items-center justify-between px-1">
           <div class="flex items-center gap-2">
-            <span class="text-base">🛒</span>
-            <h4 id="lidlCardTitle" class="font-display font-bold text-xs text-white uppercase tracking-wider">Spesa Lidl Essenziale</h4>
+            <h3 id="currentDayTitle" class="font-display font-black text-lg text-white">Lunedì</h3>
+            <span id="currentDayBadge" class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Giorno ON</span>
           </div>
-          <span id="lidlFractionTotalDisplay" class="font-mono font-bold text-xs text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded-lg border border-emerald-500/20">0.00 €</span>
+          <span class="text-xs font-mono text-emerald-400 font-bold">Piano Deficit Ricomposizione</span>
         </div>
-        <div id="lidlItemsContainer" class="space-y-1.5"></div>
+
+        <!-- Dynamic 6 Meals Container: Colazione, Spuntino, Pranzo, Merenda, Cena, Spuntino Notturno -->
+        <div id="dualColumnMealGrid" class="space-y-4"></div>
       </div>
 
-      <div class="apple-glass-card p-4 rounded-2xl border border-teal-500/30 space-y-3">
-        <div class="flex items-center justify-between">
-          <h4 class="font-display font-bold text-xs text-white uppercase tracking-wider">Idratazione (Target 3.5L)</h4>
-          <span id="waterValueDisplay" class="text-xs font-mono font-bold text-teal-300">0.0 / 3.5 L</span>
+      <!-- Spesa Lidl & Idratazione Grid (2 colonne su PC) -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 pt-2">
+        <!-- Spesa Lidl -->
+        <div class="apple-glass-card p-5 rounded-2xl border border-app-border space-y-3">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="text-lg">🛒</span>
+              <h4 id="lidlCardTitle" class="font-display font-bold text-xs uppercase tracking-wider text-white">Spesa Lidl Essenziale</h4>
+            </div>
+            <span id="lidlFractionTotalDisplay" class="font-mono font-bold text-xs text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-lg border border-emerald-500/20">0.00 €</span>
+          </div>
+          <div id="lidlItemsContainer" class="space-y-1.5"></div>
         </div>
-        <div class="grid grid-cols-7 gap-1.5" id="waterTrackerGrid"></div>
+
+        <!-- Idratazione 3.5L -->
+        <div class="apple-glass-card p-5 rounded-2xl border border-teal-500/30 space-y-4">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="text-lg">💧</span>
+              <div>
+                <h4 class="font-display font-bold text-xs uppercase tracking-wider text-white">Idratazione & Creatina</h4>
+                <p class="text-[11px] text-app-textMuted">Target 3.5 Litri quotidiani</p>
+              </div>
+            </div>
+            <span id="waterValueDisplay" class="text-xs font-mono font-bold text-teal-300">0.0 / 3.5 L</span>
+          </div>
+          <div class="grid grid-cols-7 gap-2" id="waterTrackerGrid"></div>
+        </div>
       </div>
     </section>
 
-    <!-- TAB 3: SCANNER PASTI -->
-    <section id="view-scanner" class="tab-view hidden space-y-4">
-      <div class="apple-glass-card p-5 rounded-2xl border border-app-border space-y-3 text-center">
-        <div class="w-12 h-12 mx-auto rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-xl text-emerald-400">📷</div>
-        <h3 class="font-display font-bold text-base text-white">Scanner Pasto o Tabella Nutrizionale</h3>
-        <p class="text-xs text-app-textSecondary mt-1 max-w-md mx-auto">Scatta la foto del piatto o della tabella per analizzarla con Gemini AI.</p>
+    <!-- ============================================================= -->
+    <!-- TAB 3: SCANNER FOTO PASTI (CON RAGGRUPPAMENTO & SOMME)        -->
+    <!-- ============================================================= -->
+    <section id="view-scanner" class="tab-view hidden space-y-6">
+      
+      <!-- Scanner Hero Card -->
+      <div class="apple-glass-card p-6 rounded-3xl border border-app-border text-center space-y-4 max-w-2xl mx-auto">
+        <div class="w-14 h-14 mx-auto rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-2xl text-emerald-400">
+          📷
+        </div>
+        <div>
+          <h3 class="font-display font-black text-lg text-white">Scanner Pasto o Tabella Nutrizionale</h3>
+          <p class="text-xs text-app-textSecondary mt-1 max-w-md mx-auto leading-relaxed">
+            Scatta la foto del piatto o della confezione: Gemini riconosce l'orario e calcola calorie, proteine, carboidrati e grassi aggiungendoli al pasto corretto.
+          </p>
+        </div>
 
-        <label class="cursor-pointer inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-black font-bold text-xs shadow-lg active:scale-95 transition">
-          <span>📸 Scatta o Carica Foto</span>
+        <!-- Automatic Meal Slot Detector Display & Selector -->
+        <div class="bg-app-dark p-3.5 rounded-2xl border border-app-border flex flex-col sm:flex-row items-center justify-between gap-3 text-left">
+          <div class="flex items-center gap-2.5">
+            <span class="text-lg">🕒</span>
+            <div>
+              <span class="text-[10px] text-app-textMuted block font-bold uppercase">Rilevamento Orario:</span>
+              <span id="detectedSlotBadge" class="text-xs font-bold text-emerald-400">Cena (20:30)</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <label class="text-[11px] text-app-textMuted">Pasto:</label>
+            <select id="scannerSlotSelect" class="bg-app-card border border-app-border rounded-xl text-xs text-gray-200 px-3 py-1.5 focus:outline-none focus:border-emerald-500">
+              <option value="auto">Automatico (in base all'ora)</option>
+              <option value="Colazione">Colazione</option>
+              <option value="Spuntino">Spuntino</option>
+              <option value="Pranzo">Pranzo</option>
+              <option value="Merenda">Merenda</option>
+              <option value="Cena">Cena</option>
+              <option value="Spuntino notturno">Spuntino notturno</option>
+            </select>
+          </div>
+        </div>
+
+        <label class="cursor-pointer inline-flex items-center gap-2.5 px-6 py-3.5 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-black font-black text-xs sm:text-sm shadow-xl active:scale-95 transition">
+          <span>📸 Scatta o Carica Foto Piatto</span>
           <input type="file" id="scannerPhotoInput" accept="image/*" class="hidden" onchange="window.processFoodPhoto(event)">
         </label>
 
-        <div id="scannerResultBox" class="hidden text-left pt-3 border-t border-app-border space-y-3">
-          <div class="relative w-full h-44 rounded-xl overflow-hidden bg-black border border-app-border">
+        <!-- Preview & Live Result -->
+        <div id="scannerResultBox" class="hidden text-left pt-4 border-t border-app-border space-y-3">
+          <div class="relative w-full h-56 rounded-2xl overflow-hidden bg-black border border-app-border">
             <img id="foodPreviewImg" src="" alt="Pasto" class="w-full h-full object-cover">
-            <div id="foodLoadingSpinner" class="hidden absolute inset-0 bg-black/80 flex flex-col items-center justify-center p-4 text-center">
-              <div class="w-6 h-6 border-2 border-emerald-400 border-t-transparent rounded-full animate-spin mb-2"></div>
-              <span class="text-xs font-semibold text-emerald-400">Analisi in corso con Gemini...</span>
+            <div id="foodLoadingSpinner" class="hidden absolute inset-0 bg-black/85 flex flex-col items-center justify-center p-4 text-center">
+              <div class="w-7 h-7 border-2 border-emerald-400 border-t-transparent rounded-full animate-spin mb-2"></div>
+              <span class="text-xs font-semibold text-emerald-400">Analisi nutrizionale Gemini AI in corso...</span>
             </div>
           </div>
           <div id="foodDetailsTarget" class="space-y-2"></div>
         </div>
       </div>
 
-      <div class="apple-glass-card p-4 rounded-2xl border border-app-border space-y-2">
-        <div class="flex items-center justify-between mb-1">
-          <h4 class="font-display font-bold text-xs uppercase tracking-wider text-app-textMuted">Pasti Registrati Oggi</h4>
-          <button onclick="window.clearFoodLog()" class="text-[10px] text-app-textMuted hover:text-red-400 transition">Azzera</button>
+      <!-- RAGGRUPPAMENTO PASTI CARICATI CON SOMME TOTALI -->
+      <div class="space-y-4">
+        <div class="flex items-center justify-between px-1">
+          <div>
+            <h4 class="font-display font-black text-base text-white">Diario Pasti Oggi per Fasce Orarie</h4>
+            <p class="text-xs text-app-textMuted">Somma automatica di calorie e macronutrienti per ogni pasto completato</p>
+          </div>
+          <button onclick="window.clearFoodLog()" class="text-xs text-app-textMuted hover:text-red-400 px-3 py-1 rounded-xl bg-app-card border border-app-border transition">
+            Azzera Tutto
+          </button>
         </div>
-        <div id="foodLogList" class="space-y-2"></div>
+
+        <!-- Rendered dynamically grouped by slot -->
+        <div id="groupedMealsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
       </div>
+
     </section>
 
-    <!-- TAB 4: AI COACH -->
-    <section id="view-coach" class="tab-view hidden space-y-3">
-      <div class="apple-glass-card p-3.5 rounded-2xl border border-app-border flex items-center justify-between">
-        <div class="flex items-center gap-2.5">
-          <div class="w-9 h-9 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center text-base font-bold">🧬</div>
+    <!-- ============================================================= -->
+    <!-- TAB 4: AI COACH                                               -->
+    <!-- ============================================================= -->
+    <section id="view-coach" class="tab-view hidden space-y-4 max-w-4xl mx-auto">
+      <div class="apple-glass-card p-4 rounded-2xl border border-app-border flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center text-xl font-bold">🧬</div>
           <div>
-            <h3 class="font-display font-bold text-xs text-white">AI Coach & Biologo Nutrizionista</h3>
-            <p class="text-[10px] text-app-textMuted">Gemini 3.6 / 2.5 Flash Fallback • Deficit 1.950 kcal</p>
+            <h3 class="font-display font-bold text-sm text-white">AI Coach & Biologo Nutrizionista</h3>
+            <p class="text-[11px] text-app-textMuted">Gemini Flash Fallback • Deficit 1.950 kcal</p>
           </div>
         </div>
-        <button onclick="window.resetCoachChat()" class="text-[10px] text-app-textMuted px-2.5 py-1 rounded-lg bg-app-card border border-app-border hover:text-white transition">Azzera</button>
+        <button onclick="window.resetCoachChat()" class="text-xs text-app-textMuted px-3 py-1.5 rounded-xl bg-app-card border border-app-border hover:text-white transition">Azzera</button>
       </div>
 
       <div class="flex gap-2 overflow-x-auto no-scrollbar py-0.5">
-        <button onclick="window.sendQuickChatMessage('Come preparare le polpette di manzo magro in friggitrice ad aria morbidissime a 180°C?')" class="whitespace-nowrap px-3 py-1.5 rounded-xl bg-app-card border border-app-border text-xs text-app-textSecondary transition">🥩 Polpette Friggitrice</button>
-        <button onclick="window.sendQuickChatMessage('Consigli per patate croccanti in friggitrice ad aria senza eccedere con l\'olio?')" class="whitespace-nowrap px-3 py-1.5 rounded-xl bg-app-card border border-app-border text-xs text-app-textSecondary transition">🥔 Patate Croccanti</button>
-        <button onclick="window.sendQuickChatMessage('Come cuocere i gamberetti con il riso express in 5 minuti stasera?')" class="whitespace-nowrap px-3 py-1.5 rounded-xl bg-app-card border border-app-border text-xs text-app-textSecondary transition">🍤 Gamberetti & Riso</button>
+        <button onclick="window.sendQuickChatMessage('Come preparare le polpette di manzo magro in friggitrice ad aria morbidissime a 180°C?')" class="whitespace-nowrap px-3 py-1.5 rounded-xl bg-app-card hover:bg-app-cardSubtle border border-app-border text-xs text-app-textSecondary transition">🥩 Polpette Friggitrice</button>
+        <button onclick="window.sendQuickChatMessage('Consigli per patate croccanti in friggitrice ad aria senza eccedere con l\'olio?')" class="whitespace-nowrap px-3 py-1.5 rounded-xl bg-app-card hover:bg-app-cardSubtle border border-app-border text-xs text-app-textSecondary transition">🥔 Patate Croccanti</button>
+        <button onclick="window.sendQuickChatMessage('Come cuocere i gamberetti con il riso express in 5 minuti stasera?')" class="whitespace-nowrap px-3 py-1.5 rounded-xl bg-app-card hover:bg-app-cardSubtle border border-app-border text-xs text-app-textSecondary transition">🍤 Gamberetti & Riso</button>
       </div>
 
-      <div id="coachChatBox" class="h-80 overflow-y-auto space-y-2.5 p-3.5 rounded-2xl bg-app-card/70 border border-app-border flex flex-col text-xs">
-        <div class="bg-app-dark p-3.5 rounded-2xl border border-app-border text-gray-200 leading-relaxed shadow-sm">
-          Ciao! Sono il tuo Coach e Nutrizionista. Protocollo attivo: 32 anni, 95kg, deficit 1.950 kcal, Huel Black post-workout, polpette e patate in friggitrice, riso express e gamberetti. Come posso aiutarti oggi?
+      <div id="coachChatBox" class="h-96 overflow-y-auto space-y-3 p-4 rounded-2xl bg-app-card/70 border border-app-border flex flex-col text-xs sm:text-sm">
+        <div class="bg-app-dark p-4 rounded-2xl border border-app-border text-gray-200 leading-relaxed shadow-sm">
+          Ciao Luca! Sono il tuo Coach e Nutrizionista sportivo. Protocollo attivo: 32 anni, 95kg, deficit 1.950 kcal, Huel Black post-workout, polpette e patate in friggitrice, riso express e gamberetti. Come posso aiutarti oggi?
         </div>
       </div>
 
       <form onsubmit="window.handleCoachSubmit(event)" class="flex gap-2">
-        <input type="text" id="coachInputText" placeholder="Chiedi al coach..." class="w-full bg-app-card border border-app-border focus:border-emerald-500 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-app-textMuted focus:outline-none transition">
-        <button type="submit" class="px-4 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-black text-xs transition active:scale-95 shrink-0">Invia</button>
+        <input type="text" id="coachInputText" placeholder="Chiedi al coach (es. ricette friggitrice, carichi macchine)..." class="w-full bg-app-card border border-app-border focus:border-emerald-500 rounded-xl px-4 py-3 text-xs sm:text-sm text-white placeholder-app-textMuted focus:outline-none transition">
+        <button type="submit" class="px-5 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-black text-xs sm:text-sm transition active:scale-95 shrink-0">Invia</button>
       </form>
     </section>
 
-    <!-- TAB 5: PROGRESSI -->
-    <section id="view-progress" class="tab-view hidden space-y-4">
-      <div class="apple-glass-card p-4 rounded-2xl border border-app-border space-y-4">
-        <h3 class="font-display font-bold text-sm text-white uppercase tracking-wider">Monitoraggio Ricomposizione</h3>
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-          <div class="p-3 rounded-xl bg-app-card border border-app-border">
+    <!-- ============================================================= -->
+    <!-- TAB 5: PROGRESSI                                              -->
+    <!-- ============================================================= -->
+    <section id="view-progress" class="tab-view hidden space-y-5 max-w-3xl mx-auto">
+      <div class="apple-glass-card p-6 rounded-3xl border border-app-border space-y-5">
+        <h3 class="font-display font-bold text-base text-white uppercase tracking-wider">Monitoraggio Ricomposizione</h3>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div class="p-3.5 rounded-xl bg-app-card border border-app-border">
             <div class="text-[10px] uppercase font-bold text-app-textMuted">Peso Start</div>
-            <div class="text-lg font-display font-black text-white mt-0.5">95.0 <span class="text-xs font-normal text-app-textMuted">kg</span></div>
+            <div class="text-xl font-display font-black text-white mt-0.5">95.0 <span class="text-xs font-normal text-app-textMuted">kg</span></div>
           </div>
-          <div class="p-3 rounded-xl bg-app-card border border-app-border">
+          <div class="p-3.5 rounded-xl bg-app-card border border-app-border">
             <div class="text-[10px] uppercase font-bold text-app-textMuted">Peso Oggi</div>
-            <div id="metricCurrentWeight" class="text-lg font-display font-black text-emerald-400 mt-0.5">95.0 <span class="text-xs font-normal text-app-textMuted">kg</span></div>
+            <div id="metricCurrentWeight" class="text-xl font-display font-black text-emerald-400 mt-0.5">95.0 <span class="text-xs font-normal text-app-textMuted">kg</span></div>
           </div>
-          <div class="p-3 rounded-xl bg-app-card border border-app-border">
+          <div class="p-3.5 rounded-xl bg-app-card border border-app-border">
             <div class="text-[10px] uppercase font-bold text-app-textMuted">Giro Vita Start</div>
-            <div class="text-lg font-display font-black text-white mt-0.5">104.0 <span class="text-xs font-normal text-app-textMuted">cm</span></div>
+            <div class="text-xl font-display font-black text-white mt-0.5">104.0 <span class="text-xs font-normal text-app-textMuted">cm</span></div>
           </div>
-          <div class="p-3 rounded-xl bg-app-card border border-app-border">
+          <div class="p-3.5 rounded-xl bg-app-card border border-app-border">
             <div class="text-[10px] uppercase font-bold text-app-textMuted">Giro Vita Oggi</div>
-            <div id="metricCurrentWaist" class="text-lg font-display font-black text-teal-400 mt-0.5">104.0 <span class="text-xs font-normal text-app-textMuted">cm</span></div>
+            <div id="metricCurrentWaist" class="text-xl font-display font-black text-teal-400 mt-0.5">104.0 <span class="text-xs font-normal text-app-textMuted">cm</span></div>
           </div>
         </div>
 
-        <div class="p-3.5 rounded-xl bg-app-dark border border-app-border space-y-2.5">
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-            <input type="number" id="quickWeightInput" step="0.1" inputmode="decimal" placeholder="Peso (kg)" class="w-full bg-app-card border border-app-border rounded-xl px-3 py-1.5 text-xs text-emerald-400 font-mono text-center focus:outline-none">
-            <input type="number" id="quickWaistInput" step="0.5" inputmode="decimal" placeholder="Vita (cm)" class="w-full bg-app-card border border-app-border rounded-xl px-3 py-1.5 text-xs text-teal-400 font-mono text-center focus:outline-none">
+        <div class="p-4 rounded-2xl bg-app-dark border border-app-border space-y-3">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <input type="number" id="quickWeightInput" step="0.1" inputmode="decimal" placeholder="Peso (kg)" class="w-full bg-app-card border border-app-border rounded-xl px-3 py-2 text-sm text-emerald-400 font-mono text-center focus:outline-none">
+            <input type="number" id="quickWaistInput" step="0.5" inputmode="decimal" placeholder="Vita (cm)" class="w-full bg-app-card border border-app-border rounded-xl px-3 py-2 text-sm text-teal-400 font-mono text-center focus:outline-none">
           </div>
-          <button onclick="window.saveBodyMeasurements()" class="w-full py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black text-xs font-bold active:scale-95 transition">Salva Misure</button>
+          <button onclick="window.saveBodyMeasurements()" class="w-full py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black text-xs sm:text-sm font-bold active:scale-95 transition">Salva Misure nel Cloud</button>
         </div>
       </div>
     </section>
 
   </main>
 
-  <nav class="fixed bottom-0 left-0 right-0 z-40 apple-nav px-2.5 py-2">
+  <!-- Navigation Bar Mobile -->
+  <nav class="fixed bottom-0 left-0 right-0 z-40 apple-nav px-3 py-2">
     <div class="max-w-md mx-auto grid grid-cols-6 gap-1 text-center">
-      <button onclick="window.navigateToTab('workout')" id="nav-workout" class="py-1 flex flex-col items-center text-emerald-400"><span class="text-base">🏋️</span><span class="text-[9px] font-bold mt-0.5">Scheda</span></button>
-      <button onclick="window.navigateToTab('walk')" id="nav-walk" class="py-1 flex flex-col items-center text-app-textMuted hover:text-white"><span class="text-base">👟</span><span class="text-[9px] font-medium mt-0.5">Cammino</span></button>
-      <button onclick="window.navigateToTab('nutrition')" id="nav-nutrition" class="py-1 flex flex-col items-center text-app-textMuted hover:text-white"><span class="text-base">🥗</span><span class="text-[9px] font-medium mt-0.5">Dieta</span></button>
-      <button onclick="window.navigateToTab('scanner')" id="nav-scanner" class="py-1 flex flex-col items-center text-app-textMuted hover:text-white"><span class="text-base">📷</span><span class="text-[9px] font-medium mt-0.5">Scanner</span></button>
-      <button onclick="window.navigateToTab('coach')" id="nav-coach" class="py-1 flex flex-col items-center text-app-textMuted hover:text-white"><span class="text-base">🧬</span><span class="text-[9px] font-medium mt-0.5">Coach</span></button>
-      <button onclick="window.navigateToTab('progress')" id="nav-progress" class="py-1 flex flex-col items-center text-app-textMuted hover:text-white"><span class="text-base">📈</span><span class="text-[9px] font-medium mt-0.5">Misure</span></button>
+      <button onclick="window.navigateToTab('workout')" id="nav-workout" class="py-1 flex flex-col items-center text-emerald-400"><span class="text-base sm:text-lg">🏋️</span><span class="text-[9px] font-bold mt-0.5">Scheda</span></button>
+      <button onclick="window.navigateToTab('walk')" id="nav-walk" class="py-1 flex flex-col items-center text-app-textMuted hover:text-white"><span class="text-base sm:text-lg">👟</span><span class="text-[9px] font-medium mt-0.5">Cammino</span></button>
+      <button onclick="window.navigateToTab('nutrition')" id="nav-nutrition" class="py-1 flex flex-col items-center text-app-textMuted hover:text-white"><span class="text-base sm:text-lg">🥗</span><span class="text-[9px] font-medium mt-0.5">Dieta</span></button>
+      <button onclick="window.navigateToTab('scanner')" id="nav-scanner" class="py-1 flex flex-col items-center text-app-textMuted hover:text-white"><span class="text-base sm:text-lg">📷</span><span class="text-[9px] font-medium mt-0.5">Scanner</span></button>
+      <button onclick="window.navigateToTab('coach')" id="nav-coach" class="py-1 flex flex-col items-center text-app-textMuted hover:text-white"><span class="text-base sm:text-lg">🧬</span><span class="text-[9px] font-medium mt-0.5">Coach</span></button>
+      <button onclick="window.navigateToTab('progress')" id="nav-progress" class="py-1 flex flex-col items-center text-app-textMuted hover:text-white"><span class="text-base sm:text-lg">📈</span><span class="text-[9px] font-medium mt-0.5">Misure</span></button>
     </div>
   </nav>
 
+  <!-- REST TIMER MODAL -->
   <div id="restTimerModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
     <div class="apple-glass max-w-xs w-full p-5 rounded-3xl border border-app-border text-center relative">
       <button onclick="window.toggleTimerModal()" class="absolute top-3 right-4 text-app-textMuted text-lg">✕</button>
@@ -480,6 +619,7 @@
     </div>
   </div>
 
+  <!-- API KEY MODAL -->
   <div id="apiKeyModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
     <div class="apple-glass max-w-xs w-full p-5 rounded-3xl border border-app-border space-y-3">
       <h3 class="text-sm font-bold text-white">Chiave Gemini API</h3>
@@ -497,7 +637,6 @@
     import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js';
     import { getFirestore, doc, onSnapshot, setDoc } from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js';
 
-    // Configurazione del tuo progetto Firebase budget-luca
     const firebaseConfig = {
       apiKey: 'AIzaSyAdZbBv6JYbYnl6CxuFVfHhSftvIxwf2DY',
       authDomain: 'budget-luca.firebaseapp.com',
@@ -519,10 +658,11 @@
     let unsubCloud = null;
     let cloudSaveTimeout = null;
 
-    // Modelli Gemini con fallback
     const AI_MODELS = ['gemini-3.6-flash', 'gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-1.5-flash'];
 
-    // Stato dell'applicazione
+    const MEAL_SLOTS = ["Colazione", "Spuntino", "Pranzo", "Merenda", "Cena", "Spuntino notturno"];
+
+    // Stato Globale
     let appData = {
       userApiKey: localStorage.getItem('icon_gemini_key') || '',
       waterLiters: parseFloat(localStorage.getItem('icon_water_liters') || '0.0'),
@@ -545,13 +685,34 @@
     let timerCountdown = null;
     let secondsRemaining = 0;
 
-    // Login e Logout
+    // Riconoscimento orario
+    function detectCurrentMealSlot() {
+      const h = new Date().getHours();
+      const m = new Date().getMinutes();
+      const timeDecimal = h + m / 60;
+
+      if (timeDecimal >= 6 && timeDecimal < 10.5) return "Colazione";
+      if (timeDecimal >= 10.5 && timeDecimal < 12.5) return "Spuntino";
+      if (timeDecimal >= 12.5 && timeDecimal < 15.5) return "Pranzo";
+      if (timeDecimal >= 15.5 && timeDecimal < 19.0) return "Merenda";
+      if (timeDecimal >= 19.0 && timeDecimal < 23.0) return "Cena";
+      return "Spuntino notturno";
+    }
+
+    function updateDetectedSlotUI() {
+      const slot = detectCurrentMealSlot();
+      const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const badge = document.getElementById('detectedSlotBadge');
+      if (badge) badge.innerText = `${slot} (${timeStr})`;
+    }
+
+    // Login & Sync
     document.getElementById('loginBtn').onclick = async () => {
       try {
         await signInWithPopup(auth, provider);
       } catch (err) {
         const msg = document.getElementById('loginStatusMsg');
-        msg.innerText = "Errore accesso: " + err.message;
+        msg.innerText = "Errore: " + err.message;
         msg.classList.remove('hidden');
       }
     };
@@ -573,7 +734,6 @@
       cloudDocRef = doc(db, 'users', user.uid, 'gym_recomp', 'current_state');
       cloudStatus.innerText = `${user.displayName ? user.displayName.split(' ')[0] : 'Utente'} • Cloud ✓`;
 
-      // Sincronizzazione in tempo reale dal Cloud
       unsubCloud = onSnapshot(cloudDocRef, snap => {
         if (snap.exists()) {
           const data = snap.data();
@@ -695,31 +855,47 @@
         days: {
           "Lunedì": {
             badge: "⚡ Giorno ON (Palestra A)",
-            breakfast: "🥣 Yogurt greco 0% Milbona (170g) + 45g Avena + 1 banana + caffè amaro (~440 kcal | 32g Pro).",
-            lunch: "🥤 Huel Black Edition (400 kcal, 40g proteine) + 5g Creatina nello shaker post-allenamento.",
-            snack: "🥪 1 fetta pane segale con 40g fesa di tacchino / Mozzarella light Milbona + cetriolo (~140 kcal | 12g Pro).",
-            dinner: "🐟 125g Trancio di Salmone Lidl scottato + 200g Patate friggitrice ad aria + Peperoni e zucchine + Cetrioli (~740 kcal | 52g Pro)."
+            meals: {
+              "Colazione": { title: "Colazione Energetica", time: "08:00", desc: "🥣 Yogurt greco 0% Milbona (170g) + 45g Avena + 1 banana + caffè amaro", target: "~440 kcal | 32g Pro" },
+              "Spuntino": { title: "Spuntino Mattina", time: "11:00", desc: "🍎 1 Mela fresca o spremuta d'arancia senza zuccheri", target: "~70 kcal | 1g Pro" },
+              "Pranzo": { title: "Pranzo Post-Palestra", time: "14:00", desc: "🥤 Huel Black Edition (400 kcal, 40g proteine) + 5g Creatina nello shaker Icon", target: "~400 kcal | 40g Pro" },
+              "Merenda": { title: "Merenda Pomeridiana", time: "17:30", desc: "🥪 1 fetta pane segale con 40g fesa di tacchino / Mozzarella light + cetriolo", target: "~140 kcal | 12g Pro" },
+              "Cena": { title: "Cena Friggitrice & Fresco", time: "20:30", desc: "🐟 125g Salmone fresco + 200g Patate friggitrice ad aria (190°C) + Zucchine & Cetrioli", target: "~740 kcal | 52g Pro" },
+              "Spuntino notturno": { title: "Spuntino Notturno", time: "23:00", desc: "🍵 Tisana rilassante al finocchio o camomilla senza zuccheri", target: "~0 kcal" }
+            }
           },
           "Martedì": {
             badge: "⚡ Giorno ON (Palestra B)",
-            breakfast: "🥞 Pancake veloci all'avena: 45g farina avena + 150g albume cotti 2 min + frutti di bosco (~420 kcal | 30g Pro).",
-            lunch: "🥤 Huel Black Edition (400 kcal, 40g proteine) + 5g Creatina nello shaker Icon.",
-            snack: "🥒 150g Yogurt greco 0% con cannella e fettine di cetriolo rinfrescante (~110 kcal | 15g Pro).",
-            dinner: "🥩 Polpette di Manzo Magro in Friggitrice ad Aria (200g cotte a 180°C per 12 min) + 150g Lenticchie + Peperoni arrostiti (~760 kcal | 58g Pro)."
+            meals: {
+              "Colazione": { title: "Colazione Proteica", time: "08:00", desc: "🥞 Pancake avena: 45g farina avena + 150g albume + frutti di bosco", target: "~420 kcal | 30g Pro" },
+              "Spuntino": { title: "Spuntino Mattina", time: "11:00", desc: "🥒 Cetrioli freschi a fette con pizzico di sale", target: "~25 kcal | 1g Pro" },
+              "Pranzo": { title: "Pranzo Post-Icon", time: "14:00", desc: "🥤 Huel Black Edition (400 kcal, 40g proteine) + 5g Creatina", target: "~400 kcal | 40g Pro" },
+              "Merenda": { title: "Merenda", time: "17:30", desc: "🥣 150g Yogurt greco 0% con cannella e fettine di mela", target: "~110 kcal | 15g Pro" },
+              "Cena": { title: "Cena Polpette Friggitrice", time: "20:30", desc: "🥩 200g Polpette Manzo Magro (180°C 12 min) + 150g Lenticchie + Peperoni arrostiti", target: "~760 kcal | 58g Pro" },
+              "Spuntino notturno": { title: "Spuntino Notturno", time: "23:00", desc: "🍵 Infuso menta piperita digestivo", target: "~0 kcal" }
+            }
           },
           "Mercoledì": {
             badge: "🌱 Giorno OFF (Camminata)",
-            breakfast: "🍳 Omelette con 2 uova + 1 fetta pane segale + caffè amaro + frutto fresco (~420 kcal | 24g Pro).",
-            lunch: "🥗 1 barattolo Lenticchie (240g) con cetrioli, 100g Mozzarella Light Milbona a dadini e 1 cucchiaino EVO (~550 kcal | 42g Pro).",
-            snack: "🥣 120g Yogurt greco 0% con mezza mela a tocchetti (~130 kcal | 13g Pro).",
-            dinner: "🐟 125g Trancio di Salmone Lidl + 200g Patate in friggitrice + Cetrioli e peperoni a crudo (~710 kcal | 50g Pro)."
+            meals: {
+              "Colazione": { title: "Omelette Mattutina", time: "08:00", desc: "🍳 Omelette con 2 uova + 1 fetta tosta segale + caffè amaro + frutto", target: "~420 kcal | 24g Pro" },
+              "Spuntino": { title: "Spuntino Mattina", time: "11:00", desc: "🥣 80g Yogurt greco 0%", target: "~60 kcal | 8g Pro" },
+              "Pranzo": { title: "Insalatona Proteica", time: "13:30", desc: "🥗 1 barattolo Lenticchie (240g) con cetrioli, 100g Mozzarella Light a dadini + EVO", target: "~550 kcal | 42g Pro" },
+              "Merenda": { title: "Merenda", time: "17:30", desc: "🥪 Fetta di segale con fesa di tacchino", target: "~120 kcal | 10g Pro" },
+              "Cena": { title: "Salmone & Patate", time: "20:30", desc: "🐟 125g Salmone Lidl + 200g Patate in friggitrice + Cetrioli e peperoni a crudo", target: "~710 kcal | 50g Pro" },
+              "Spuntino notturno": { title: "Spuntino Notturno", time: "23:00", desc: "🍵 Camomilla calda", target: "~0 kcal" }
+            }
           },
           "Giovedì": {
             badge: "⚡ Giorno ON (Palestra C)",
-            breakfast: "🥞 Pancake proteici all'avena con banana schiacciata e cannella (~430 kcal | 28g Pro).",
-            lunch: "🥤 Huel Black Edition (400 kcal, 40g proteine) + 5g Creatina Monoidrato.",
-            snack: "🧀 60g Mozzarella Light con cetriolo fresco e origano (~110 kcal | 12g Pro).",
-            dinner: "🥩 Polpette di Manzo Magro in Friggitrice ad Aria (200g) + 200g Patate a spicchi + Peperoni grigliati (~750 kcal | 55g Pro)."
+            meals: {
+              "Colazione": { title: "Pancake Energetici", time: "08:00", desc: "🥞 Pancake avena con banana schiacciata e cannella", target: "~430 kcal | 28g Pro" },
+              "Spuntino": { title: "Spuntino Mattina", time: "11:00", desc: "🥒 Cetriolo fresco dissetante", target: "~20 kcal" },
+              "Pranzo": { title: "Pranzo Post-Icon", time: "14:00", desc: "🥤 Huel Black Edition (400 kcal, 40g proteine) + 5g Creatina", target: "~400 kcal | 40g Pro" },
+              "Merenda": { title: "Merenda", time: "17:30", desc: "🧀 60g Mozzarella Light Milbona con fette di pomodoro e origano", target: "~110 kcal | 12g Pro" },
+              "Cena": { title: "Polpette & Patate", time: "20:30", desc: "🥩 200g Polpette Manzo Magro in friggitrice + 200g Patate a spicchi + Peperoni", target: "~750 kcal | 55g Pro" },
+              "Spuntino notturno": { title: "Spuntino Notturno", time: "23:00", desc: "🍵 Tisana zenzero e limone", target: "~0 kcal" }
+            }
           }
         }
       },
@@ -738,24 +914,36 @@
         days: {
           "Venerdì": {
             badge: "⚡ Giorno ON (Palestra D)",
-            breakfast: "🥣 Yogurt greco 0% Milbona (170g) + 40g Avena + banana (~420 kcal | 31g Pro).",
-            lunch: "🥤 Huel Black Edition (400 kcal, 40g proteine) + 5g Creatina Monoidrato.",
-            snack: "🥒 Cetriolo fresco con 50g Mozzarella light a dadini (~95 kcal | 10g Pro).",
-            dinner: "🍤 200g Gamberetti sgusciati saltati 3 min con aglio e limone + 1 busta Riso Basmati Express in padella + Peperoni (~720 kcal | 54g Pro)."
+            meals: {
+              "Colazione": { title: "Colazione", time: "08:00", desc: "🥣 Yogurt greco 0% (170g) + 40g Avena + banana", target: "~420 kcal | 31g Pro" },
+              "Spuntino": { title: "Spuntino", time: "11:00", desc: "🍎 1 Mela o caffè", target: "~70 kcal" },
+              "Pranzo": { title: "Pranzo Post-Icon", time: "14:00", desc: "🥤 Huel Black (400 kcal, 40g proteine) + 5g Creatina", target: "~400 kcal | 40g Pro" },
+              "Merenda": { title: "Merenda", time: "17:30", desc: "🧀 50g Mozzarella Light con cetriolo a rondelle", target: "~95 kcal | 10g Pro" },
+              "Cena": { title: "Gamberetti Express", time: "20:30", desc: "🍤 200g Gamberetti sgusciati saltati 3 min con limone + 1 busta Riso Express + Peperoni", target: "~720 kcal | 54g Pro" },
+              "Spuntino notturno": { title: "Spuntino Notturno", time: "23:00", desc: "🍵 Tisana rilassante", target: "~0 kcal" }
+            }
           },
           "Sabato": {
-            badge: "🌱 Giorno OFF / Relax Coppia",
-            breakfast: "🥞 Pancake caldi all'avena con frutti di bosco e cannella (~430 kcal | 27g Pro).",
-            lunch: "🥩 Bowl: 150g Polpette manzo magro + 100g Riso Basmati Express + cetrioli e peperoni a cubetti (~580 kcal | 45g Pro).",
-            snack: "🥣 Yogurt greco 0% con mela (~120 kcal | 14g Pro).",
-            dinner: "🥩 Trancio di Tonno Fresco Lidl (160g) scottato 1 min per lato + 220g Patate in friggitrice + Cetrioli freschi (~690 kcal | 55g Pro)."
+            badge: "🌱 Giorno OFF / Relax",
+            meals: {
+              "Colazione": { title: "Pancake Weekend", time: "08:30", desc: "🥞 Pancake caldi all'avena con frutti di bosco e cannella", target: "~430 kcal | 27g Pro" },
+              "Spuntino": { title: "Spuntino", time: "11:30", desc: "🥣 100g Yogurt greco 0%", target: "~70 kcal | 10g Pro" },
+              "Pranzo": { title: "Bowl Manzo & Riso", time: "13:30", desc: "🥩 150g Polpette manzo + 100g Riso Basmati Express + cetrioli e peperoni a cubetti", target: "~580 kcal | 45g Pro" },
+              "Merenda": { title: "Merenda", time: "17:30", desc: "🥪 Mezza mela con yogurt o fesa", target: "~120 kcal" },
+              "Cena": { title: "Trancio di Tonno Fresco", time: "20:30", desc: "🥩 160g Tonno Fresco Lidl scottato 1 min per lato con sesamo + 220g Patate friggitrice", target: "~690 kcal | 55g Pro" },
+              "Spuntino notturno": { title: "Spuntino Notturno", time: "23:00", desc: "🍵 Infuso ai frutti rossi", target: "~0 kcal" }
+            }
           },
           "Domenica": {
-            badge: "🌱 Giorno OFF / Ricarica Pulita",
-            breakfast: "🍳 Uova strapazzate con 1 fetta tosta di segale + caffè amaro + frutto fresco (~410 kcal | 23g Pro).",
-            lunch: "🍤 Gamberetti saltati con zucchine e peperoni + 120g Riso Basmati Express (~540 kcal | 42g Pro).",
-            snack: "🧀 Mozzarella light Milbona (60g) con cetrioli e pomodori (~110 kcal | 12g Pro).",
-            dinner: "🥩 Polpette di Manzo Magro (200g) + 200g Patate croccanti in friggitrice + Peperoni dolci + Cetrioli (~730 kcal | 56g Pro)."
+            badge: "🌱 Giorno OFF / Ricarica",
+            meals: {
+              "Colazione": { title: "Uova e Pane", time: "08:30", desc: "🍳 Uova strapazzate con 1 fetta tosta di segale + frutto fresco", target: "~410 kcal | 23g Pro" },
+              "Spuntino": { title: "Spuntino", time: "11:30", desc: "🥒 Cetriolo fresco con gocce di limone", target: "~20 kcal" },
+              "Pranzo": { title: "Gamberetti & Zucchine", time: "13:30", desc: "🍤 Gamberetti saltati con zucchine e 120g Riso Basmati Express", target: "~540 kcal | 42g Pro" },
+              "Merenda": { title: "Merenda", time: "17:30", desc: "🧀 60g Mozzarella light con cetrioli", target: "~110 kcal | 12g Pro" },
+              "Cena": { title: "Polpette & Patate", time: "20:30", desc: "🥩 200g Polpette Manzo Magro + 200g Patate croccanti in friggitrice + Peperoni", target: "~730 kcal | 56g Pro" },
+              "Spuntino notturno": { title: "Spuntino Notturno", time: "23:00", desc: "🍵 Camomilla o tisana finocchio", target: "~0 kcal" }
+            }
           }
         }
       }
@@ -763,19 +951,392 @@
 
     function updateUIFromState() {
       renderWorkoutList(currentWorkoutDay);
-      renderDailyMealPlan();
+      renderDaySelector();
+      renderDualColumnDiet();
+      renderGroupedMeals();
       renderLidlFractionShopping();
       initWaterGrid();
-      renderFoodLog();
       updateBurnedCaloriesUI();
       updateGymBottleDisplay();
       renderWalkHistory();
+      updateDeficitCalculations();
+      updateDetectedSlotUI();
 
       document.getElementById('metricCurrentWeight').innerHTML = `${appData.weight} <span class="text-xs font-normal text-app-textMuted">kg</span>`;
       document.getElementById('metricCurrentWaist').innerHTML = `${appData.waist} <span class="text-xs font-normal text-app-textMuted">cm</span>`;
       document.getElementById('apiStatusDot').className = appData.userApiKey ? "w-2.5 h-2.5 rounded-full bg-emerald-400" : "w-2.5 h-2.5 rounded-full bg-amber-500";
     }
 
+    // CALCOLO TOTALE KCAL ASSUNTE E DEFICIT / SURPLUS
+    function updateDeficitCalculations() {
+      const totalIntake = appData.foodLogs.reduce((acc, m) => acc + (Number(m.calories) || 0), 0);
+      const burned = Number(appData.burnedCalories) || 0;
+      const target = 1950;
+
+      // Net Balance = Intake - Burned
+      const netIntake = totalIntake - burned;
+      // Deficit = Target - Net Intake
+      const actualDeficit = target - netIntake;
+
+      document.getElementById('summaryIntakeKcal').innerText = totalIntake;
+      document.getElementById('summaryBurnedKcal').innerText = burned;
+
+      const netEl = document.getElementById('summaryNetBalance');
+      const statusEl = document.getElementById('summaryNetStatus');
+      const badgeEl = document.getElementById('deficitSurplusBadge');
+
+      if (actualDeficit >= 0) {
+        netEl.innerText = `-${actualDeficit} kcal`;
+        netEl.className = "text-2xl font-mono font-black text-emerald-400 mt-1";
+        statusEl.innerText = "in deficit calorico ✓";
+        statusEl.className = "text-[10px] text-emerald-400 font-mono font-bold";
+        badgeEl.innerText = `DEFICIT -${actualDeficit} KCAL`;
+        badgeEl.className = "self-start sm:self-auto px-3.5 py-1.5 rounded-xl font-mono font-black text-xs sm:text-sm bg-emerald-500/20 text-emerald-300 border border-emerald-500/40";
+      } else {
+        const surplus = Math.abs(actualDeficit);
+        netEl.innerText = `+${surplus} kcal`;
+        netEl.className = "text-2xl font-mono font-black text-amber-400 mt-1";
+        statusEl.innerText = "surplus calorico";
+        statusEl.className = "text-[10px] text-amber-400 font-mono font-bold";
+        badgeEl.innerText = `SURPLUS +${surplus} KCAL`;
+        badgeEl.className = "self-start sm:self-auto px-3.5 py-1.5 rounded-xl font-mono font-black text-xs sm:text-sm bg-amber-500/20 text-amber-300 border border-amber-500/40";
+      }
+    }
+
+    window.updateBurnedFromNutrition = () => {
+      const val = parseInt(document.getElementById('nutritionBurnedInput').value);
+      if (!isNaN(val) && val >= 0) {
+        appData.burnedCalories = val;
+        document.getElementById('nutritionBurnedInput').value = '';
+        updateBurnedCaloriesUI();
+        triggerCloudSave();
+        showNotification(`Calorie bruciate impostate a ${val} kcal!`);
+      }
+    };
+
+    // RENDERING DIETA A DOPPIA COLONNA (CONSIGLIATO VS EFFETTIVAMENTE MANGIATO)
+    function renderDualColumnDiet() {
+      const container = document.getElementById('dualColumnMealGrid');
+      const dayData = FRACTION_DATA[currentFraction].days[currentSelectedDay];
+      if (!dayData || !container) return;
+
+      document.getElementById('currentDayTitle').innerText = currentSelectedDay;
+      document.getElementById('currentDayBadge').innerText = dayData.badge;
+
+      // Group logged food by slot
+      const loggedBySlot = {};
+      MEAL_SLOTS.forEach(s => loggedBySlot[s] = []);
+      appData.foodLogs.forEach(m => {
+        const s = m.slot || "Cena";
+        if (!loggedBySlot[s]) loggedBySlot[s] = [];
+        loggedBySlot[s].push(m);
+      });
+
+      container.innerHTML = MEAL_SLOTS.map(slotName => {
+        const planned = dayData.meals[slotName] || { title: slotName, time: "--:--", desc: "Pasto libero o non previsto", target: "" };
+        const actualItems = loggedBySlot[slotName] || [];
+
+        // Sum actual macros for this slot
+        const sumKcal = actualItems.reduce((acc, x) => acc + (Number(x.calories) || 0), 0);
+        const sumPro = actualItems.reduce((acc, x) => acc + (Number(x.protein) || 0), 0);
+        const sumCarb = actualItems.reduce((acc, x) => acc + (Number(x.carbs) || 0), 0);
+        const sumFat = actualItems.reduce((acc, x) => acc + (Number(x.fat) || 0), 0);
+
+        let actualHTML = '';
+        if (actualItems.length === 0) {
+          actualHTML = `
+            <div class="h-full flex flex-col items-center justify-center p-4 rounded-2xl bg-app-dark/60 border border-dashed border-app-border text-center space-y-2">
+              <span class="text-xs text-app-textMuted">Nessun piatto registrato in questo pasto.</span>
+              <button onclick="window.triggerScanForSlot('${slotName}')" class="px-3 py-1.5 rounded-xl bg-app-card hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-bold text-xs flex items-center gap-1.5 transition active:scale-95">
+                <span>📸</span> Scansiona ${slotName}
+              </button>
+            </div>
+          `;
+        } else {
+          const itemsList = actualItems.map(item => `
+            <div class="flex items-center justify-between p-2 rounded-xl bg-app-dark border border-app-border text-xs">
+              <div class="truncate pr-2">
+                <div class="font-bold text-white truncate">${item.dishName}</div>
+                <div class="text-[10px] text-app-textMuted font-mono">${item.time} • ${item.protein}g Pro | ${item.carbs}g Cho | ${item.fat}g Fat</div>
+              </div>
+              <span class="font-mono font-black text-emerald-400 text-xs shrink-0">${item.calories} kcal</span>
+            </div>
+          `).join('');
+
+          actualHTML = `
+            <div class="space-y-2">
+              <div class="space-y-1.5 max-h-40 overflow-y-auto pr-1">
+                ${itemsList}
+              </div>
+
+              <!-- Subtotale Effettivo Pasto in Evidenza -->
+              <div class="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-between">
+                <div>
+                  <span class="text-[10px] uppercase font-bold text-emerald-400 block">Totale ${slotName}</span>
+                  <div class="text-[11px] font-mono text-gray-300">
+                    <strong>${sumPro}g</strong> Pro • <strong>${sumCarb}g</strong> Cho • <strong>${sumFat}g</strong> Fat
+                  </div>
+                </div>
+                <div class="text-right">
+                  <span class="text-base sm:text-lg font-mono font-black text-emerald-300">${sumKcal}</span>
+                  <span class="text-[10px] font-mono text-emerald-400 block">KCAL EFFETTIVE</span>
+                </div>
+              </div>
+            </div>
+          `;
+        }
+
+        return `
+          <div class="apple-glass-card p-4 rounded-2xl border border-app-border space-y-3">
+            <div class="flex items-center justify-between border-b border-app-border pb-2">
+              <div class="flex items-center gap-2">
+                <span class="text-base">${getSlotEmoji(slotName)}</span>
+                <h4 class="font-display font-black text-sm text-white uppercase tracking-wider">${slotName}</h4>
+              </div>
+              <span class="text-xs font-mono text-teal-400 font-semibold">${planned.time}</span>
+            </div>
+
+            <!-- Griglia Split 2 Colonne (Sinistra Consigliato, Destra Effettivo) -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5 items-stretch">
+              
+              <!-- Colonna Sinistra: Consigliato -->
+              <div class="p-3.5 rounded-2xl bg-app-card border border-app-border flex flex-col justify-between space-y-2">
+                <div>
+                  <div class="flex items-center justify-between text-[11px] text-app-textMuted uppercase font-bold mb-1">
+                    <span>💡 Consigliato da Piano</span>
+                    <span class="text-emerald-400 font-mono">${planned.target}</span>
+                  </div>
+                  <h5 class="text-xs font-bold text-white mb-1">${planned.title}</h5>
+                  <p class="text-xs text-app-textSecondary leading-relaxed">${planned.desc}</p>
+                </div>
+                <div class="text-[10px] text-teal-400/80 font-mono pt-1 border-t border-app-border/40">
+                  Target dietetico fissato
+                </div>
+              </div>
+
+              <!-- Colonna Destra: Effettivamente Mangiato -->
+              <div class="p-3.5 rounded-2xl bg-app-cardSubtle/60 border border-emerald-500/20 flex flex-col justify-between space-y-2">
+                <div class="flex items-center justify-between text-[11px] uppercase font-bold mb-1">
+                  <span class="text-teal-300">🍽️ Effettivamente Mangiato</span>
+                  <span class="text-[10px] text-app-textMuted font-mono">Dati Scanner</span>
+                </div>
+                ${actualHTML}
+              </div>
+
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function getSlotEmoji(slot) {
+      switch(slot) {
+        case "Colazione": return "🥣";
+        case "Spuntino": return "🍎";
+        case "Pranzo": return "🥤";
+        case "Merenda": return "🥪";
+        case "Cena": return "🍽️";
+        case "Spuntino notturno": return "🍵";
+        default: return "🥗";
+      }
+    }
+
+    window.triggerScanForSlot = slotName => {
+      window.navigateToTab('scanner');
+      const sel = document.getElementById('scannerSlotSelect');
+      if (sel) sel.value = slotName;
+      document.getElementById('scannerPhotoInput').click();
+    };
+
+    // RENDERING SCANNER CON RAGGRUPPAMENTO PASTI E SOMME TOTALI
+    function renderGroupedMeals() {
+      const container = document.getElementById('groupedMealsContainer');
+      if (!container) return;
+
+      if (appData.foodLogs.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-full text-xs text-app-textMuted py-8 text-center bg-app-card rounded-2xl border border-app-border">
+            Nessun pasto registrato oggi. Scatta la foto del tuo piatto per iniziare la somma automatica!
+          </div>
+        `;
+        return;
+      }
+
+      // Group items by slot
+      const groups = {};
+      appData.foodLogs.forEach(item => {
+        const s = item.slot || "Cena";
+        if (!groups[s]) groups[s] = [];
+        groups[s].push(item);
+      });
+
+      container.innerHTML = Object.keys(groups).map(slot => {
+        const items = groups[slot];
+        const sumKcal = items.reduce((acc, x) => acc + (Number(x.calories) || 0), 0);
+        const sumPro = items.reduce((acc, x) => acc + (Number(x.protein) || 0), 0);
+        const sumCarb = items.reduce((acc, x) => acc + (Number(x.carbs) || 0), 0);
+        const sumFat = items.reduce((acc, x) => acc + (Number(x.fat) || 0), 0);
+
+        const itemsHTML = items.map(m => `
+          <div class="flex items-center justify-between p-2 rounded-xl bg-app-dark border border-app-border text-xs">
+            <div class="truncate pr-2">
+              <span class="font-bold text-white truncate block">${m.dishName}</span>
+              <span class="text-[10px] text-app-textMuted font-mono">${m.time} • ${m.protein}g Pro | ${m.carbs}g Cho | ${m.fat}g Fat</span>
+            </div>
+            <span class="font-mono font-bold text-emerald-400 text-xs shrink-0">${m.calories} kcal</span>
+          </div>
+        `).join('');
+
+        return `
+          <div class="apple-glass-card p-4 rounded-2xl border border-app-border space-y-3 flex flex-col justify-between">
+            <div class="space-y-2.5">
+              <div class="flex items-center justify-between border-b border-app-border pb-2">
+                <div class="flex items-center gap-2">
+                  <span>${getSlotEmoji(slot)}</span>
+                  <h5 class="font-display font-black text-sm text-white uppercase tracking-wider">${slot}</h5>
+                </div>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-bold">${items.length} cibi</span>
+              </div>
+
+              <div class="space-y-1.5">
+                ${itemsHTML}
+              </div>
+            </div>
+
+            <!-- Box Somma a fine pasto (Cena, Pranzo, ecc.) -->
+            <div class="p-3 rounded-xl bg-gradient-to-r from-emerald-500/15 to-teal-500/15 border border-emerald-500/30 flex items-center justify-between mt-2">
+              <div>
+                <span class="text-[10px] uppercase font-black text-emerald-400 block">Somma Valori ${slot}</span>
+                <div class="text-[11px] font-mono text-gray-200">
+                  <strong class="text-white">${sumPro}g</strong> P • <strong class="text-white">${sumCarb}g</strong> C • <strong class="text-white">${sumFat}g</strong> F
+                </div>
+              </div>
+              <div class="text-right">
+                <span class="text-xl font-mono font-black text-emerald-300">${sumKcal}</span>
+                <span class="text-[9px] font-mono text-emerald-400 uppercase block font-bold">KCAL TOTALI</span>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // GESTIONE PROCESSO FOTO PASTI CON DETERMINAZIONE SLOT
+    window.processFoodPhoto = async event => {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const selVal = document.getElementById('scannerSlotSelect').value;
+      const targetSlot = selVal === 'auto' ? detectCurrentMealSlot() : selVal;
+
+      const reader = new FileReader();
+      reader.onload = async function(e) {
+        const base64Content = e.target.result.split(',')[1];
+        document.getElementById('foodPreviewImg').src = e.target.result;
+        document.getElementById('scannerResultBox').classList.remove('hidden');
+        document.getElementById('foodLoadingSpinner').classList.remove('hidden');
+
+        if (!appData.userApiKey) {
+          window.openApiKeyModal();
+          document.getElementById('foodLoadingSpinner').classList.add('hidden');
+          showNotification("Inserisci la chiave API Gemini.", true);
+          return;
+        }
+
+        try {
+          const prompt = `
+            Agisci come Biologo Nutrizionista Sportivo esperto.
+            Momento del pasto: "${targetSlot}".
+            Profilo atleta: 32 anni, 95kg, target deficit 1.950 kcal/die (target 170g proteine).
+            Analizza l'immagine (piatto preparato, singolo ingrediente o tabella nutrizionale) e restituisci ESCLUSIVAMENTE un JSON valido senza blocchi markdown esterni:
+            {
+              "dishName": "Nome descrittivo piatto o pietanza",
+              "slot": "${targetSlot}",
+              "calories": 250,
+              "protein": 24,
+              "carbs": 18,
+              "fat": 8,
+              "verdict": "Giudizio rapido per il deficit",
+              "advice": "Consiglio pratico di cottura o abbinamento"
+            }
+          `;
+
+          const rawText = await callGeminiApi({
+            contents: [{
+              role: "user",
+              parts: [{ text: prompt }, { inlineData: { mimeType: file.type || "image/jpeg", data: base64Content } }]
+            }]
+          });
+
+          const cleanJson = rawText.replace(/```json/g, '').replace(/```/g, '').trim();
+          const data = JSON.parse(cleanJson);
+          data.slot = targetSlot;
+          renderFoodAnalysisResult(data);
+        } catch (err) {
+          document.getElementById('foodDetailsTarget').innerHTML = `
+            <div class="p-3.5 rounded-2xl bg-red-950/40 text-red-300 text-xs border border-red-500/30">
+              Errore durante l'analisi della foto con Gemini. Riprova con un'immagine più luminosa.
+            </div>
+          `;
+        } finally {
+          document.getElementById('foodLoadingSpinner').classList.add('hidden');
+        }
+      };
+      reader.readAsDataURL(file);
+    };
+
+    function renderFoodAnalysisResult(data) {
+      const target = document.getElementById('foodDetailsTarget');
+      target.innerHTML = `
+        <div class="flex items-center justify-between">
+          <div>
+            <span class="text-[10px] uppercase font-bold text-emerald-400">${data.slot}</span>
+            <h4 class="font-display font-bold text-white text-base">${data.dishName}</h4>
+          </div>
+          <span class="font-mono font-black text-lg text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-xl border border-emerald-500/20">
+            ${data.calories} kcal
+          </span>
+        </div>
+
+        <div class="grid grid-cols-3 gap-2 text-center text-xs py-1">
+          <div class="p-2.5 rounded-xl bg-app-card border border-app-border"><span class="text-[10px] text-app-textMuted font-semibold block">PROTEINE</span><span class="text-sm font-bold text-white">${data.protein}g</span></div>
+          <div class="p-2.5 rounded-xl bg-app-card border border-app-border"><span class="text-[10px] text-app-textMuted font-semibold block">CARBOIDRATI</span><span class="text-sm font-bold text-white">${data.carbs}g</span></div>
+          <div class="p-2.5 rounded-xl bg-app-card border border-app-border"><span class="text-[10px] text-app-textMuted font-semibold block">GRASSI</span><span class="text-sm font-bold text-white">${data.fat}g</span></div>
+        </div>
+
+        <div class="p-3 rounded-xl bg-app-dark border border-app-border text-xs text-app-textSecondary space-y-1">
+          <p><strong class="text-emerald-400">Verdetto:</strong> ${data.verdict}</p>
+          <p><strong class="text-teal-400">Consiglio:</strong> ${data.advice}</p>
+        </div>
+
+        <button onclick="window.commitMealToLog(${JSON.stringify(data).replace(/"/g, '&quot;')})" class="w-full py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-black text-xs sm:text-sm active:scale-95 transition shadow-lg">
+          + Salva nel pasto "${data.slot}" & Sincronizza Cloud
+        </button>
+      `;
+    }
+
+    window.commitMealToLog = meal => {
+      meal.time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      appData.foodLogs.unshift(meal);
+      renderGroupedMeals();
+      renderDualColumnDiet();
+      updateDeficitCalculations();
+      triggerCloudSave();
+      showNotification(`Pasto registrato in ${meal.slot}!`);
+      document.getElementById('scannerResultBox').classList.add('hidden');
+    };
+
+    window.clearFoodLog = () => {
+      if (!confirm("Vuoi azzerare il diario pasti di oggi?")) return;
+      appData.foodLogs = [];
+      renderGroupedMeals();
+      renderDualColumnDiet();
+      updateDeficitCalculations();
+      triggerCloudSave();
+      showNotification("Diario pasti azzerato.");
+    };
+
+    // FUNZIONI WORKOUT & CAMMINATA
     window.switchWorkoutDay = dayKey => {
       currentWorkoutDay = dayKey;
       ['dayA', 'dayB', 'dayC', 'dayD'].forEach(key => {
@@ -807,7 +1368,7 @@
         for (let s = 1; s <= ex.sets; s++) {
           const isDone = exState.completedSets && exState.completedSets.includes(s);
           setsHTML += `
-            <button onclick="window.handleGymSetClick('${dayKey}', '${ex.id}', ${s}, ${ex.rest})" class="h-12 flex-1 min-w-[64px] rounded-xl text-xs font-black transition border flex items-center justify-center gap-1 active:scale-95 ${
+            <button onclick="window.handleGymSetClick('${dayKey}', '${ex.id}', ${s}, ${ex.rest})" class="h-12 flex-1 min-w-[56px] rounded-xl text-xs font-black transition border flex items-center justify-center gap-1 active:scale-95 ${
               isDone ? 'bg-emerald-500 text-black border-emerald-400 shadow-md' : 'bg-app-dark border-app-border text-gray-300 hover:border-emerald-500/40'
             }">
               ${isDone ? '✓ ' : ''}S${s}
@@ -851,7 +1412,7 @@
                   <button onclick="window.adjustWeight('${dayKey}', '${ex.id}', 2.5)" class="w-8 h-8 rounded-lg bg-app-card text-white font-black text-sm active:scale-90 transition">+</button>
                 </div>
               `}
-              <span class="text-[11px] text-app-textMuted font-medium">Tocca il set:</span>
+              <span class="text-[11px] text-app-textMuted font-medium">Serie completata:</span>
             </div>
             <div class="flex gap-2 w-full overflow-x-auto pb-0.5">${setsHTML}</div>
           </div>
@@ -967,598 +1528,4 @@
             }]
           });
 
-          const cleanJson = rawText.replace(/```json/g, '').replace(/```/g, '').trim();
-          const res = JSON.parse(cleanJson);
-
-          textTarget.innerHTML = `
-            <div class="font-bold text-white">${res.name}</div>
-            <div class="text-[10px] text-teal-300 font-mono">${res.calories} kcal • ${res.carbs}g carbo • +${res.hydrationLiters}L idratazione</div>
-            <div class="text-[10px] text-app-textMuted">${res.advice}</div>
-          `;
-
-          if (res.hydrationLiters > 0) {
-            appData.waterLiters = parseFloat((appData.waterLiters + res.hydrationLiters).toFixed(1));
-            updateWaterDisplay();
-            initWaterGrid();
-            triggerCloudSave();
-          }
-        } catch (err) {
-          textTarget.innerHTML = `<div class="text-teal-300 font-bold">Bevanda registrata (+0.5L).</div>`;
-        }
-      };
-      reader.readAsDataURL(file);
-    };
-
-    window.addBurnedCalories = amount => {
-      appData.burnedCalories += amount;
-      updateBurnedCaloriesUI();
-      triggerCloudSave();
-      showNotification(`+${amount} kcal!`);
-    };
-
-    window.applyCustomKcal = () => {
-      const val = parseInt(document.getElementById('customKcalInput').value);
-      if (!isNaN(val) && val > 0) {
-        appData.burnedCalories = val;
-        document.getElementById('customKcalInput').value = '';
-        updateBurnedCaloriesUI();
-        triggerCloudSave();
-        showNotification(`Calorie: ${val} kcal!`);
-      }
-    };
-
-    window.resetBurnedCalories = () => {
-      appData.burnedCalories = 0;
-      updateBurnedCaloriesUI();
-      triggerCloudSave();
-      showNotification("Calorie azzerate.");
-    };
-
-    function updateBurnedCaloriesUI() {
-      const displayEl = document.getElementById('displayBurnedKcal');
-      const deficitEl = document.getElementById('displayTotalDeficit');
-      if (displayEl) displayEl.innerText = appData.burnedCalories;
-      if (deficitEl) deficitEl.innerText = `${-500 - appData.burnedCalories} kcal`;
-    }
-
-    window.startDiscreetTimer = seconds => {
-      clearInterval(timerCountdown);
-      secondsRemaining = seconds;
-      updateTimerDisplay();
-
-      const liveBar = document.getElementById('activeTimerBar');
-      liveBar.classList.remove('hidden');
-
-      timerCountdown = setInterval(() => {
-        secondsRemaining--;
-        if (secondsRemaining <= 0) {
-          clearInterval(timerCountdown);
-          secondsRemaining = 0;
-          updateTimerDisplay();
-          window.stopDiscreetTimer();
-          playDiscreetPing();
-          if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
-          showNotification("Recupero terminato! Sotto con la serie!");
-        } else {
-          updateTimerDisplay();
-        }
-      }, 1000);
-    };
-
-    window.addTimerSeconds = extra => {
-      secondsRemaining += extra;
-      updateTimerDisplay();
-    };
-
-    window.stopDiscreetTimer = () => {
-      clearInterval(timerCountdown);
-      secondsRemaining = 0;
-      updateTimerDisplay();
-      document.getElementById('activeTimerBar').classList.add('hidden');
-    };
-
-    function updateTimerDisplay() {
-      const m = Math.floor(secondsRemaining / 60);
-      const s = secondsRemaining % 60;
-      const str = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-      document.getElementById('activeTimerValue').innerText = str;
-      document.getElementById('headerTimerReadout').innerText = str;
-      document.getElementById('modalTimerDigits').innerText = str;
-    }
-
-    window.toggleTimerModal = () => document.getElementById('restTimerModal').classList.toggle('hidden');
-
-    function playDiscreetPing() {
-      try {
-        const ctx = new (window.AudioContext || window.webkitAudioContext)();
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(587.33, ctx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.15);
-        gain.gain.setValueAtTime(0.25, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.start();
-        osc.stop(ctx.currentTime + 0.45);
-      } catch (e) {}
-    }
-
-    window.selectWeekFraction = fractionKey => {
-      currentFraction = fractionKey;
-      const btn1 = document.getElementById('btn-fraction-block1');
-      const btn2 = document.getElementById('btn-fraction-block2');
-
-      if (fractionKey === 'block1') {
-        btn1.className = 'py-2.5 px-2 rounded-xl text-xs font-black transition bg-emerald-500 text-black shadow-sm';
-        btn2.className = 'py-2.5 px-2 rounded-xl text-xs font-semibold transition text-app-textMuted hover:text-white';
-        currentSelectedDay = 'Lunedì';
-      } else {
-        btn2.className = 'py-2.5 px-2 rounded-xl text-xs font-black transition bg-emerald-500 text-black shadow-sm';
-        btn1.className = 'py-2.5 px-2 rounded-xl text-xs font-semibold transition text-app-textMuted hover:text-white';
-        currentSelectedDay = 'Venerdì';
-      }
-
-      renderDaySelector();
-      renderDailyMealPlan();
-      renderLidlFractionShopping();
-    };
-
-    function renderDaySelector() {
-      const container = document.getElementById('daySelectorContainer');
-      const data = FRACTION_DATA[currentFraction];
-      const days = Object.keys(data.days);
-
-      container.innerHTML = days.map(d => `
-        <button onclick="window.selectDay('${d}')" class="whitespace-nowrap px-4 py-2 rounded-xl text-xs font-bold transition ${
-          d === currentSelectedDay 
-            ? 'bg-emerald-500 text-black shadow-sm' 
-            : 'bg-app-card text-app-textMuted hover:text-white border border-app-border'
-        }">
-          ${d}
-        </button>
-      `).join('');
-    }
-
-    window.selectDay = dayName => {
-      currentSelectedDay = dayName;
-      renderDaySelector();
-      renderDailyMealPlan();
-    };
-
-    function renderDailyMealPlan() {
-      const container = document.getElementById('dailyMealPlanContainer');
-      const dayData = FRACTION_DATA[currentFraction].days[currentSelectedDay];
-      if (!dayData) return;
-
-      container.innerHTML = `
-        <div class="flex items-center justify-between px-1">
-          <div class="flex items-center gap-2">
-            <h3 class="font-display font-black text-sm text-white">${currentSelectedDay}</h3>
-            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">${dayData.badge}</span>
-          </div>
-          <span class="text-xs font-mono text-emerald-400 font-bold">1.950 kcal (-500)</span>
-        </div>
-
-        <div class="apple-glass-card p-3.5 rounded-2xl border border-app-border space-y-1">
-          <div class="flex items-center justify-between text-xs">
-            <span class="font-display font-bold text-white flex items-center gap-1.5"><span>🥣</span> Colazione</span>
-            <span class="text-emerald-400 font-mono text-[11px]">08:00</span>
-          </div>
-          <p class="text-xs text-app-textSecondary leading-relaxed">${dayData.breakfast}</p>
-        </div>
-
-        <div class="apple-glass-card p-4 rounded-2xl border border-emerald-500/30 bg-emerald-500/[0.04] space-y-1.5">
-          <div class="flex items-center justify-between text-xs">
-            <span class="font-display font-bold text-white flex items-center gap-1.5"><span>🥤</span> Pranzo Post-Palestra</span>
-            <span class="text-emerald-400 font-mono text-[11px] font-bold">14:00</span>
-          </div>
-          <p class="text-xs text-gray-200 leading-relaxed">${dayData.lunch}</p>
-        </div>
-
-        <div class="apple-glass-card p-3 rounded-2xl border border-app-border space-y-1">
-          <div class="flex items-center justify-between text-xs">
-            <span class="font-display font-bold text-white flex items-center gap-1.5"><span>🥪</span> Spuntino</span>
-            <span class="text-emerald-400 font-mono text-[11px]">17:30</span>
-          </div>
-          <p class="text-xs text-app-textSecondary">${dayData.snack}</p>
-        </div>
-
-        <div class="apple-glass-card p-4 rounded-2xl border border-app-border space-y-1.5">
-          <div class="flex items-center justify-between text-xs">
-            <span class="font-display font-bold text-white flex items-center gap-1.5"><span>🍽️</span> Cena (Friggitrice ad Aria)</span>
-            <span class="text-emerald-400 font-mono text-[11px] font-bold">20:30</span>
-          </div>
-          <p class="text-xs text-app-textSecondary leading-relaxed">${dayData.dinner}</p>
-        </div>
-      `;
-    }
-
-    function renderLidlFractionShopping() {
-      const container = document.getElementById('lidlItemsContainer');
-      const data = FRACTION_DATA[currentFraction];
-      const savedChecks = appData.lidlChecks[currentFraction] || {};
-
-      let currentSum = 0;
-      let html = '';
-
-      data.lidlItems.forEach((item, index) => {
-        const isChecked = savedChecks[index] !== undefined ? savedChecks[index] : false;
-        if (isChecked) currentSum += item.price;
-
-        html += `
-          <div onclick="window.toggleLidlCheck(${index})" class="flex items-center justify-between p-2 rounded-xl bg-app-card border border-app-border cursor-pointer hover:border-emerald-500/30 transition">
-            <div class="flex items-center gap-2">
-              <div class="w-4 h-4 rounded border flex items-center justify-center text-[10px] ${
-                isChecked ? 'bg-emerald-500 border-emerald-500 text-black font-bold' : 'border-app-border'
-              }">${isChecked ? '✓' : ''}</div>
-              <span class="text-xs ${isChecked ? 'line-through text-app-textMuted' : 'text-gray-200'}">${item.name}</span>
-            </div>
-            <span class="text-xs font-mono font-bold text-emerald-400">~${item.price.toFixed(2)}€</span>
-          </div>
-        `;
-      });
-
-      container.innerHTML = html;
-      document.getElementById('lidlFractionTotalDisplay').innerText = `${currentSum.toFixed(2)} €`;
-      document.getElementById('lidlCardTitle').innerText = `Spesa Lidl Essenziale (${data.title})`;
-    }
-
-    window.toggleLidlCheck = index => {
-      const savedChecks = appData.lidlChecks[currentFraction] || {};
-      savedChecks[index] = !savedChecks[index];
-      appData.lidlChecks[currentFraction] = savedChecks;
-      renderLidlFractionShopping();
-      triggerCloudSave();
-    };
-
-    function initWaterGrid() {
-      const grid = document.getElementById('waterTrackerGrid');
-      grid.innerHTML = '';
-      const totalSteps = 7;
-      const filledSteps = Math.round(appData.waterLiters / 0.5);
-
-      for (let i = 1; i <= totalSteps; i++) {
-        const active = i <= filledSteps;
-        const btn = document.createElement('button');
-        btn.onclick = () => window.selectWaterStep(i);
-        btn.className = `p-2 rounded-xl text-xs font-semibold transition flex flex-col items-center border active:scale-90 ${
-          active ? 'water-droplet-glow text-teal-300' : 'bg-app-dark border-app-border text-gray-500 hover:border-gray-400'
-        }`;
-        btn.innerHTML = `
-          <span class="${active ? 'scale-110 drop-shadow-[0_0_8px_rgba(45,212,191,0.8)]' : 'opacity-40'} transition">💧</span>
-          <span class="text-[9px] font-mono mt-0.5 ${(active ? 'font-bold text-teal-200' : '')}">${(i * 0.5).toFixed(1)}L</span>
-        `;
-        grid.appendChild(btn);
-      }
-      updateWaterDisplay();
-    }
-
-    window.selectWaterStep = step => {
-      const target = step * 0.5;
-      appData.waterLiters = (appData.waterLiters === target) ? (step - 1) * 0.5 : target;
-      initWaterGrid();
-      triggerCloudSave();
-    };
-
-    function updateWaterDisplay() {
-      const el = document.getElementById('waterValueDisplay');
-      if (el) el.innerText = `${appData.waterLiters.toFixed(1)} / 3.5 L`;
-    }
-
-    window.processFoodPhoto = async event => {
-      const file = event.target.files[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = async function(e) {
-        const base64Content = e.target.result.split(',')[1];
-        document.getElementById('foodPreviewImg').src = e.target.result;
-        document.getElementById('scannerResultBox').classList.remove('hidden');
-        document.getElementById('foodLoadingSpinner').classList.remove('hidden');
-
-        if (!appData.userApiKey) {
-          window.openApiKeyModal();
-          document.getElementById('foodLoadingSpinner').classList.add('hidden');
-          showNotification("Inserisci la chiave API Gemini.", true);
-          return;
-        }
-
-        try {
-          const prompt = `
-            Agisci come Nutrizionista Sportivo. Uomo 32 anni, 95kg, deficit 1.950 kcal (target 170g proteine).
-            Analizza l'immagine (cibo o etichetta) e restituisci ESCLUSIVAMENTE un JSON:
-            {"dishName": "Nome piatto", "calories": 550, "protein": 48, "carbs": 42, "fat": 15, "verdict": "Giudizio rapido", "advice": "Consiglio pratico"}
-          `;
-
-          const rawText = await callGeminiApi({
-            contents: [{
-              role: "user",
-              parts: [{ text: prompt }, { inlineData: { mimeType: file.type || "image/jpeg", data: base64Content } }]
-            }]
-          });
-
-          const cleanJson = rawText.replace(/```json/g, '').replace(/```/g, '').trim();
-          const data = JSON.parse(cleanJson);
-          renderFoodAnalysisResult(data);
-        } catch (err) {
-          document.getElementById('foodDetailsTarget').innerHTML = `
-            <div class="p-3 rounded-xl bg-red-950/40 text-red-300 text-xs border border-red-500/30">Errore di analisi foto.</div>
-          `;
-        } finally {
-          document.getElementById('foodLoadingSpinner').classList.add('hidden');
-        }
-      };
-      reader.readAsDataURL(file);
-    };
-
-    function renderFoodAnalysisResult(data) {
-      const target = document.getElementById('foodDetailsTarget');
-      target.innerHTML = `
-        <div class="flex items-center justify-between">
-          <h4 class="font-display font-bold text-white text-sm">${data.dishName}</h4>
-          <span class="font-mono font-bold text-sm text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded-lg border border-emerald-500/20">${data.calories} kcal</span>
-        </div>
-        <div class="grid grid-cols-3 gap-2 text-center text-xs py-1">
-          <div class="p-2 rounded-xl bg-app-card border border-app-border"><span class="text-[10px] text-app-textMuted font-semibold">PRO</span><div class="text-sm font-bold text-white">${data.protein}g</div></div>
-          <div class="p-2 rounded-xl bg-app-card border border-app-border"><span class="text-[10px] text-app-textMuted font-semibold">CARBO</span><div class="text-sm font-bold text-white">${data.carbs}g</div></div>
-          <div class="p-2 rounded-xl bg-app-card border border-app-border"><span class="text-[10px] text-app-textMuted font-semibold">GRASSI</span><div class="text-sm font-bold text-white">${data.fat}g</div></div>
-        </div>
-        <div class="p-2.5 rounded-xl bg-app-dark border border-app-border text-xs text-app-textSecondary space-y-1">
-          <p><strong class="text-emerald-400">Verdetto:</strong> ${data.verdict}</p>
-          <p><strong class="text-teal-400">Consiglio:</strong> ${data.advice}</p>
-        </div>
-        <button onclick="window.commitMealToLog(${JSON.stringify(data).replace(/"/g, '&quot;')})" class="w-full py-2.5 rounded-xl bg-emerald-500 text-black font-black text-xs active:scale-95 transition">+ Salva nel Cloud</button>
-      `;
-    }
-
-    window.commitMealToLog = meal => {
-      meal.time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      appData.foodLogs.unshift(meal);
-      renderFoodLog();
-      triggerCloudSave();
-      showNotification("Pasto salvato su Cloud.");
-    };
-
-    function renderFoodLog() {
-      const list = document.getElementById('foodLogList');
-      if (appData.foodLogs.length === 0) {
-        list.innerHTML = `<div class="text-xs text-app-textMuted py-3 text-center bg-app-dark rounded-xl border border-app-border">Nessun pasto registrato oggi.</div>`;
-        return;
-      }
-
-      list.innerHTML = appData.foodLogs.map(m => `
-        <div class="flex items-center justify-between p-2.5 rounded-xl bg-app-card border border-app-border text-xs">
-          <div>
-            <div class="font-bold text-white">${m.dishName}</div>
-            <div class="text-[10px] text-app-textMuted mt-0.5">${m.time} • ${m.protein}g Pro | ${m.carbs}g Carbo</div>
-          </div>
-          <div class="font-mono font-bold text-emerald-400 text-xs">${m.calories} kcal</div>
-        </div>
-      `).join('');
-    }
-
-    window.clearFoodLog = () => {
-      appData.foodLogs = [];
-      renderFoodLog();
-      triggerCloudSave();
-      showNotification("Diario pasti azzerato.");
-    };
-
-    window.handleCoachSubmit = async e => {
-      e.preventDefault();
-      const input = document.getElementById('coachInputText');
-      const query = input.value.trim();
-      if (!query) return;
-
-      if (!appData.userApiKey) {
-        window.openApiKeyModal();
-        showNotification("Inserisci la chiave API Gemini.", true);
-        return;
-      }
-
-      input.value = '';
-      const box = document.getElementById('coachChatBox');
-      box.innerHTML += `<div class="bg-emerald-500 text-black font-semibold p-3 rounded-2xl rounded-tr-none self-end max-w-[85%] ml-auto">${query}</div>`;
-      box.scrollTop = box.scrollHeight;
-
-      const loadingId = 'loading_' + Date.now();
-      box.innerHTML += `<div id="${loadingId}" class="bg-app-dark p-3 rounded-2xl border border-app-border max-w-[85%] text-emerald-400 animate-pulse">Il Coach sta elaborando...</div>`;
-      box.scrollTop = box.scrollHeight;
-
-      try {
-        const sys = `
-          Sei il PT e Nutrizionista Sportivo di Luca. Profilo: 32 anni, 95kg, deficit 1.950 kcal/die (target 170g proteine).
-          Post-workout: Huel Black + creatina. Dieta: polpette manzo magro (180°C), patate croccanti (190°C), riso express, gamberetti, salmone, tonno fresco weekend, mozzarella light Milbona, cetrioli, peperoni. NO BROCCOLI, NO QUARK.
-          Rispondi in massimo 2 brevi paragrafi diretti e scientifici.
-        `;
-
-        const reply = await callGeminiApi({
-          contents: [{ role: "user", parts: [{ text: `${sys}\n\nDomanda: ${query}` }] }]
-        });
-
-        document.getElementById(loadingId)?.remove();
-        box.innerHTML += `<div class="bg-app-dark p-3.5 rounded-2xl border border-app-border max-w-[90%] text-gray-200 leading-relaxed shadow-sm">${reply}</div>`;
-        box.scrollTop = box.scrollHeight;
-      } catch (err) {
-        document.getElementById(loadingId)?.remove();
-        box.innerHTML += `<div class="text-red-400 p-2">Errore di comunicazione con il Coach.</div>`;
-      }
-    };
-
-    window.sendQuickChatMessage = promptText => {
-      window.navigateToTab('coach');
-      document.getElementById('coachInputText').value = promptText;
-      window.handleCoachSubmit(new Event('submit'));
-    };
-
-    window.resetCoachChat = () => {
-      document.getElementById('coachChatBox').innerHTML = `
-        <div class="bg-app-dark p-3.5 rounded-2xl border border-app-border text-gray-200 leading-relaxed shadow-sm">
-          Chat azzerata! Fammi qualsiasi domanda su palestra o ricette.
-        </div>
-      `;
-    };
-
-    window.saveBodyMeasurements = () => {
-      const weightVal = parseFloat(document.getElementById('quickWeightInput').value);
-      const waistVal = parseFloat(document.getElementById('quickWaistInput').value);
-
-      if (!isNaN(weightVal) && weightVal > 40 && weightVal < 200) {
-        appData.weight = weightVal.toFixed(1);
-        document.getElementById('metricCurrentWeight').innerHTML = `${appData.weight} <span class="text-xs font-normal text-app-textMuted">kg</span>`;
-      }
-      if (!isNaN(waistVal) && waistVal > 50 && waistVal < 180) {
-        appData.waist = waistVal.toFixed(1);
-        document.getElementById('metricCurrentWaist').innerHTML = `${appData.waist} <span class="text-xs font-normal text-app-textMuted">cm</span>`;
-      }
-
-      document.getElementById('quickWeightInput').value = '';
-      document.getElementById('quickWaistInput').value = '';
-      triggerCloudSave();
-      showNotification("Misure salvate nel Cloud!");
-    };
-
-    window.updateEstimatedSteps = () => {
-      const km = parseFloat(document.getElementById('inputWalkKm').value) || 0;
-      const steps = Math.round(km * 1320);
-      const display = document.getElementById('displayEstimatedSteps');
-      if (display) display.innerText = km > 0 ? `~${steps.toLocaleString('it-IT')} passi` : '~0 passi';
-    };
-
-    window.updateHeartRateZoneBadge = () => {
-      const bpm = parseInt(document.getElementById('inputWalkBpm').value) || 0;
-      const statusEl = document.getElementById('bpmZoneStatus');
-      if (!statusEl) return;
-      if (bpm === 0) statusEl.innerText = "Zona 2";
-      else if (bpm < 100) statusEl.innerText = "Passeggiata Leggera";
-      else if (bpm <= 128) statusEl.innerText = "Zona 2 • Fat Burn 🔥";
-      else statusEl.innerText = "Soglia Alta";
-    };
-
-    window.saveWalkSession = () => {
-      const kmVal = parseFloat(document.getElementById('inputWalkKm').value);
-      const kcalVal = parseInt(document.getElementById('inputWalkKcal').value);
-      const bpmVal = parseInt(document.getElementById('inputWalkBpm').value);
-      const waterVal = parseFloat(document.getElementById('inputWalkWater').value) || 0;
-
-      if (isNaN(kmVal) || kmVal <= 0) {
-        showNotification("Inserisci almeno i km.", true);
-        return;
-      }
-
-      if (waterVal > 0) {
-        appData.waterLiters = parseFloat((appData.waterLiters + waterVal).toFixed(1));
-        updateWaterDisplay();
-        initWaterGrid();
-      }
-
-      if (!isNaN(kcalVal) && kcalVal > 0) {
-        appData.burnedCalories += kcalVal;
-        updateBurnedCaloriesUI();
-      }
-
-      const sessionData = {
-        id: 'walk_' + Date.now(),
-        date: new Date().toLocaleDateString('it-IT', { weekday: 'short', day: 'numeric', month: 'short' }),
-        km: kmVal.toFixed(1),
-        steps: Math.round(kmVal * 1320),
-        kcal: !isNaN(kcalVal) ? kcalVal : Math.round(kmVal * 55),
-        bpm: !isNaN(bpmVal) ? bpmVal : null,
-        water: waterVal > 0 ? waterVal.toFixed(1) : null
-      };
-
-      appData.walkLogs.unshift(sessionData);
-      document.getElementById('inputWalkKm').value = '';
-      document.getElementById('inputWalkKcal').value = '';
-      document.getElementById('inputWalkBpm').value = '';
-      document.getElementById('inputWalkWater').value = '';
-      window.updateEstimatedSteps();
-      window.updateHeartRateZoneBadge();
-      renderWalkHistory();
-      triggerCloudSave();
-      showNotification(`Camminata di ${kmVal} km salvata!`);
-    };
-
-    function renderWalkHistory() {
-      const container = document.getElementById('walkLogContainer');
-      if (!container) return;
-
-      if (appData.walkLogs.length === 0) {
-        container.innerHTML = `<div class="text-xs text-app-textMuted text-center py-4 bg-app-dark/60 rounded-xl border border-app-border">Nessuna camminata registrata.</div>`;
-        return;
-      }
-
-      container.innerHTML = appData.walkLogs.map(w => `
-        <div class="p-3 rounded-xl bg-app-card border border-app-border text-xs space-y-1.5">
-          <div class="flex items-center justify-between">
-            <span class="font-bold text-white">👟 ${w.km} km (${w.steps.toLocaleString('it-IT')} passi)</span>
-            <span class="font-mono font-bold text-amber-400">${w.kcal} kcal</span>
-          </div>
-          <div class="flex items-center justify-between text-[11px] text-app-textSecondary">
-            <span class="text-app-textMuted">${w.date}</span>
-            <div class="flex items-center gap-2 font-mono">
-              ${w.bpm ? `<span class="text-red-300">❤️ ${w.bpm} bpm</span>` : ''}
-              ${w.water ? `<span class="text-teal-300">💧 ${w.water}L</span>` : ''}
-            </div>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    window.clearWalkLogs = () => {
-      appData.walkLogs = [];
-      renderWalkHistory();
-      triggerCloudSave();
-      showNotification("Storico azzerato.");
-    };
-
-    window.navigateToTab = tabId => {
-      ['workout', 'walk', 'nutrition', 'scanner', 'coach', 'progress'].forEach(t => {
-        const view = document.getElementById(`view-${t}`);
-        const navBtn = document.getElementById(`nav-${t}`);
-        if (view) view.classList.toggle('hidden', t !== tabId);
-        if (navBtn) {
-          navBtn.className = t === tabId
-            ? 'py-1 flex flex-col items-center text-emerald-400'
-            : 'py-1 flex flex-col items-center text-app-textMuted hover:text-white';
-        }
-      });
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    };
-
-    window.openApiKeyModal = () => document.getElementById('apiKeyModal').classList.remove('hidden');
-    window.closeApiKeyModal = () => document.getElementById('apiKeyModal').classList.add('hidden');
-
-    window.saveUserApiKey = () => {
-      const val = document.getElementById('userApiKeyInput').value.trim();
-      appData.userApiKey = val;
-      localStorage.setItem('icon_gemini_key', val);
-      document.getElementById('apiStatusDot').className = val ? "w-2.5 h-2.5 rounded-full bg-emerald-400" : "w-2.5 h-2.5 rounded-full bg-amber-500";
-      window.closeApiKeyModal();
-      triggerCloudSave();
-      showNotification("Chiave salvata nel Cloud!");
-    };
-
-    function showNotification(msg, isAlert = false) {
-      const old = document.getElementById('toast');
-      if (old) old.remove();
-      const toast = document.createElement('div');
-      toast.id = 'toast';
-      toast.className = `fixed bottom-20 left-1/2 -translate-x-1/2 z-50 px-4 py-2.5 rounded-2xl text-xs font-bold border transition duration-300 shadow-xl flex items-center gap-2 ${
-        isAlert ? 'bg-red-950 text-red-200 border-red-500/40' : 'bg-app-card text-emerald-400 border-emerald-500/30'
-      }`;
-      toast.innerHTML = `<span>${isAlert ? '⚠️' : '✓'}</span><span>${msg}</span>`;
-      document.body.appendChild(toast);
-      setTimeout(() => toast.remove(), 2600);
-    }
-
-    window.addEventListener('DOMContentLoaded', () => {
-      window.switchWorkoutDay('dayA');
-      window.selectWeekFraction('block1');
-      updateUIFromState();
-    });
-  </script>
-</body>
-</html>
+          const cleanJson = rawText.replace(/```json/g, '').replace(/
