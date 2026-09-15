@@ -11,15 +11,10 @@
   <meta name="apple-mobile-web-app-title" content="ICON RECOMP">
   <meta name="theme-color" content="#080a0d">
 
-  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800;900&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
-
-  <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -118,7 +113,7 @@
       <div>
         <h2 class="font-display font-black text-2xl text-white">ICON RECOMP</h2>
         <p class="text-sm text-app-textMuted mt-2 leading-relaxed">
-          Accedi con Google per salvare i tuoi dati in tempo reale sul Cloud Firestore privato.
+          Accedi con il tuo account Google per salvare carichi, dieta e deficit sul tuo profilo Cloud privato.
         </p>
       </div>
       <button id="loginBtn" onclick="window.handleGoogleLogin()" class="w-full py-4 rounded-2xl bg-white hover:bg-gray-100 text-black font-bold text-sm flex items-center justify-center gap-3 transition active:scale-95 shadow-md cursor-pointer">
@@ -194,9 +189,7 @@
   <!-- Container Principale -->
   <main class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
 
-    <!-- ============================================================= -->
-    <!-- TAB 1: SCHEDA PALESTRA                                        -->
-    <!-- ============================================================= -->
+    <!-- TAB 1: SCHEDA PALESTRA -->
     <section id="view-workout" class="tab-view space-y-6">
       <div class="grid grid-cols-4 gap-2.5 p-1.5 bg-app-dark rounded-2xl border border-app-border max-w-2xl mx-auto">
         <button onclick="window.switchWorkoutDay('dayA')" id="btn-dayA" class="py-3 rounded-xl text-sm font-bold transition bg-emerald-500 text-black shadow-sm">Giorno A</button>
@@ -206,7 +199,6 @@
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
-        <!-- Borraccia Live Floor -->
         <div class="apple-glass-card p-5 rounded-2xl border border-teal-500/30 bg-teal-500/[0.03] space-y-4">
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-2.5">
@@ -243,7 +235,6 @@
           </div>
         </div>
 
-        <!-- Calorie Bruciate Palestra con Scanner Orologio -->
         <div class="apple-glass-card p-5 rounded-2xl border border-amber-500/30 bg-amber-500/[0.03] space-y-4">
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-2.5">
@@ -756,7 +747,7 @@
     </div>
   </div>
 
-  <!-- SCRIPT LOGICO CENTRALE (FIREBASE + GEMINI + UI) -->
+  <!-- FIREBASE & CORE APPLICATION SCRIPT -->
   <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js';
     import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js';
@@ -784,7 +775,8 @@
     let cloudSaveTimeout = null;
     let recompChart = null;
 
-    const AI_MODELS = ['gemini-2.0-flash', 'gemini-1.5-flash', 'gemini-2.5-flash'];
+    // Stessi modelli con cui funziona AI-BUDGET
+    const AI_MODELS = ['gemini-2.5-flash', 'gemini-3.6-flash', 'gemini-2.0-flash', 'gemini-1.5-flash'];
     const MEAL_SLOTS = ["Colazione", "Spuntino", "Pranzo", "Merenda", "Cena", "Spuntino notturno"];
 
     let selectedDate = new Date();
@@ -926,10 +918,20 @@
       cloudDocRef = doc(db, 'users', user.uid, 'gym_recomp', 'current_state');
       cloudStatus.innerText = `${user.displayName ? user.displayName.split(' ')[0] : 'Utente'} • Cloud ✓`;
 
+      // Recupera in automatico la chiave API Gemini già configurata in AI-BUDGET
+      const refGeminiProfile = doc(db, 'users', user.uid, 'settings', 'gemini');
+      onSnapshot(refGeminiProfile, s => {
+        if (s.exists() && s.data().apiKey) {
+          appData.userApiKey = s.data().apiKey;
+          localStorage.setItem('icon_gemini_key', s.data().apiKey);
+          document.getElementById('apiStatusDot').className = "w-3 h-3 rounded-full bg-emerald-400";
+        }
+      });
+
       unsubCloud = onSnapshot(cloudDocRef, snap => {
         if (snap.exists()) {
           const data = snap.data();
-          if (data.userApiKey) {
+          if (data.userApiKey && !appData.userApiKey) {
             appData.userApiKey = data.userApiKey;
             localStorage.setItem('icon_gemini_key', data.userApiKey);
           }
@@ -948,7 +950,9 @@
     });
 
     async function callGeminiApi(payload) {
-      if (!appData.userApiKey) throw new Error("API Key mancante");
+      if (!appData.userApiKey) {
+        throw new Error("Chiave Gemini API non presente. Clicca sul pallino in alto a destra e inseriscila.");
+      }
       for (const model of AI_MODELS) {
         try {
           const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(appData.userApiKey)}`;
@@ -963,8 +967,57 @@
           }
         } catch (e) {}
       }
-      throw new Error("Nessun modello Gemini attivo o chiave non valida");
+      throw new Error("Nessun modello Gemini attivo. Verifica che la chiave sia abilitata su Google AI Studio.");
     }
+
+    // Input Vocale
+    let speechRecognizer = null;
+    let isListening = false;
+
+    window.toggleVoiceInput = () => {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        showNotification("Riconoscimento vocale non supportato da questo browser.", true);
+        return;
+      }
+
+      const voiceBtn = document.getElementById('voiceInputBtn');
+      const input = document.getElementById('manualDishTextInput');
+
+      if (isListening && speechRecognizer) {
+        speechRecognizer.stop();
+        return;
+      }
+
+      speechRecognizer = new SpeechRecognition();
+      speechRecognizer.lang = 'it-IT';
+      speechRecognizer.continuous = false;
+      speechRecognizer.interimResults = false;
+
+      speechRecognizer.onstart = () => {
+        isListening = true;
+        voiceBtn.classList.add('mic-active');
+        showNotification("Ascolto in corso... Dì cosa hai mangiato!");
+      };
+
+      speechRecognizer.onresult = event => {
+        const transcript = event.results[0][0].transcript;
+        input.value = transcript;
+        showNotification(`Riconosciuto: "${transcript}"`);
+        window.processManualFoodText();
+      };
+
+      speechRecognizer.onerror = () => {
+        showNotification("Errore microfono.", true);
+      };
+
+      speechRecognizer.onend = () => {
+        isListening = false;
+        voiceBtn.classList.remove('mic-active');
+      };
+
+      speechRecognizer.start();
+    };
 
     // =============================================================
     // ANALISI CIBO TESTO A MANO
@@ -1037,7 +1090,7 @@ Restituisci ESCLUSIVAMENTE un JSON valido senza commenti e senza blocchi markdow
         console.error("Dettaglio errore Gemini:", err);
         target.innerHTML = `
           <div class="p-4 rounded-2xl bg-red-950/40 text-red-300 text-sm border border-red-500/30">
-            Errore durante l'elaborazione del testo: ${err.message}. Verifica la chiave API inserita.
+            ${err.message}
           </div>
         `;
       } finally {
@@ -1115,7 +1168,7 @@ Analizza l'immagine e restituisci ESCLUSIVAMENTE un JSON:
         } catch (err) {
           target.innerHTML = `
             <div class="p-4 rounded-2xl bg-red-950/40 text-red-300 text-sm border border-red-500/30">
-              Errore analisi foto: ${err.message}.
+              ${err.message}
             </div>
           `;
         } finally {
@@ -1199,6 +1252,7 @@ Analizza l'immagine e restituisci ESCLUSIVAMENTE un JSON:
       showNotification(`"${itemName}" eliminato.`);
     };
 
+    // Scanner Orologio (Rileva sia Attive che Riposo se presenti)
     window.scanWatchCalories = async event => {
       const file = event.target.files[0];
       if (!file) return;
@@ -1436,6 +1490,109 @@ Restituisci ESCLUSIVAMENTE un JSON: {"burnedKcal": 450, "restingKcal": 1950}`;
         triggerCloudSave();
         showNotification(`Calorie attive impostate a ${val} kcal!`);
       }
+    };
+
+    // =============================================================
+    // COACH SYNC
+    // =============================================================
+    function updateCoachSyncSummaryUI() {
+      const summaryEl = document.getElementById('coachSyncSummaryText');
+      if (!summaryEl) return;
+
+      const day = getSelectedDayData();
+      const totalIntake = (day.foodLogs || []).reduce((acc, m) => acc + (Number(m.calories) || 0), 0);
+      const totalPro = (day.foodLogs || []).reduce((acc, m) => acc + (Number(m.protein) || 0), 0);
+      const resting = Number(day.restingCalories) || 1950;
+      const burned = Number(day.burnedCalories) || 0;
+      const totalExpenditure = resting + burned;
+      const netDeficit = totalExpenditure - totalIntake;
+
+      summaryEl.innerText = `${totalIntake} kcal assunte (${totalPro}g Pro) • ${resting} kcal riposo + ${burned} kcal attive • Deficit: ${netDeficit >= 0 ? '-' : '+'}${Math.abs(netDeficit)} kcal • ${day.waterLiters || 0}L acqua`;
+    }
+
+    window.handleCoachSubmit = async e => {
+      e.preventDefault();
+      const input = document.getElementById('coachInputText');
+      const query = input.value.trim();
+      if (!query) return;
+
+      if (!appData.userApiKey) {
+        window.openApiKeyModal();
+        showNotification("Inserisci la chiave API Gemini.", true);
+        return;
+      }
+
+      input.value = '';
+      const box = document.getElementById('coachChatBox');
+      box.innerHTML += `<div class="bg-emerald-500 text-black font-bold p-3.5 rounded-2xl rounded-tr-none self-end max-w-[85%] ml-auto text-sm sm:text-base">${query}</div>`;
+      box.scrollTop = box.scrollHeight;
+
+      const loadingId = 'loading_' + Date.now();
+      box.innerHTML += `<div id="${loadingId}" class="bg-app-dark p-4 rounded-2xl border border-app-border max-w-[85%] text-emerald-400 animate-pulse text-sm">Il Coach sta controllando i tuoi dati...</div>`;
+      box.scrollTop = box.scrollHeight;
+
+      try {
+        const day = getSelectedDayData();
+        const totalIntake = (day.foodLogs || []).reduce((acc, m) => acc + (Number(m.calories) || 0), 0);
+        const totalPro = (day.foodLogs || []).reduce((acc, m) => acc + (Number(m.protein) || 0), 0);
+        const totalCarb = (day.foodLogs || []).reduce((acc, m) => acc + (Number(m.carbs) || 0), 0);
+        const totalFat = (day.foodLogs || []).reduce((acc, m) => acc + (Number(m.fat) || 0), 0);
+        const resting = Number(day.restingCalories) || 1950;
+        const burned = Number(day.burnedCalories) || 0;
+        const totalExpenditure = resting + burned;
+        const netDeficit = totalExpenditure - totalIntake;
+
+        const mealsBreakdown = (day.foodLogs || []).length > 0 
+          ? day.foodLogs.map(m => `- [${m.slot}] ${m.dishName}: ${m.calories} kcal (${m.protein}g P, ${m.carbs}g C, ${m.fat}g F)`).join('\n')
+          : "Ancora nessun pasto inserito oggi.";
+
+        const promptWithCloudContext = `
+Sei il personal trainer e nutrizionista sportivo di Luca, parli come un ragazzo sveglio di 30 anni, appassionato di palestra, diretto, pratico e amichevole. Zero formalismi medici o tabelle noiose.
+
+DATI REALI DI OGGI SU FIREBASE:
+- Peso: ${appData.weight} kg | Giro vita: ${appData.waist} cm
+- Calorie a Riposo (BMR): ${resting} kcal
+- Calorie Attive Bruciate: ${burned} kcal
+- SPESA ENERGETICA TOTALE (TDEE): ${totalExpenditure} kcal
+- Calorie mangiate: ${totalIntake} kcal (${totalPro}g P, ${totalCarb}g C, ${totalFat}g F)
+- DEFICIT REALE EFFETTIVO: ${netDeficit >= 0 ? `In deficit reale di ${netDeficit} kcal` : `In surplus di ${Math.abs(netDeficit)} kcal`}
+- Acqua: ${day.waterLiters || 0}L su 3.5L
+- Pasti odierni:
+${mealsBreakdown}
+
+- Preferenze: Friggitrice ad aria (polpette magre a 180°C, patate croccanti a 190°C), Huel Black + creatina post-gym, gamberetti e riso express, salmone/tonno fresco, mozzarella light Milbona, cetrioli, peperoni. NO broccoli, NO quark.
+
+DOMANDA DI LUCA:
+"${query}"
+
+Rispondi in massimo 2 brevi paragrafi diretti e motivanti usando i suoi numeri reali.
+`;
+
+        const reply = await callGeminiApi({
+          contents: [{ role: "user", parts: [{ text: promptWithCloudContext }] }]
+        });
+
+        document.getElementById(loadingId)?.remove();
+        box.innerHTML += `<div class="bg-app-dark p-4 rounded-2xl border border-app-border max-w-[90%] text-gray-200 leading-relaxed shadow-sm text-sm sm:text-base">${reply}</div>`;
+        box.scrollTop = box.scrollHeight;
+      } catch (err) {
+        document.getElementById(loadingId)?.remove();
+        box.innerHTML += `<div class="text-red-400 p-2">Errore Coach: ${err.message}</div>`;
+      }
+    };
+
+    window.sendQuickChatMessage = promptText => {
+      window.navigateToTab('coach');
+      document.getElementById('coachInputText').value = promptText;
+      window.handleCoachSubmit(new Event('submit'));
+    };
+
+    window.resetCoachChat = () => {
+      document.getElementById('coachChatBox').innerHTML = `
+        <div class="bg-app-dark p-4 rounded-2xl border border-app-border text-gray-200 leading-relaxed shadow-sm text-sm sm:text-base">
+          Chat resettata! Vai pure Luca, dimmi cosa vuoi sapere sulla giornata o sui pasti!
+        </div>
+      `;
     };
 
     // =============================================================
@@ -2330,9 +2487,6 @@ Restituisci ESCLUSIVAMENTE un JSON: {"burnedKcal": 450, "restingKcal": 1950}`;
       showNotification("Storico azzerato.");
     };
 
-    // =============================================================
-    // GRAFICO TREND RECOMP
-    // =============================================================
     function renderRecompChart() {
       const canvas = document.getElementById('recompTrendChart');
       if (!canvas) return;
@@ -2397,9 +2551,6 @@ Restituisci ESCLUSIVAMENTE un JSON: {"burnedKcal": 450, "restingKcal": 1950}`;
       });
     }
 
-    // =============================================================
-    // INIZIALIZZAZIONE UI
-    // =============================================================
     function updateUIFromState() {
       updateDateHeaderUI();
       renderWorkoutList(currentWorkoutDay);
@@ -2439,7 +2590,6 @@ Restituisci ESCLUSIVAMENTE un JSON: {"burnedKcal": 450, "restingKcal": 1950}`;
     });
   </script>
 
-  <!-- SCRIPT DI NAVIGAZIONE GLOBALE -->
   <script>
     window.navigateToTab = tabId => {
       ['workout', 'walk', 'nutrition', 'scanner', 'coach', 'progress'].forEach(t => {
