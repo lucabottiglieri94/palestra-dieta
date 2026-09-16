@@ -94,6 +94,44 @@
       color: #ffffff !important;
       border-color: #f87171 !important;
     }
+
+    /* ANIMAZIONI BIOMECCANICHE MOVIMENTO ESERCIZIO */
+    @keyframes gymWeightStack {
+      0%, 100% { transform: translateY(0); }
+      40%, 60% { transform: translateY(-18px); }
+    }
+    @keyframes gymPushPress {
+      0%, 100% { transform: scaleX(0.78); transform-origin: left center; }
+      45%, 55% { transform: scaleX(1.02); transform-origin: left center; }
+    }
+    @keyframes gymPullDown {
+      0%, 100% { transform: translateY(0); }
+      45%, 55% { transform: translateY(22px); }
+    }
+    @keyframes gymLegPress {
+      0%, 100% { transform: translate(0, 0); }
+      45%, 55% { transform: translate(24px, -14px); }
+    }
+    @keyframes gymLegExtension {
+      0%, 100% { transform: rotate(0deg); transform-origin: 50px 70px; }
+      45%, 55% { transform: rotate(-65deg); transform-origin: 50px 70px; }
+    }
+    @keyframes gymArmCurl {
+      0%, 100% { transform: rotate(0deg); transform-origin: 65px 75px; }
+      45%, 55% { transform: rotate(70deg); transform-origin: 65px 75px; }
+    }
+    @keyframes muscleGlow {
+      0%, 100% { filter: drop-shadow(0 0 3px rgba(16, 185, 129, 0.4)); opacity: 0.8; }
+      50% { filter: drop-shadow(0 0 10px rgba(52, 211, 153, 0.95)); opacity: 1; }
+    }
+
+    .anim-weight-stack { animation: gymWeightStack 3.2s infinite ease-in-out; }
+    .anim-push { animation: gymPushPress 3.2s infinite ease-in-out; }
+    .anim-pulldown { animation: gymPullDown 3.2s infinite ease-in-out; }
+    .anim-legpress { animation: gymLegPress 3.2s infinite ease-in-out; }
+    .anim-legext { animation: gymLegExtension 3.2s infinite ease-in-out; }
+    .anim-armcurl { animation: gymArmCurl 3.2s infinite ease-in-out; }
+    .anim-muscle-target { animation: muscleGlow 1.6s infinite ease-in-out; }
   </style>
 </head>
 
@@ -777,6 +815,79 @@
     </div>
   </div>
 
+  <!-- MODAL: GUIDA MACCHINA & MOVIMENTO ANIMATO -->
+  <div id="exerciseGuideModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-lg hidden flex items-center justify-center p-3 sm:p-4">
+    <div class="apple-glass-card max-w-lg w-full max-h-[90vh] overflow-y-auto rounded-3xl border border-emerald-500/40 p-5 sm:p-6 space-y-4 shadow-2xl relative">
+      <div class="flex items-start justify-between gap-3 border-b border-app-border pb-3">
+        <div class="flex items-center gap-2.5">
+          <span id="guideModalCode" class="font-mono text-xs font-black px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">M01</span>
+          <div>
+            <h3 id="guideModalTitle" class="font-display font-black text-lg text-white leading-tight">Nome Esercizio</h3>
+            <p id="guideModalModel" class="text-xs text-app-textMuted font-mono">Technogym Line</p>
+          </div>
+        </div>
+        <button onclick="window.closeExerciseGuide()" class="w-9 h-9 rounded-xl bg-app-card hover:bg-app-cardSubtle border border-app-border text-gray-400 hover:text-white flex items-center justify-center text-lg transition">✕</button>
+      </div>
+
+      <!-- BOX ILLUSTRAZIONE MOVIMENTO ANIMATO -->
+      <div class="rounded-2xl bg-gradient-to-b from-app-dark to-app-black p-4 border border-emerald-500/25 relative overflow-hidden flex flex-col items-center">
+        <div class="w-full flex items-center justify-between text-[11px] font-mono text-app-textMuted mb-2">
+          <span class="flex items-center gap-1.5 text-emerald-400 font-bold">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+            Simulatore Movimento Live
+          </span>
+          <span id="guideCadenceTag" class="px-2 py-0.5 rounded bg-app-card border border-app-border text-teal-300 font-bold">Cadenza 1s Spinta - 3s Freno</span>
+        </div>
+
+        <div id="guideGraphicContainer" class="w-full h-44 flex items-center justify-center relative">
+          <!-- SVG animato iniettato dinamicamente -->
+        </div>
+
+        <div class="w-full mt-2 pt-2 border-t border-app-border/40 flex items-center justify-between text-[10px] text-app-textMuted font-mono">
+          <span>Verde: Muscolo Target Coinvolto</span>
+          <span>Bianco/Ciano: Traiettoria Leva</span>
+        </div>
+      </div>
+
+      <!-- DETTAGLI ASSETTO E ISTRUZIONI DI ESECUZIONE -->
+      <div class="space-y-3 text-xs sm:text-sm">
+        <div class="bg-app-dark p-3.5 rounded-2xl border border-app-border space-y-1">
+          <div class="text-emerald-400 font-bold flex items-center gap-1.5">
+            <span>⚙️</span>
+            <span>Assetto Sedile & Posizione Corretta:</span>
+          </div>
+          <p id="guideModalSeat" class="text-gray-200 leading-relaxed pl-5">Regolazione precisa.</p>
+        </div>
+
+        <div class="bg-app-dark p-3.5 rounded-2xl border border-teal-500/30 space-y-1">
+          <div class="text-teal-300 font-bold flex items-center gap-1.5">
+            <span>💡</span>
+            <span>Focus Biomeccanico & Indicazioni PT:</span>
+          </div>
+          <p id="guideModalCue" class="text-gray-200 leading-relaxed pl-5">Focus contrazione muscolare.</p>
+        </div>
+
+        <div class="bg-red-950/25 p-3.5 rounded-2xl border border-red-500/30 space-y-1">
+          <div class="text-red-300 font-bold flex items-center gap-1.5">
+            <span>⚠️</span>
+            <span>Errori Comuni da Evitare:</span>
+          </div>
+          <p id="guideModalMistakes" class="text-red-200/90 leading-relaxed pl-5">Non inarcare la schiena né staccare il bacino.</p>
+        </div>
+      </div>
+
+      <div class="flex gap-2 pt-1">
+        <button id="guideTimerBtn" onclick="window.startTimerFromGuide()" class="flex-1 py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 hover:to-teal-300 text-black font-black text-xs sm:text-sm active:scale-95 transition shadow-lg flex items-center justify-center gap-1.5">
+          <span>⏱️</span>
+          <span id="guideTimerBtnLabel">Avvia Recupero</span>
+        </button>
+        <button onclick="window.closeExerciseGuide()" class="px-5 py-3 rounded-xl bg-app-card hover:bg-app-cardSubtle border border-app-border text-white text-xs sm:text-sm font-semibold transition">
+          Ho Capito
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- MODAL: REST TIMER -->
   <div id="restTimerModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
     <div class="apple-glass max-w-xs w-full p-6 rounded-3xl border border-app-border text-center relative">
@@ -840,6 +951,11 @@
       }
     };
     window.closePtPhotoModal = () => document.getElementById('ptPhotoModal').classList.add('hidden');
+
+    window.closeExerciseGuide = () => {
+      const modal = document.getElementById('exerciseGuideModal');
+      if (modal) modal.classList.add('hidden');
+    };
 
     function showNotification(msg, isAlert = false) {
       const old = document.getElementById('toast');
@@ -1451,9 +1567,15 @@
                 <span class="font-mono text-xs font-black px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">${ex.code || 'EX'}</span>
                 <h3 class="font-display font-bold text-base text-white">${ex.name}</h3>
               </div>
-              <button onclick="window.startDiscreetTimer(${ex.rest || 60})" class="px-3 py-1 rounded-xl bg-app-card border border-app-border text-xs sm:text-sm font-mono text-emerald-400">
-                <span>⏱️</span><span>${ex.rest || 60}s</span>
-              </button>
+              <div class="flex items-center gap-1.5">
+                <button type="button" onclick="window.openExerciseGuide('${dayKey}', '${ex.id}')" class="px-2.5 py-1.5 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/35 text-xs text-emerald-300 font-bold flex items-center gap-1 active:scale-95 transition shadow-sm" title="Vedi macchina e movimento animato">
+                  <span>🎬</span>
+                  <span>Guida</span>
+                </button>
+                <button onclick="window.startDiscreetTimer(${ex.rest || 60})" class="px-2.5 py-1.5 rounded-xl bg-app-card hover:bg-app-cardSubtle border border-app-border text-xs font-mono text-emerald-400 flex items-center gap-1">
+                  <span>⏱️</span><span>${ex.rest || 60}s</span>
+                </button>
+              </div>
             </div>
             <div class="text-xs text-app-textMuted font-mono mt-1">${ex.model || 'Macchina Technogym'} • ${ex.sets} × ${ex.reps}</div>
           </div>
@@ -1480,6 +1602,207 @@
         `;
         container.appendChild(card);
       });
+    }
+
+    // =========================================================================
+    // MODAL GUIDA MOVIMENTO & ILLUSTRAZIONE ANIMATA TECHNOGYM
+    // =========================================================================
+    let currentGuideRestSeconds = 60;
+
+    window.openExerciseGuide = function(dayKey, exId) {
+      const routine = getActiveRoutine(dayKey);
+      if (!routine || !routine.exercises) return;
+      const ex = routine.exercises.find(e => e.id === exId);
+      if (!ex) return;
+
+      currentGuideRestSeconds = ex.rest || 60;
+
+      const modal = document.getElementById('exerciseGuideModal');
+      const titleEl = document.getElementById('guideModalTitle');
+      const codeEl = document.getElementById('guideModalCode');
+      const modelEl = document.getElementById('guideModalModel');
+      const seatEl = document.getElementById('guideModalSeat');
+      const cueEl = document.getElementById('guideModalCue');
+      const mistakesEl = document.getElementById('guideModalMistakes');
+      const graphicContainer = document.getElementById('guideGraphicContainer');
+      const timerBtnLabel = document.getElementById('guideTimerBtnLabel');
+
+      if (titleEl) titleEl.innerText = ex.name;
+      if (codeEl) codeEl.innerText = ex.code || 'EX';
+      if (modelEl) modelEl.innerText = `${ex.model || 'Technogym'} • Target: ${ex.sets} × ${ex.reps}`;
+      if (seatEl) seatEl.innerText = ex.seat || 'Regola la seduta per allineare l\'articolazione principale con il perno di rotazione della macchina.';
+      if (cueEl) cueEl.innerText = ex.cue || 'Controlla la fase negativa in 3 secondi ed espira con forza durante la fase attiva.';
+      if (timerBtnLabel) timerBtnLabel.innerText = `Avvia Timer Recupero (${currentGuideRestSeconds}s)`;
+
+      // Generazione errori comuni dedotti
+      const lowerName = (ex.name + ' ' + (ex.model || '')).toLowerCase();
+      let mistakes = "Non staccare la zona lombare o i glutei dal cuscino. Evita strappi o slanci a carico della colonna.";
+      if (lowerName.includes('press') || lowerName.includes('spinta') || lowerName.includes('chest')) {
+        mistakes = "Non staccare mai le scapole né allargare i gomiti a 90° con le spalle. Non estendere completamente le articolazioni a fine spinta.";
+      } else if (lowerName.includes('lat') || lowerName.includes('pulley') || lowerName.includes('trazione')) {
+        mistakes = "Non oscillare con il tronco all'indietro per sfruttare l'inerzia. Tira guidando con i gomiti senza piegare i polsi.";
+      } else if (lowerName.includes('curl')) {
+        mistakes = "Non staccare i gomiti dal cuscino o dal fianco. Non usare lo slancio del busto durante la fase di salita.";
+      } else if (lowerName.includes('extension') || lowerName.includes('leg')) {
+        mistakes = "Non alzare il bacino dal sedile; mantieni le caviglie ben salde contro il rullo ed evita movimenti a scatto.";
+      }
+      if (mistakesEl) mistakesEl.innerText = mistakes;
+
+      // Generazione grafica SVG animata personalizzata
+      if (graphicContainer) {
+        graphicContainer.innerHTML = buildExerciseSvgGraphic(lowerName, ex.name);
+      }
+
+      if (modal) modal.classList.remove('hidden');
+    };
+
+    window.startTimerFromGuide = function() {
+      window.closeExerciseGuide();
+      window.startDiscreetTimer(currentGuideRestSeconds);
+    };
+
+    function buildExerciseSvgGraphic(typeStr, displayName) {
+      // 1. LEG PRESS
+      if (typeStr.includes('leg press') || typeStr.includes('slitta')) {
+        return `
+          <svg viewBox="0 0 320 160" class="w-full h-full max-w-xs drop-shadow-md">
+            <!-- Telaio Macchina Technogym -->
+            <path d="M 40 140 L 280 140 M 60 140 L 110 40 L 140 40" stroke="#334155" stroke-width="6" stroke-linecap="round" fill="none"/>
+            <!-- Schienale Sedile a 45° -->
+            <line x1="80" y1="130" x2="135" y2="70" stroke="#10b981" stroke-width="10" stroke-linecap="round"/>
+            <!-- Atleta sagoma base -->
+            <circle cx="145" cy="55" r="14" fill="#cbd5e1"/>
+            <line x1="135" y1="70" x2="110" y2="120" stroke="#cbd5e1" stroke-width="8" stroke-linecap="round"/>
+            <!-- Cosce e Ginocchia (Muscolo Target: Quadricipiti in verde) -->
+            <path d="M 110 120 L 170 85" stroke="#10b981" stroke-width="10" stroke-linecap="round" class="anim-muscle-target"/>
+            <!-- Slitta e Pedana Mobile Technogym -->
+            <g class="anim-legpress">
+              <!-- Tibia che spinge -->
+              <line x1="170" y1="85" x2="225" y2="55" stroke="#38bdf8" stroke-width="8" stroke-linecap="round"/>
+              <!-- Pedana a piastre -->
+              <rect x="220" y="30" width="14" height="60" rx="4" fill="#f59e0b" transform="rotate(25 220 30)"/>
+              <!-- Pacco Pesi Inclinato -->
+              <rect x="235" y="45" width="30" height="25" rx="3" fill="#64748b"/>
+            </g>
+            <!-- Testo didattico cadenza -->
+            <text x="160" y="152" fill="#94a3b8" font-size="10" font-family="monospace" text-anchor="middle">SPINTA CONCENTRICA (1s) ➔ RITORNO CONTROLLATO (3s)</text>
+          </svg>
+        `;
+      }
+
+      // 2. CHEST PRESS / SPINTE
+      if (typeStr.includes('chest') || typeStr.includes('bench') || typeStr.includes('incline') || typeStr.includes('spinte')) {
+        return `
+          <svg viewBox="0 0 320 160" class="w-full h-full max-w-xs drop-shadow-md">
+            <!-- Telaio Technogym Selection -->
+            <rect x="230" y="25" width="40" height="110" rx="6" fill="#1e293b" stroke="#334155" stroke-width="3"/>
+            <!-- Pacco Pesi Animato Verticale -->
+            <g class="anim-weight-stack">
+              <rect x="235" y="55" width="30" height="45" rx="3" fill="#f59e0b"/>
+              <line x1="250" y1="20" x2="250" y2="55" stroke="#94a3b8" stroke-width="2"/>
+            </g>
+            <!-- Seduta e Schienale Eretto -->
+            <line x1="80" y1="135" x2="80" y2="50" stroke="#334155" stroke-width="12" stroke-linecap="round"/>
+            <line x1="75" y1="135" x2="130" y2="135" stroke="#334155" stroke-width="8" stroke-linecap="round"/>
+            <!-- Sagoma busto -->
+            <circle cx="85" cy="38" r="13" fill="#cbd5e1"/>
+            <line x1="85" y1="52" x2="90" y2="125" stroke="#cbd5e1" stroke-width="12" stroke-linecap="round"/>
+            <!-- Pettorale Evidenziato Target -->
+            <circle cx="102" cy="74" r="9" fill="#10b981" class="anim-muscle-target"/>
+            <!-- Braccio e Leva Spinta -->
+            <g class="anim-push">
+              <path d="M 95 72 L 130 82 L 175 75" fill="none" stroke="#38bdf8" stroke-width="7" stroke-linecap="round"/>
+              <rect x="175" y="60" width="8" height="30" rx="3" fill="#10b981"/>
+            </g>
+            <text x="160" y="152" fill="#94a3b8" font-size="10" font-family="monospace" text-anchor="middle">PETTO APERTO • SCAPOLE ADROTTE FISSE</text>
+          </svg>
+        `;
+      }
+
+      // 3. LAT MACHINE / TRAZIONE
+      if (typeStr.includes('lat') || typeStr.includes('vertical traction') || typeStr.includes('trazione')) {
+        return `
+          <svg viewBox="0 0 320 160" class="w-full h-full max-w-xs drop-shadow-md">
+            <!-- Torretta e Carrucola Superiore -->
+            <path d="M 60 140 L 60 25 L 180 25" stroke="#334155" stroke-width="6" stroke-linecap="round" fill="none"/>
+            <circle cx="180" cy="25" r="8" fill="#64748b"/>
+            <!-- Sedile e Rullo Cosce -->
+            <line x1="140" y1="135" x2="190" y2="135" stroke="#334155" stroke-width="8"/>
+            <rect x="175" y="95" width="22" height="12" rx="4" fill="#f59e0b"/>
+            <!-- Sagoma Atleta con Dorso Verde -->
+            <circle cx="160" cy="72" r="12" fill="#cbd5e1"/>
+            <line x1="160" y1="84" x2="162" y2="132" stroke="#10b981" stroke-width="10" stroke-linecap="round" class="anim-muscle-target"/>
+            <!-- Sbarra Trazione Animata verso il Basso -->
+            <g class="anim-pulldown">
+              <line x1="180" y1="25" x2="180" y2="55" stroke="#94a3b8" stroke-width="2" stroke-dasharray="3"/>
+              <!-- Sbarra Larga -->
+              <line x1="125" y1="55" x2="235" y2="55" stroke="#38bdf8" stroke-width="6" stroke-linecap="round"/>
+              <!-- Braccia che tirano -->
+              <path d="M 160 84 L 140 60 M 160 84 L 215 60" stroke="#cbd5e1" stroke-width="6" stroke-linecap="round"/>
+            </g>
+            <text x="160" y="152" fill="#94a3b8" font-size="10" font-family="monospace" text-anchor="middle">GOMITI ALLE TASCHE POSTERIORI • NO SLANCI</text>
+          </svg>
+        `;
+      }
+
+      // 4. LEG EXTENSION / LEG CURL
+      if (typeStr.includes('extension') || typeStr.includes('leg curl') || typeStr.includes('femorali')) {
+        return `
+          <svg viewBox="0 0 320 160" class="w-full h-full max-w-xs drop-shadow-md">
+            <!-- Sedile Technogym -->
+            <line x1="100" y1="60" x2="100" y2="115" stroke="#334155" stroke-width="12" stroke-linecap="round"/>
+            <line x1="100" y1="115" x2="170" y2="115" stroke="#334155" stroke-width="10" stroke-linecap="round"/>
+            <!-- Sagoma Busto -->
+            <circle cx="108" cy="45" r="13" fill="#cbd5e1"/>
+            <line x1="108" y1="58" x2="115" y2="112" stroke="#cbd5e1" stroke-width="10"/>
+            <!-- Coscia sul sedile (Target Quadricipite) -->
+            <line x1="115" y1="112" x2="175" y2="112" stroke="#10b981" stroke-width="12" stroke-linecap="round" class="anim-muscle-target"/>
+            <!-- Perno di Rotazione -->
+            <circle cx="175" cy="112" r="8" fill="#f59e0b"/>
+            <!-- Gamba Mobile con Cuscinetto Animato -->
+            <g class="anim-legext">
+              <line x1="175" y1="112" x2="175" y2="150" stroke="#38bdf8" stroke-width="8" stroke-linecap="round"/>
+              <rect x="168" y="142" width="16" height="12" rx="4" fill="#10b981"/>
+            </g>
+            <text x="160" y="152" fill="#94a3b8" font-size="10" font-family="monospace" text-anchor="middle">1s TENUTA IN CIMA • 3s DISCESA FRENATA</text>
+          </svg>
+        `;
+      }
+
+      // 5. BICIPITI / TRICIPITI / CAVI
+      if (typeStr.includes('curl') || typeStr.includes('tricipiti') || typeStr.includes('pushdown') || typeStr.includes('braccia')) {
+        return `
+          <svg viewBox="0 0 320 160" class="w-full h-full max-w-xs drop-shadow-md">
+            <!-- Torretta Cavi Technogym Ercolina -->
+            <line x1="230" y1="20" x2="230" y2="140" stroke="#334155" stroke-width="8" stroke-linecap="round"/>
+            <circle cx="230" cy="30" r="10" fill="#64748b"/>
+            <!-- Atleta Erto -->
+            <circle cx="120" cy="45" r="13" fill="#cbd5e1"/>
+            <line x1="120" y1="58" x2="120" y2="135" stroke="#cbd5e1" stroke-width="10" stroke-linecap="round"/>
+            <!-- Bicipite/Tricipite Evidenziato -->
+            <line x1="120" y1="65" x2="140" y2="92" stroke="#10b981" stroke-width="10" stroke-linecap="round" class="anim-muscle-target"/>
+            <!-- Avambraccio in Flessione Animata -->
+            <g class="anim-armcurl">
+              <line x1="140" y1="92" x2="185" y2="92" stroke="#38bdf8" stroke-width="7" stroke-linecap="round"/>
+              <circle cx="185" cy="92" r="6" fill="#f59e0b"/>
+            </g>
+            <!-- Cavo di collegamento -->
+            <line x1="230" y1="30" x2="185" y2="92" stroke="#94a3b8" stroke-width="2" stroke-dasharray="3"/>
+            <text x="160" y="152" fill="#94a3b8" font-size="10" font-family="monospace" text-anchor="middle">GOMITI BLOCCATI SUI FIANCHI • TENSIONE COSTANTE</text>
+          </svg>
+        `;
+      }
+
+      // 6. DEFAULT GENERAL TECHNOGYM MACHINE
+      return `
+        <svg viewBox="0 0 320 160" class="w-full h-full max-w-xs drop-shadow-md">
+          <rect x="40" y="30" width="240" height="95" rx="14" fill="#0f172a" stroke="#10b981" stroke-width="2" stroke-dasharray="6"/>
+          <circle cx="160" cy="65" r="18" fill="#10b981" class="anim-muscle-target"/>
+          <path d="M 120 100 L 160 85 L 200 100" stroke="#38bdf8" stroke-width="6" stroke-linecap="round" fill="none" class="anim-push"/>
+          <text x="160" y="118" fill="#e2e8f0" font-size="12" font-family="monospace" font-weight="bold" text-anchor="middle">${displayName}</text>
+          <text x="160" y="148" fill="#94a3b8" font-size="10" font-family="monospace" text-anchor="middle">1s CONCENTRICA • 3s ECCENTRICA FRENATA</text>
+        </svg>
+      `;
     }
 
     window.switchWorkoutDay = function(dayKey) {
