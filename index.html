@@ -2246,6 +2246,7 @@
       updateDeficitCalculations();
       renderLidlShoppingList();
       renderWalkHistory();
+      updatePtSheetUI();
       if (window.updateDetectedMealSlotUI) window.updateDetectedMealSlotUI();
 
       document.getElementById('metricCurrentWeight').innerHTML = `${appData.weight} <span class="text-xs text-app-textMuted">kg</span>`;
@@ -2284,6 +2285,9 @@
             const data = snap.data();
             if (data.dailyRecords) appData.dailyRecords = data.dailyRecords;
             if (data.workoutExercises) appData.workoutExercises = data.workoutExercises;
+            if (data.customRoutines) appData.customRoutines = data.customRoutines;
+            if (data.ptSheetImage) appData.ptSheetImage = data.ptSheetImage;
+            if (data.ptSheetDate) appData.ptSheetDate = data.ptSheetDate;
             if (data.weight) appData.weight = data.weight;
             if (data.waist) appData.waist = data.waist;
             if (data.walkLogs) appData.walkLogs = data.walkLogs;
