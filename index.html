@@ -801,8 +801,8 @@
     let unsubCloud = null;
     let cloudSaveTimeout = null;
 
-    // Modelli Gemini aggiornati ed operativi (allineati con AI-BUDGET, rimossi modelli deprecati)
-    const AI_MODELS = ['gemini-2.5-flash', 'gemini-3-flash-preview', 'gemini-2.0-flash'];
+    // Modelli Gemini aggiornati: rimosso gemini-2.0-flash deprecato, impostato gemini-3.6-flash come primario
+    const AI_MODELS = ['gemini-3.6-flash', 'gemini-2.5-flash', 'gemini-3-flash-preview'];
     const MEAL_SLOTS = ["Colazione", "Spuntino", "Pranzo", "Merenda", "Cena", "Spuntino notturno"];
 
     let selectedDate = new Date();
@@ -984,7 +984,8 @@
       let lastError = "";
       for (const model of AI_MODELS) {
         try {
-          const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(activeKey)}`;
+          const keyParam = activeKey ? `key=${encodeURIComponent(activeKey)}` : 'key=';
+          const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?${keyParam}`;
           const resp = await fetch(url, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -997,7 +998,7 @@
           }
           if (data.error) {
             lastError = data.error.message || `Errore ${resp.status}`;
-            console.warn(`Tentativo modello ${model} fallito:`, data.error);
+            console.warn(`Tentativo modello ${model} non riuscito:`, data.error);
           }
         } catch (e) {
           lastError = e.message;
