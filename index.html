@@ -173,7 +173,7 @@
           <span id="headerTimerReadout">00:00</span>
         </button>
         <button onclick="window.openApiKeyModal()" class="w-10 h-10 rounded-xl bg-app-card border border-app-border text-sm flex items-center justify-center text-gray-300 hover:border-emerald-500/40 transition" title="Configura Gemini API">
-          <span id="apiStatusDot" class="w-3 h-3 rounded-full bg-amber-500"></span>
+          <span id="apiStatusDot" class="w-3 h-3 rounded-full bg-emerald-400"></span>
         </button>
         <button id="headerLogoutBtn" onclick="window.logoutUser()" class="w-10 h-10 rounded-xl bg-app-card border border-app-border text-sm flex items-center justify-center text-gray-400 hover:text-red-400 transition" title="Esci / Cambio Utente">
           ✕
@@ -189,14 +189,59 @@
     <!-- ============================================================= -->
     <section id="view-workout" class="tab-view space-y-6">
       
-      <!-- Day Switcher -->
-      <div class="grid grid-cols-4 gap-2.5 p-1.5 bg-app-dark rounded-2xl border border-app-border max-w-2xl mx-auto">
-        <button onclick="window.switchWorkoutDay('dayA')" id="btn-dayA" class="py-3 rounded-xl text-sm font-bold transition bg-emerald-500 text-black shadow-sm">Giorno A</button>
-        <button onclick="window.switchWorkoutDay('dayB')" id="btn-dayB" class="py-3 rounded-xl text-sm font-medium transition text-app-textMuted hover:text-white">Giorno B</button>
-        <button onclick="window.switchWorkoutDay('dayC')" id="btn-dayC" class="py-3 rounded-xl text-sm font-medium transition text-app-textMuted hover:text-white">Giorno C</button>
-        <button onclick="window.switchWorkoutDay('dayD')" id="btn-dayD" class="py-3 rounded-xl text-sm font-medium transition text-app-textMuted hover:text-white">Giorno D</button>
+      <!-- Day Switcher con Day PT e Scheda Custom Coach -->
+      <div class="grid grid-cols-5 gap-2 p-1.5 bg-app-dark rounded-2xl border border-app-border max-w-3xl mx-auto text-center">
+        <button onclick="window.switchWorkoutDay('dayA')" id="btn-dayA" class="py-3 rounded-xl text-xs sm:text-sm font-bold transition bg-emerald-500 text-black shadow-sm">Giorno A</button>
+        <button onclick="window.switchWorkoutDay('dayB')" id="btn-dayB" class="py-3 rounded-xl text-xs sm:text-sm font-medium transition text-app-textMuted hover:text-white">Giorno B</button>
+        <button onclick="window.switchWorkoutDay('dayC')" id="btn-dayC" class="py-3 rounded-xl text-xs sm:text-sm font-medium transition text-app-textMuted hover:text-white">Giorno C</button>
+        <button onclick="window.switchWorkoutDay('dayD')" id="btn-dayD" class="py-3 rounded-xl text-xs sm:text-sm font-medium transition text-app-textMuted hover:text-white">Giorno D</button>
+        <button onclick="window.switchWorkoutDay('dayPT')" id="btn-dayPT" class="py-3 rounded-xl text-xs sm:text-sm font-bold transition bg-amber-500/20 text-amber-300 border border-amber-500/40 hover:bg-amber-500/30">📋 Scheda PT</button>
       </div>
 
+      <!-- CARD DEDICATA: SCHEDA DEL PERSONAL TRAINER (ALLEGATO FOTOGRAFICO & DIGITALIZZATORE) -->
+      <div id="ptSheetCardModule" class="apple-glass-card p-5 sm:p-6 rounded-3xl border border-amber-500/30 bg-gradient-to-br from-amber-500/[0.04] to-transparent space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-2xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-2xl">
+              📋
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <h3 class="font-display font-black text-base sm:text-lg text-white">Scheda del Personal Trainer (Icon PT)</h3>
+                <span id="ptSheetDateBadge" class="text-[10px] uppercase font-bold px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">In attesa di foto</span>
+              </div>
+              <p class="text-xs sm:text-sm text-app-textMuted mt-0.5">Scatta la foto del foglio cartaceo: puoi consultarlo o convertirlo con l'AI</p>
+            </div>
+          </div>
+          
+          <div class="flex items-center gap-2 self-start sm:self-auto">
+            <label class="cursor-pointer px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-black text-xs sm:text-sm flex items-center gap-2 transition active:scale-95 shadow-md">
+              <span>📷</span>
+              <span id="ptUploadBtnLabel">Carica / Scatta Foto Scheda</span>
+              <input type="file" id="ptSheetPhotoInput" accept="image/*" class="hidden" onchange="window.handlePtSheetUpload(event)">
+            </label>
+            <button id="viewPtPhotoBtn" onclick="window.openPtPhotoModal()" class="hidden px-3.5 py-2.5 rounded-xl bg-app-card hover:bg-app-cardSubtle border border-app-border text-xs sm:text-sm font-bold text-gray-200 transition">
+              🔍 Vedi Foto
+            </button>
+          </div>
+        </div>
+
+        <div id="ptSheetConversionBox" class="hidden pt-3 border-t border-app-border/60 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div class="flex items-center gap-3">
+            <img id="ptSheetThumbnail" src="" alt="Scheda PT" class="w-14 h-14 rounded-xl object-cover border border-amber-500/40 cursor-pointer" onclick="window.openPtPhotoModal()">
+            <div class="text-xs text-app-textSecondary">
+              <span class="font-bold text-white block">Foto scheda memorizzata nel Cloud</span>
+              <span class="text-app-textMuted">Tocca per vederla in palestra o digitalizzala nei tasti Technogym</span>
+            </div>
+          </div>
+          <button id="convertPtSheetBtn" onclick="window.convertPtSheetWithAi()" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-emerald-500 hover:from-amber-400 hover:to-emerald-400 text-black font-black text-xs sm:text-sm transition active:scale-95 shadow-lg flex items-center justify-center gap-2">
+            <span>✨</span>
+            <span>Converti Scheda con AI nei Tasti Technogym</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Borraccia 500ml & Drink Scanner & Calorie Bruciate -->
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
         <!-- Borraccia 500ml & Drink Scanner -->
         <div class="apple-glass-card p-5 rounded-2xl border border-teal-500/30 bg-teal-500/[0.03] space-y-4">
@@ -283,12 +328,20 @@
 
       <div class="apple-glass-card px-5 py-4 rounded-2xl flex items-center justify-between">
         <div>
-          <h2 id="workoutTitle" class="text-base sm:text-lg font-display font-bold text-white leading-snug">Giorno A: Petto, Deltoidi & Tricipiti</h2>
+          <div class="flex items-center gap-2">
+            <h2 id="workoutTitle" class="text-base sm:text-lg font-display font-bold text-white leading-snug">Giorno A: Petto, Deltoidi & Tricipiti</h2>
+            <span id="workoutCustomBadge" class="hidden text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">Adattata dal Coach</span>
+          </div>
           <div id="workoutSubtitle" class="text-xs sm:text-sm text-app-textMuted mt-0.5">Pausa Pranzo 13:00 - 15:00 • 50 min Technogym</div>
         </div>
-        <button onclick="window.resetCurrentDayChecks()" class="px-3.5 py-2 rounded-xl bg-app-card hover:bg-red-950/40 border border-app-border text-xs sm:text-sm text-app-textMuted hover:text-red-300 transition">
-          Azzera Spunte
-        </button>
+        <div class="flex items-center gap-2">
+          <button id="resetCustomRoutineBtn" onclick="window.resetToOriginalRoutine()" class="hidden px-3.5 py-2 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/40 text-xs sm:text-sm text-amber-300 transition font-semibold">
+            ↺ Ripristina Base
+          </button>
+          <button onclick="window.resetCurrentDayChecks()" class="px-3.5 py-2 rounded-xl bg-app-card hover:bg-red-950/40 border border-app-border text-xs sm:text-sm text-app-textMuted hover:text-red-300 transition">
+            Azzera Spunte
+          </button>
+        </div>
       </div>
 
       <div id="exerciseList" class="grid grid-cols-1 lg:grid-cols-2 gap-4"></div>
@@ -298,7 +351,6 @@
     <!-- TAB: CAMMINATA & RECUPERO ATTIVO (OUTDOOR / GIORNI OFF)       -->
     <!-- ============================================================= -->
     <section id="view-walk" class="tab-view hidden space-y-6 max-w-4xl mx-auto">
-      
       <div class="apple-glass-card p-6 rounded-3xl border border-teal-500/30 bg-teal-500/[0.03] space-y-4">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-3">
@@ -369,7 +421,6 @@
     <!-- TAB 2: ALIMENTAZIONE & DIETA (BILANCIO DEFICIT REALE)         -->
     <!-- ============================================================= -->
     <section id="view-nutrition" class="tab-view hidden space-y-7">
-      
       <!-- Card Bilancio Calorico & Deficit Reale -->
       <div class="apple-glass-card p-6 sm:p-7 rounded-3xl border border-emerald-500/30 bg-gradient-to-br from-emerald-500/[0.05] via-teal-500/[0.02] to-transparent space-y-5">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-app-border/60 pb-3">
@@ -522,10 +573,9 @@
     </section>
 
     <!-- ============================================================= -->
-    <!-- TAB 3: SCANNER FOTO & TESTO CON VOCE RIPRISTINATA             -->
+    <!-- TAB 3: SCANNER FOTO & TESTO CON VOCE                         -->
     <!-- ============================================================= -->
     <section id="view-scanner" class="tab-view hidden space-y-7">
-      
       <div class="apple-glass-card p-6 sm:p-8 rounded-3xl border border-app-border text-center space-y-5 max-w-3xl mx-auto">
         <div class="w-16 h-16 mx-auto rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-3xl text-emerald-400">
           🍽️
@@ -615,16 +665,15 @@
     </section>
 
     <!-- ============================================================= -->
-    <!-- TAB 4: AI COACH & NUTRIZIONISTA CLINICO                      -->
+    <!-- TAB 4: AI COACH & NUTRIZIONISTA CLINICO (CON ADATTAMENTO SCHEDA) -->
     <!-- ============================================================= -->
     <section id="view-coach" class="tab-view hidden space-y-5 max-w-4xl mx-auto">
-      
       <div class="apple-glass-card p-5 rounded-2xl border border-app-border flex items-center justify-between">
         <div class="flex items-center gap-3.5">
           <div class="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center text-2xl font-bold">🧬</div>
           <div>
             <h3 class="font-display font-bold text-base sm:text-lg text-white">Coach & Nutrizionista Sportivo</h3>
-            <p class="text-xs sm:text-sm text-teal-400 font-mono">Dati reali sincronizzati • Tono diretto</p>
+            <p class="text-xs sm:text-sm text-teal-400 font-mono">Dati reali sincronizzati • Schede adattate live</p>
           </div>
         </div>
         <button onclick="window.resetCoachChat()" class="text-xs sm:text-sm text-app-textMuted px-3.5 py-2 rounded-xl bg-app-card border border-app-border hover:text-white transition">Azzera</button>
@@ -632,11 +681,11 @@
 
       <!-- Quick prompts -->
       <div class="flex gap-2 overflow-x-auto no-scrollbar py-1">
-        <button onclick="window.sendQuickCoachMessage('Come cuocere le polpette di manzo magro in friggitrice ad aria a 180°C morbidissime?')" class="whitespace-nowrap px-3.5 py-2 rounded-xl bg-app-card hover:bg-app-cardSubtle border border-app-border text-xs text-app-textSecondary transition">
-          🥩 Polpette Friggitrice Aria
+        <button onclick="window.sendQuickCoachMessage('Ho un leggero fastidio alla piega del gomito: adattami la scheda di oggi con macchine sicure!')" class="whitespace-nowrap px-3.5 py-2 rounded-xl bg-app-card hover:bg-app-cardSubtle border border-emerald-500/30 text-xs text-emerald-300 transition">
+          🩹 Tutela Gomito & Adatta Scheda
         </button>
-        <button onclick="window.sendQuickCoachMessage('Come posso preparare le patate croccanti in friggitrice ad aria senza eccedere nei grassi?')" class="whitespace-nowrap px-3.5 py-2 rounded-xl bg-app-card hover:bg-app-cardSubtle border border-app-border text-xs text-app-textSecondary transition">
-          🥔 Patate Friggitrice Aria
+        <button onclick="window.sendQuickCoachMessage('Oggi ho solo 35 minuti a pranzo: creami un circuito spinta rapido!')" class="whitespace-nowrap px-3.5 py-2 rounded-xl bg-app-card hover:bg-app-cardSubtle border border-app-border text-xs text-app-textSecondary transition">
+          ⚡ Allenamento Express 35 min
         </button>
         <button onclick="window.sendQuickCoachMessage('Cosa mi consigli per cena per chiudere al meglio i macro proteici oggi?')" class="whitespace-nowrap px-3.5 py-2 rounded-xl bg-app-card hover:bg-app-cardSubtle border border-app-border text-xs text-app-textSecondary transition">
           🍽️ Consiglio Cena Stasera
@@ -645,12 +694,12 @@
 
       <div id="coachChatBox" class="h-96 overflow-y-auto space-y-3.5 p-5 rounded-2xl bg-app-card/70 border border-app-border flex flex-col text-sm sm:text-base">
         <div class="bg-app-dark p-4 rounded-2xl border border-app-border text-gray-200 leading-relaxed shadow-sm">
-          Bella Luca! Ho sott'occhio tutti i numeri di oggi: calorie assunte, spesa a riposo, calorie bruciate, litri d'acqua e scheda Icon. Puoi scrivermi o toccare il microfono per parlarmi direttamente!
+          Bella Luca! Ho sott'occhio tutti i numeri di oggi: calorie assunte, calorie bruciate, litri d'acqua e scheda Icon. Se hai un fastidio, poco tempo o vuoi variare l'allenamento, chiedimelo: posso modificare e caricare direttamente la nuova scheda sul tuo schermo!
         </div>
       </div>
 
       <form onsubmit="window.handleCoachSubmit(event)" class="flex gap-2.5">
-        <input type="text" id="coachInputText" placeholder="Chiedi al coach (o tocca il microfono)..." class="w-full bg-app-card border border-app-border focus:border-emerald-500 rounded-xl px-4 py-3.5 text-sm text-white focus:outline-none">
+        <input type="text" id="coachInputText" placeholder="Chiedi al coach (es. adattami la scheda per tutelare il gomito)..." class="w-full bg-app-card border border-app-border focus:border-emerald-500 rounded-xl px-4 py-3.5 text-sm text-white focus:outline-none">
         <button type="button" id="coachVoiceBtn" onclick="window.toggleCoachVoiceInput()" class="px-4 py-3.5 rounded-xl bg-app-card hover:bg-app-cardSubtle border border-emerald-500/40 text-emerald-300 font-bold text-lg flex items-center justify-center transition active:scale-95" title="Parla al Coach">
           🎙️
         </button>
@@ -662,7 +711,6 @@
     <!-- TAB 5: PROGRESSI, PESO & GIRO VITA                           -->
     <!-- ============================================================= -->
     <section id="view-progress" class="tab-view hidden space-y-6 max-w-4xl mx-auto">
-      
       <div class="apple-glass-card p-6 sm:p-8 rounded-3xl border border-app-border space-y-6">
         <h3 class="font-display font-bold text-lg text-white uppercase tracking-wider">Misure Corporee</h3>
         
@@ -709,6 +757,25 @@
       <button onclick="window.navigateToTab('progress')" id="nav-progress" class="py-1 flex flex-col items-center text-app-textMuted hover:text-white"><span class="text-lg">📈</span><span class="text-[10px] font-medium mt-0.5">Misure</span></button>
     </div>
   </nav>
+
+  <!-- MODAL: VISUALIZZATORE FOTO SCHEDA PT -->
+  <div id="ptPhotoModal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md hidden flex flex-col items-center justify-center p-4">
+    <div class="max-w-xl w-full flex items-center justify-between pb-3 text-white">
+      <h3 class="font-display font-bold text-base">Foto Scheda Personal Trainer</h3>
+      <button onclick="window.closePtPhotoModal()" class="w-9 h-9 rounded-xl bg-app-card flex items-center justify-center text-lg text-gray-400 hover:text-white">✕</button>
+    </div>
+    <div class="max-w-xl w-full max-h-[80vh] overflow-auto rounded-2xl border border-app-border bg-app-black flex items-center justify-center">
+      <img id="ptPhotoModalImg" src="" alt="Scheda PT a tutto schermo" class="w-full h-auto object-contain">
+    </div>
+    <div class="pt-4 flex gap-3 max-w-xl w-full">
+      <button onclick="window.convertPtSheetWithAi(); window.closePtPhotoModal();" class="w-full py-3 rounded-xl bg-gradient-to-r from-amber-500 to-emerald-500 text-black font-black text-sm">
+        ✨ Converti in Tasti Technogym
+      </button>
+      <button onclick="window.closePtPhotoModal()" class="py-3 px-6 rounded-xl bg-app-card border border-app-border text-white text-sm font-semibold">
+        Chiudi
+      </button>
+    </div>
+  </div>
 
   <!-- MODAL: REST TIMER -->
   <div id="restTimerModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
@@ -761,6 +828,19 @@
     window.openApiKeyModal = () => document.getElementById('apiKeyModal').classList.remove('hidden');
     window.closeApiKeyModal = () => document.getElementById('apiKeyModal').classList.add('hidden');
 
+    window.openPtPhotoModal = () => {
+      const modal = document.getElementById('ptPhotoModal');
+      const img = document.getElementById('ptPhotoModalImg');
+      const stored = localStorage.getItem('icon_pt_sheet_image');
+      if (stored) {
+        img.src = stored;
+        modal.classList.remove('hidden');
+      } else {
+        showNotification("Nessuna foto della scheda PT presente.", true);
+      }
+    };
+    window.closePtPhotoModal = () => document.getElementById('ptPhotoModal').classList.add('hidden');
+
     function showNotification(msg, isAlert = false) {
       const old = document.getElementById('toast');
       if (old) old.remove();
@@ -775,6 +855,7 @@
     }
   </script>
 
+  <!-- FIREBASE & CORE LOGIC -->
   <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js';
     import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js';
@@ -801,8 +882,7 @@
     let unsubCloud = null;
     let cloudSaveTimeout = null;
 
-    // Modelli Gemini aggiornati: rimosso gemini-2.0-flash deprecato, impostato gemini-3.6-flash come primario
-    const AI_MODELS = ['gemini-3.6-flash', 'gemini-2.5-flash', 'gemini-3-flash-preview'];
+    const AI_MODELS = ['gemini-2.5-flash', 'gemini-3.6-flash', 'gemini-3-flash-preview'];
     const MEAL_SLOTS = ["Colazione", "Spuntino", "Pranzo", "Merenda", "Cena", "Spuntino notturno"];
 
     let selectedDate = new Date();
@@ -816,6 +896,9 @@
       waist: localStorage.getItem('icon_waist_record') || '104.0',
       workoutExercises: JSON.parse(localStorage.getItem('icon_workout_exercises') || '{}'),
       walkLogs: JSON.parse(localStorage.getItem('icon_walk_logs') || '[]'),
+      customRoutines: JSON.parse(localStorage.getItem('icon_custom_routines') || '{}'),
+      ptSheetImage: localStorage.getItem('icon_pt_sheet_image') || null,
+      ptSheetDate: localStorage.getItem('icon_pt_sheet_date') || null,
       currentLidlSlot: 'slot1'
     };
 
@@ -823,8 +906,8 @@
     let timerCountdown = null;
     let secondsRemaining = 0;
 
-    // Routines Technogym
-    const ROUTINES = {
+    // Routines Base Technogym
+    const BASE_ROUTINES = {
       dayA: {
         title: "Giorno A: Petto, Deltoidi & Tricipiti",
         subtitle: "Spinta • 50 min • Focus Tensione",
@@ -869,6 +952,11 @@
           { id: "ex_D3", code: "M20", name: "Crossover Cavi Alti", model: "Technogym DAP Cavi", sets: 3, reps: "12-15", rest: 60, defaultKg: 15, seat: "Carrucole in alto.", cue: "Braccia quasi distese." },
           { id: "ex_D4", code: "M21", name: "Superset Corda + Curl Cavo", model: "Technogym Ercolina", sets: 3, reps: "10 + 10", rest: 60, defaultKg: 20, seat: "Prima tricipiti, poi bicipiti.", cue: "Zero pause." }
         ]
+      },
+      dayPT: {
+        title: "Scheda del Tuo Personal Trainer",
+        subtitle: "Scatta la foto del foglio per caricarla o digitalizzarla",
+        exercises: []
       }
     };
 
@@ -925,6 +1013,7 @@
         localStorage.setItem('icon_waist_record', appData.waist);
         localStorage.setItem('icon_workout_exercises', JSON.stringify(appData.workoutExercises));
         localStorage.setItem('icon_walk_logs', JSON.stringify(appData.walkLogs));
+        localStorage.setItem('icon_custom_routines', JSON.stringify(appData.customRoutines));
       } catch (e) {}
 
       if (!currentUser || !cloudDocRef) return;
@@ -938,7 +1027,6 @@
       }, 300);
     }
 
-    // Ridimensiona e converte QUALSIASI immagine in JPEG leggero (risolve errore HEIC e limiti di payload)
     function prepareImageForAi(file) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -977,7 +1065,6 @@
       });
     }
 
-    // Chiamata Gemini con fallback automatico e gestione trasparente degli errori
     async function callGeminiApi(payload) {
       const activeKey = appData.userApiKey || localStorage.getItem('icon_gemini_key') || '';
 
@@ -1007,7 +1094,6 @@
       throw new Error(lastError || "Impossibile contattare Gemini. Verifica la chiave API.");
     }
 
-    // Salvataggio e sincronizzazione Cloud della chiave API Gemini
     window.saveUserApiKey = async function() {
       const val = document.getElementById('userApiKeyInput').value.trim();
       appData.userApiKey = val;
@@ -1024,20 +1110,499 @@
       }
       
       window.closeApiKeyModal();
-      showNotification("Chiave API salvata e sincronizzata con il tuo Cloud!");
+      showNotification("Chiave API salvata e sincronizzata!");
     };
 
-    // Riconoscimento Vocale per Scanner Pasti
+    // =========================================================================
+    // AI COACH & MODIFICA DINAMICA DELLA SCHEDA
+    // =========================================================================
+    window.handleCoachSubmit = async function(e) {
+      if (e) e.preventDefault();
+      const input = document.getElementById('coachInputText');
+      const query = input.value.trim();
+      if (!query) return;
+
+      input.value = '';
+      const box = document.getElementById('coachChatBox');
+      box.innerHTML += `<div class="bg-emerald-500 text-black font-semibold p-3.5 rounded-2xl rounded-tr-none self-end max-w-[85%] ml-auto">${query}</div>`;
+      box.scrollTop = box.scrollHeight;
+
+      const loadingId = 'loading_' + Date.now();
+      box.innerHTML += `<div id="${loadingId}" class="bg-app-dark p-3.5 rounded-2xl border border-app-border max-w-[85%] text-emerald-400 animate-pulse">Il Coach sta studiando la tua richiesta...</div>`;
+      box.scrollTop = box.scrollHeight;
+
+      try {
+        const day = getSelectedDayData();
+        const totalIntake = (day.foodLogs || []).reduce((acc, m) => acc + (Number(m.calories) || 0), 0);
+        
+        const sys = `
+          Sei il PT e Nutrizionista personale dell'atleta Luca.
+          Profilo atleta: Luca, 32 anni, 95kg, 177cm, Icon Palestre (4 sessioni a pranzo, 50 min, macchine Technogym Selection e Pure).
+          Deficit calorico target: 1.950 kcal/die (target 170g proteine, 3.5L acqua).
+          Dati oggi: ${totalIntake} kcal assunte, ${day.burnedCalories} kcal attive bruciate, ${day.waterLiters}L acqua bevuta.
+          Dieta: polpette di manzo magro in friggitrice ad aria, patate croccanti, gamberetti con riso express, salmone, tonno fresco weekend, mozzarella light Milbona. NO QUARK, NO BROCCOLI.
+
+          REGOLE FONDAMENTALI:
+          1. Rispondi con tono clinico, scientifico, diretto e pratico (2 brevi paragrafi).
+          2. SE L'UTENTE CHIEDE DI FARE UN TIPO DI ALLENAMENTO, SEGNALA UN FASTIDIO/DOLORE (es. gomito, spalle, schiena), CHIEDE UNA VARIANTE, UN CIRCUITO O UNA MODIFICA ALLA SCHEDA:
+             DEVI ASSOLUTAMENTE includere alla fine della tua risposta una scheda Technogym personalizzata racchiusa ESATTAMENTE tra i tag:
+             \`\`\`workout_json
+             {
+               "targetDay": "${currentWorkoutDay}",
+               "title": "Titolo specifico della routine adattata",
+               "subtitle": "Spiegazione focus e durata",
+               "exercises": [
+                 {
+                   "id": "cw_1",
+                   "code": "M01",
+                   "name": "Nome Esercizio Technogym",
+                   "model": "Modello Technogym Selection o Pure",
+                   "sets": 3,
+                   "reps": "10-12",
+                   "rest": 75,
+                   "defaultKg": 50,
+                   "seat": "Regolazione precisa del sedile",
+                   "cue": "Indicazione tecnica ed esecuzione per tutelare l'articolazione o massimizzare lo stimolo"
+                 }
+               ]
+             }
+             \`\`\`
+             Includi da 4 a 6 esercizi mirati con carichi realistici per un uomo di 95kg.
+        `;
+
+        const reply = await callGeminiApi({
+          contents: [{ role: "user", parts: [{ text: query }] }],
+          systemInstruction: { parts: [{ text: sys }] }
+        });
+
+        document.getElementById(loadingId)?.remove();
+
+        // Estrazione blocco workout_json
+        const jsonMatch = reply.match(/```workout_json([\s\S]*?)```/);
+        let textOnly = reply.replace(/```workout_json[\s\S]*?```/, '').trim();
+        let routineData = null;
+
+        if (jsonMatch) {
+          try {
+            routineData = JSON.parse(jsonMatch[1].trim());
+          } catch (pe) {
+            console.warn("Parsing workout json fallito:", pe);
+          }
+        }
+
+        let bubbleContent = `<div class="bg-app-dark p-4 rounded-2xl border border-app-border max-w-[90%] text-gray-200 leading-relaxed shadow-sm space-y-3">
+          <p>${textOnly.replace(/\n/g, '<br>')}</p>
+        `;
+
+        if (routineData && Array.isArray(routineData.exercises) && routineData.exercises.length > 0) {
+          const serialized = JSON.stringify(routineData).replace(/"/g, '&quot;');
+          bubbleContent += `
+            <div class="p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 space-y-2.5 mt-2">
+              <div class="flex items-center justify-between">
+                <span class="text-xs uppercase font-bold text-emerald-400">⚡ Nuova Routine Pronta</span>
+                <span class="text-xs text-app-textMuted font-mono">${routineData.exercises.length} Esercizi</span>
+              </div>
+              <div class="font-display font-black text-white text-sm sm:text-base">${routineData.title}</div>
+              <div class="text-xs text-app-textSecondary">${routineData.subtitle}</div>
+              <div class="text-[11px] text-teal-300 font-mono space-y-0.5">
+                ${routineData.exercises.map(x => `<div>• <strong>${x.name}</strong> (${x.sets}×${x.reps})</div>`).join('')}
+              </div>
+              <button onclick="window.applyCoachWorkout(${serialized})" class="w-full py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-400 text-black font-black text-xs sm:text-sm active:scale-95 transition shadow-lg flex items-center justify-center gap-2">
+                <span>⚡</span>
+                <span>Applica Subito alla Scheda Palestra</span>
+              </button>
+            </div>
+          `;
+        }
+
+        bubbleContent += `</div>`;
+        box.innerHTML += bubbleContent;
+        box.scrollTop = box.scrollHeight;
+      } catch (err) {
+        document.getElementById(loadingId)?.remove();
+        box.innerHTML += `<div class="p-3 bg-red-950/40 text-red-300 text-xs rounded-xl border border-red-500/30">${err.message}</div>`;
+      }
+    };
+
+    window.applyCoachWorkout = function(routine) {
+      if (!routine || !routine.exercises) return;
+      const targetDay = routine.targetDay || currentWorkoutDay || 'dayA';
+      
+      if (!appData.customRoutines) appData.customRoutines = {};
+      appData.customRoutines[targetDay] = {
+        title: routine.title,
+        subtitle: routine.subtitle,
+        exercises: routine.exercises
+      };
+
+      currentWorkoutDay = targetDay;
+      triggerCloudSave();
+      window.navigateToTab('workout');
+      renderWorkoutList(targetDay);
+      showNotification(`"${routine.title}" caricata sulla scheda!`);
+    };
+
+    window.resetToOriginalRoutine = function() {
+      if (!appData.customRoutines) appData.customRoutines = {};
+      delete appData.customRoutines[currentWorkoutDay];
+      triggerCloudSave();
+      renderWorkoutList(currentWorkoutDay);
+      showNotification("Scheda originale Technogym ripristinata.");
+    };
+
+    window.sendQuickCoachMessage = function(txt) {
+      document.getElementById('coachInputText').value = txt;
+      window.handleCoachSubmit(new Event('submit'));
+    };
+
+    window.resetCoachChat = function() {
+      document.getElementById('coachChatBox').innerHTML = `
+        <div class="bg-app-dark p-4 rounded-2xl border border-app-border text-gray-200 leading-relaxed shadow-sm">
+          Chat azzerata! Profilo attivo: 32 anni, 95kg, 1.950 kcal, Huel Black + 5g creatina, polpette e patate in friggitrice ad aria, gamberetti e riso express. Chiedimi pure qualsiasi modifica alla scheda!
+        </div>
+      `;
+    };
+
+    // =========================================================================
+    // CARICAMENTO & DIGITALIZZAZIONE SCHEDA PERSONAL TRAINER (PT)
+    // =========================================================================
+    window.handlePtSheetUpload = async function(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      showNotification("Caricamento foto scheda PT in corso...");
+      try {
+        const processed = await prepareImageForAi(file);
+        appData.ptSheetImage = processed.dataUrl;
+        appData.ptSheetDate = new Date().toLocaleDateString('it-IT', { day: 'numeric', month: 'short' });
+
+        localStorage.setItem('icon_pt_sheet_image', appData.ptSheetImage);
+        localStorage.setItem('icon_pt_sheet_date', appData.ptSheetDate);
+
+        updatePtSheetUI();
+        triggerCloudSave();
+        showNotification("Foto scheda salvata! Ora puoi consultarla o convertirla con l'AI.");
+      } catch (e) {
+        showNotification("Errore caricamento foto scheda PT.", true);
+      }
+    };
+
+    function updatePtSheetUI() {
+      const badge = document.getElementById('ptSheetDateBadge');
+      const box = document.getElementById('ptSheetConversionBox');
+      const thumb = document.getElementById('ptSheetThumbnail');
+      const viewBtn = document.getElementById('viewPtPhotoBtn');
+      const uploadLabel = document.getElementById('ptUploadBtnLabel');
+
+      if (appData.ptSheetImage) {
+        if (badge) badge.innerText = `Foto del ${appData.ptSheetDate || 'recente'}`;
+        if (box) box.classList.remove('hidden');
+        if (thumb) thumb.src = appData.ptSheetImage;
+        if (viewBtn) viewBtn.classList.remove('hidden');
+        if (uploadLabel) uploadLabel.innerText = "Sostituisci Foto Scheda";
+      } else {
+        if (badge) badge.innerText = "In attesa di foto";
+        if (box) box.classList.add('hidden');
+        if (viewBtn) viewBtn.classList.add('hidden');
+        if (uploadLabel) uploadLabel.innerText = "Carica / Scatta Scheda PT";
+      }
+    }
+
+    window.convertPtSheetWithAi = async function() {
+      if (!appData.ptSheetImage) {
+        showNotification("Prima scatta o carica la foto della scheda PT.", true);
+        return;
+      }
+
+      const btn = document.getElementById('convertPtSheetBtn');
+      const originalText = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = `<span>⏳</span><span>Gemini Vision sta leggendo la scheda cartacea...</span>`;
+
+      try {
+        const rawBase64 = appData.ptSheetImage.split(',')[1];
+        const prompt = `
+          Sei un Personal Trainer esperto della palestra Icon Palestre.
+          Analizza la foto di questa scheda di allenamento cartacea compilata dal personal trainer.
+          Estrai TUTTI gli esercizi scritti sulla scheda (nome esercizio, serie, ripetizioni, tempi di recupero e carichi stimati o annotati).
+          Abbina ogni esercizio alla rispettiva macchina o postazione Technogym di Icon Palestre (Selection, Pure, Cavi o Manubri).
+          Restituisci ESCLUSIVAMENTE un JSON valido con questa struttura:
+          {
+            "title": "Scheda del Personal Trainer",
+            "subtitle": "Digitalizzata con AI dalla foto del tuo trainer",
+            "exercises": [
+              {
+                "id": "pt_1",
+                "code": "PT01",
+                "name": "Nome Esercizio",
+                "model": "Technogym Selection / Pure / Cavi",
+                "sets": 4,
+                "reps": "10",
+                "rest": 90,
+                "defaultKg": 50,
+                "seat": "Regolazione sedile consigliata",
+                "cue": "Consiglio posturale ed esecuzione sicura"
+              }
+            ]
+          }
+        `;
+
+        const rawText = await callGeminiApi({
+          contents: [{
+            role: "user",
+            parts: [
+              { text: prompt },
+              { inlineData: { mimeType: "image/jpeg", data: rawBase64 } }
+            ]
+          }],
+          generationConfig: { responseMimeType: "application/json" }
+        });
+
+        const jsonMatch = rawText.match(/\{[\s\S]*\}/);
+        if (!jsonMatch) throw new Error("Impossibile interpretare il testo della scheda.");
+        const parsed = JSON.parse(jsonMatch[0]);
+
+        if (!appData.customRoutines) appData.customRoutines = {};
+        appData.customRoutines['dayPT'] = {
+          title: parsed.title || "Scheda del Personal Trainer",
+          subtitle: parsed.subtitle || "Digitalizzata con AI",
+          exercises: parsed.exercises || []
+        };
+
+        triggerCloudSave();
+        window.switchWorkoutDay('dayPT');
+        showNotification("Scheda PT digitalizzata con successo nei tasti interattivi!");
+      } catch (err) {
+        showNotification(`Errore conversione scheda: ${err.message}`, true);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = originalText;
+      }
+    };
+
+    // =========================================================================
+    // RENDERING DELLA SCHEDA WORKOUT
+    // =========================================================================
+    function getActiveRoutine(dayKey) {
+      if (appData.customRoutines && appData.customRoutines[dayKey]) {
+        return { ...appData.customRoutines[dayKey], isCustom: true };
+      }
+      return { ...BASE_ROUTINES[dayKey], isCustom: false };
+    }
+
+    function renderWorkoutList(dayKey) {
+      const routine = getActiveRoutine(dayKey);
+      if (!routine) return;
+
+      const titleEl = document.getElementById('workoutTitle');
+      const subEl = document.getElementById('workoutSubtitle');
+      const customBadge = document.getElementById('workoutCustomBadge');
+      const resetBtn = document.getElementById('resetCustomRoutineBtn');
+
+      if (titleEl) titleEl.innerText = routine.title;
+      if (subEl) subEl.innerText = routine.subtitle;
+
+      if (customBadge) customBadge.classList.toggle('hidden', !routine.isCustom);
+      if (resetBtn) resetBtn.classList.toggle('hidden', !routine.isCustom);
+
+      const container = document.getElementById('exerciseList');
+      if (!container) return;
+      container.innerHTML = '';
+
+      if (!appData.workoutExercises) appData.workoutExercises = {};
+
+      if (!routine.exercises || routine.exercises.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-full apple-glass-card p-8 rounded-2xl text-center space-y-3">
+            <div class="text-3xl">📋</div>
+            <h4 class="font-display font-bold text-white text-base">Nessun esercizio presente in questa scheda</h4>
+            <p class="text-xs text-app-textMuted max-w-md mx-auto">
+              Carica la foto della scheda rilasciata dal tuo Personal Trainer in alto e tocca <strong>"Converti Scheda con AI"</strong> per generare le serie interattive.
+            </p>
+          </div>
+        `;
+        return;
+      }
+
+      routine.exercises.forEach(ex => {
+        const key = `${dayKey}_${ex.id}`;
+        const exState = appData.workoutExercises[key] || { kg: ex.defaultKg, completedSets: [] };
+        const currentKg = (exState.kg !== null && exState.kg !== undefined) ? exState.kg : ex.defaultKg;
+        const completedSets = Array.isArray(exState.completedSets) ? exState.completedSets : [];
+
+        let setsHTML = '';
+        for (let s = 1; s <= ex.sets; s++) {
+          const isDone = completedSets.includes(s);
+          setsHTML += `
+            <button onclick="window.handleGymSetClick('${dayKey}', '${ex.id}', ${s}, ${ex.rest})" class="h-12 flex-1 min-w-[56px] rounded-xl text-sm font-black transition border flex items-center justify-center gap-1 active:scale-95 ${
+              isDone ? 'bg-emerald-500 text-black border-emerald-400 shadow-md' : 'bg-app-dark border-app-border text-gray-300 hover:border-emerald-500/40'
+            }">
+              ${isDone ? '✓ ' : ''}S${s}
+            </button>
+          `;
+        }
+
+        const card = document.createElement('div');
+        card.className = "apple-glass-card p-5 rounded-2xl border border-app-border space-y-3.5";
+        card.innerHTML = `
+          <div>
+            <div class="flex items-center justify-between gap-2">
+              <div class="flex items-center gap-2">
+                <span class="font-mono text-xs font-black px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">${ex.code || 'EX'}</span>
+                <h3 class="font-display font-bold text-base text-white">${ex.name}</h3>
+              </div>
+              <button onclick="window.startDiscreetTimer(${ex.rest || 60})" class="px-3 py-1 rounded-xl bg-app-card border border-app-border text-xs sm:text-sm font-mono text-emerald-400">
+                <span>⏱️</span><span>${ex.rest || 60}s</span>
+              </button>
+            </div>
+            <div class="text-xs text-app-textMuted font-mono mt-1">${ex.model || 'Macchina Technogym'} • ${ex.sets} × ${ex.reps}</div>
+          </div>
+
+          <div class="bg-app-dark/90 p-3 rounded-xl border border-app-border text-xs">
+            <span class="text-teal-400 font-medium">⚙️ Seduta: ${ex.seat || 'Assetto fisiologico comodo'}</span>
+            ${ex.cue ? `<div class="text-app-textSecondary mt-1">💡 ${ex.cue}</div>` : ''}
+          </div>
+
+          <div class="space-y-2.5">
+            <div class="flex items-center justify-between gap-2">
+              <div class="flex items-center gap-1 bg-app-dark p-1 rounded-xl border border-app-border">
+                <button onclick="window.adjustWeight('${dayKey}', '${ex.id}', -2.5)" class="w-9 h-9 rounded-lg bg-app-card text-white font-black text-base active:scale-90">-</button>
+                <div class="flex items-center px-2">
+                  <input type="number" step="0.5" value="${currentKg}" onchange="window.saveWeightLoadDirect('${dayKey}', '${ex.id}', this.value)" class="w-16 text-center bg-transparent text-emerald-400 font-display font-black text-base focus:outline-none">
+                  <span class="text-xs text-app-textMuted font-bold ml-0.5">kg</span>
+                </div>
+                <button onclick="window.adjustWeight('${dayKey}', '${ex.id}', 2.5)" class="w-9 h-9 rounded-lg bg-app-card text-white font-black text-base active:scale-90">+</button>
+              </div>
+              <span class="text-xs sm:text-sm text-app-textMuted font-medium">Serie completata:</span>
+            </div>
+            <div class="flex gap-2 w-full overflow-x-auto pb-0.5">${setsHTML}</div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    window.switchWorkoutDay = function(dayKey) {
+      currentWorkoutDay = dayKey;
+      ['dayA', 'dayB', 'dayC', 'dayD', 'dayPT'].forEach(key => {
+        const btn = document.getElementById(`btn-${key}`);
+        if (!btn) return;
+        if (key === 'dayPT') {
+          btn.className = key === dayKey
+            ? 'py-3 rounded-xl text-xs sm:text-sm font-black transition bg-amber-500 text-black shadow-sm'
+            : 'py-3 rounded-xl text-xs sm:text-sm font-bold transition bg-amber-500/20 text-amber-300 border border-amber-500/40 hover:bg-amber-500/30';
+        } else {
+          btn.className = key === dayKey
+            ? 'py-3 rounded-xl text-xs sm:text-sm font-bold transition bg-emerald-500 text-black shadow-sm'
+            : 'py-3 rounded-xl text-xs sm:text-sm font-medium transition text-app-textMuted hover:text-white';
+        }
+      });
+      renderWorkoutList(dayKey);
+    };
+
+    window.adjustWeight = function(dayKey, exId, delta) {
+      const key = `${dayKey}_${exId}`;
+      if (!appData.workoutExercises[key]) appData.workoutExercises[key] = { kg: 50, completedSets: [] };
+      appData.workoutExercises[key].kg = Math.max(2.5, parseFloat(((parseFloat(appData.workoutExercises[key].kg) || 0) + delta).toFixed(1)));
+      renderWorkoutList(dayKey);
+      triggerCloudSave();
+    };
+
+    window.saveWeightLoadDirect = function(dayKey, exId, val) {
+      const parsed = parseFloat(val);
+      if (!isNaN(parsed) && parsed > 0) {
+        const key = `${dayKey}_${exId}`;
+        if (!appData.workoutExercises[key]) appData.workoutExercises[key] = { kg: 50, completedSets: [] };
+        appData.workoutExercises[key].kg = parseFloat(parsed.toFixed(1));
+        triggerCloudSave();
+        showNotification(`Carico: ${appData.workoutExercises[key].kg} kg`);
+      }
+    };
+
+    window.handleGymSetClick = function(dayKey, exId, setNumber, restSeconds) {
+      const key = `${dayKey}_${exId}`;
+      if (!appData.workoutExercises[key]) appData.workoutExercises[key] = { kg: null, completedSets: [] };
+      let list = Array.isArray(appData.workoutExercises[key].completedSets) ? appData.workoutExercises[key].completedSets : [];
+
+      if (list.includes(setNumber)) {
+        list = list.filter(n => n !== setNumber);
+      } else {
+        list.push(setNumber);
+        window.startDiscreetTimer(restSeconds || 60);
+        showNotification(`Set ${setNumber} completato!`);
+      }
+
+      appData.workoutExercises[key].completedSets = list;
+      renderWorkoutList(dayKey);
+      triggerCloudSave();
+    };
+
+    window.resetCurrentDayChecks = function() {
+      const routine = getActiveRoutine(currentWorkoutDay);
+      if (!routine || !routine.exercises) return;
+      routine.exercises.forEach(ex => {
+        const key = `${currentWorkoutDay}_${ex.id}`;
+        if (appData.workoutExercises[key]) appData.workoutExercises[key].completedSets = [];
+      });
+      renderWorkoutList(currentWorkoutDay);
+      triggerCloudSave();
+      showNotification("Spunte azzerate.");
+    };
+
+    // Timer Recupero
+    window.startDiscreetTimer = function(seconds) {
+      clearInterval(timerCountdown);
+      secondsRemaining = seconds;
+      updateTimerDisplay();
+
+      document.getElementById('activeTimerBar').classList.remove('hidden');
+      timerCountdown = setInterval(() => {
+        secondsRemaining--;
+        if (secondsRemaining <= 0) {
+          clearInterval(timerCountdown);
+          secondsRemaining = 0;
+          updateTimerDisplay();
+          window.stopDiscreetTimer();
+          showNotification("Recupero terminato!");
+        } else {
+          updateTimerDisplay();
+        }
+      }, 1000);
+    };
+
+    window.addTimerSeconds = function(extra) {
+      secondsRemaining += extra;
+      updateTimerDisplay();
+    };
+
+    window.stopDiscreetTimer = function() {
+      clearInterval(timerCountdown);
+      secondsRemaining = 0;
+      updateTimerDisplay();
+      document.getElementById('activeTimerBar').classList.add('hidden');
+    };
+
+    function updateTimerDisplay() {
+      const m = Math.floor(secondsRemaining / 60);
+      const s = secondsRemaining % 60;
+      const str = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+      document.getElementById('activeTimerValue').innerText = str;
+      document.getElementById('headerTimerReadout').innerText = str;
+      document.getElementById('modalTimerDigits').innerText = str;
+    }
+
+    window.toggleTimerModal = () => document.getElementById('restTimerModal').classList.toggle('hidden');
+
+    // Speech Recognition
     let scannerRecognition = null;
     let isScannerRecording = false;
 
     window.toggleVoiceInput = function() {
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
       if (!SpeechRecognition) {
-        showNotification("Il riconoscimento vocale non è supportato da questo browser.", true);
+        showNotification("Riconoscimento vocale non supportato nel browser.", true);
         return;
       }
-
       const btn = document.getElementById('voiceInputBtn');
       const input = document.getElementById('manualDishTextInput');
 
@@ -1063,38 +1628,28 @@
           for (let i = event.resultIndex; i < event.results.length; i++) {
             transcript += event.results[i][0].transcript;
           }
-          if (input && transcript) {
-            input.value = transcript;
-          }
+          if (input && transcript) input.value = transcript;
         };
 
         scannerRecognition.onerror = event => {
           isScannerRecording = false;
           if (btn) btn.classList.remove('mic-active');
-          if (event.error === 'not-allowed') {
-            showNotification("Permesso microfono non concesso nel browser.", true);
-          } else if (event.error !== 'no-speech') {
-            showNotification(`Errore microfono: ${event.error}`, true);
-          }
+          if (event.error !== 'no-speech') showNotification(`Microfono: ${event.error}`, true);
         };
 
         scannerRecognition.onend = () => {
           isScannerRecording = false;
           if (btn) btn.classList.remove('mic-active');
-          if (input && input.value.trim()) {
-            showNotification("Voce registrata! Tocca 'Calcola' o premi Invia.");
-          }
+          if (input && input.value.trim()) showNotification("Voce registrata! Tocca Calcola.");
         };
 
         scannerRecognition.start();
-      } catch (err) {
+      } catch (e) {
         isScannerRecording = false;
         if (btn) btn.classList.remove('mic-active');
-        showNotification("Impossibile avviare il microfono.", true);
       }
     };
 
-    // Riconoscimento Vocale per Chat Coach
     let coachRecognition = null;
     let isCoachRecording = false;
 
@@ -1104,7 +1659,6 @@
         showNotification("Riconoscimento vocale non supportato.", true);
         return;
       }
-
       const btn = document.getElementById('coachVoiceBtn');
       const input = document.getElementById('coachInputText');
 
@@ -1130,36 +1684,56 @@
           for (let i = event.resultIndex; i < event.results.length; i++) {
             transcript += event.results[i][0].transcript;
           }
-          if (input && transcript) {
-            input.value = transcript;
-          }
+          if (input && transcript) input.value = transcript;
         };
 
-        coachRecognition.onerror = event => {
+        coachRecognition.onerror = () => {
           isCoachRecording = false;
           if (btn) btn.classList.remove('mic-active');
-          if (event.error === 'not-allowed') {
-            showNotification("Permesso microfono negato.", true);
-          }
         };
 
         coachRecognition.onend = () => {
           isCoachRecording = false;
           if (btn) btn.classList.remove('mic-active');
-          if (input && input.value.trim()) {
-            window.handleCoachSubmit(new Event('submit'));
-          }
+          if (input && input.value.trim()) window.handleCoachSubmit(new Event('submit'));
         };
 
         coachRecognition.start();
-      } catch (err) {
+      } catch (e) {
         isCoachRecording = false;
         if (btn) btn.classList.remove('mic-active');
-        showNotification("Errore avvio microfono Coach.", true);
       }
     };
 
-    // Scanner Foto Pasti
+    // Scanner Pasti
+    function getInferredMealSlot() {
+      const now = new Date();
+      const h = now.getHours() + now.getMinutes() / 60;
+      if (h >= 5 && h < 10.5) return "Colazione";
+      if (h >= 10.5 && h < 12.5) return "Spuntino";
+      if (h >= 12.5 && h < 15.5) return "Pranzo";
+      if (h >= 15.5 && h < 19.0) return "Merenda";
+      if (h >= 19.0 && h < 23.5) return "Cena";
+      return "Spuntino notturno";
+    }
+
+    window.updateDetectedMealSlotUI = function() {
+      const badge = document.getElementById('detectedSlotBadge');
+      const select = document.getElementById('scannerSlotSelect');
+      if (!badge) return;
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const detected = getInferredMealSlot();
+
+      if (select && select.value !== 'auto') {
+        badge.innerText = `${select.value} (Manuale)`;
+        badge.className = "text-sm font-bold text-teal-400";
+      } else {
+        badge.innerText = `${detected} (${timeStr})`;
+        badge.className = "text-sm font-bold text-emerald-400";
+      }
+    };
+
     window.processFoodPhoto = async function(event) {
       const file = event.target.files[0];
       if (!file) return;
@@ -1177,26 +1751,16 @@
       target.innerHTML = '';
 
       try {
-        // Conversione e ottimizzazione client-side (compatibile iPhone/Android)
         const processed = await prepareImageForAi(file);
         preview.src = processed.dataUrl;
 
         const prompt = `
           Agisci come Biologo Nutrizionista Sportivo.
-          Profilo atleta: Uomo 32 anni, 95kg, 177cm, target ricomposizione 1.950 kcal/die (target 170g proteine).
+          Profilo: Uomo 32 anni, 95kg, target deficit 1.950 kcal/die (target 170g proteine).
           Pasto: "${targetSlot}".
-          Analizza l'immagine (piatto cucinato o etichetta nutrizionale) e calcola porzione, calorie e macronutrienti.
-          Restituisci ESCLUSIVAMENTE un JSON valido con questa struttura:
-          {
-            "dishName": "Nome descrittivo del piatto",
-            "slot": "${targetSlot}",
-            "calories": 450,
-            "protein": 38,
-            "carbs": 40,
-            "fat": 12,
-            "verdict": "Giudizio clinico per il deficit a 1.950 kcal",
-            "advice": "Consiglio pratico per sazietà o recupero"
-          }
+          Analizza l'immagine e calcola porzione, calorie e macronutrienti.
+          Restituisci ESCLUSIVAMENTE un JSON:
+          {"dishName": "Nome piatto", "slot": "${targetSlot}", "calories": 450, "protein": 38, "carbs": 40, "fat": 12, "verdict": "Valutazione", "advice": "Consiglio"}
         `;
 
         const rawText = await callGeminiApi({
@@ -1213,7 +1777,6 @@
         const jsonMatch = rawText.match(/\{[\s\S]*\}/);
         if (!jsonMatch) throw new Error("Risposta AI non valida.");
         const data = JSON.parse(jsonMatch[0]);
-        // Garantisce che il pasto rilevato o scelto dall'utente prevalga sempre su allucinazioni dell'AI
         data.slot = targetSlot;
 
         target.innerHTML = `
@@ -1227,50 +1790,23 @@
                 ${data.calories} kcal
               </span>
             </div>
-
             <div class="grid grid-cols-3 gap-2 text-center text-xs">
-              <div class="p-2 rounded-xl bg-app-card border border-app-border">
-                <span class="text-[10px] text-app-textMuted uppercase font-bold">Pro</span>
-                <div class="text-sm font-bold text-white">${data.protein}g</div>
-              </div>
-              <div class="p-2 rounded-xl bg-app-card border border-app-border">
-                <span class="text-[10px] text-app-textMuted uppercase font-bold">Carbo</span>
-                <div class="text-sm font-bold text-white">${data.carbs}g</div>
-              </div>
-              <div class="p-2 rounded-xl bg-app-card border border-app-border">
-                <span class="text-[10px] text-app-textMuted uppercase font-bold">Grassi</span>
-                <div class="text-sm font-bold text-white">${data.fat}g</div>
-              </div>
+              <div class="p-2 rounded-xl bg-app-card border border-app-border font-bold text-white">${data.protein}g Pro</div>
+              <div class="p-2 rounded-xl bg-app-card border border-app-border font-bold text-white">${data.carbs}g Carbo</div>
+              <div class="p-2 rounded-xl bg-app-card border border-app-border font-bold text-white">${data.fat}g Grassi</div>
             </div>
-
-            <div class="text-xs text-app-textSecondary space-y-1 pt-1 border-t border-app-border">
-              <p><strong class="text-emerald-400">Verdetto:</strong> ${data.verdict}</p>
-              <p><strong class="text-teal-400">Consiglio:</strong> ${data.advice}</p>
-            </div>
-
-            <button onclick="window.commitMealToLog(${JSON.stringify(data).replace(/"/g, '&quot;')})" class="w-full py-3 bg-emerald-500 hover:bg-emerald-400 text-black font-black text-xs sm:text-sm rounded-xl active:scale-95 transition shadow-lg">
+            <button onclick="window.commitMealToLog(${JSON.stringify(data).replace(/"/g, '&quot;')})" class="w-full py-3 bg-emerald-500 text-black font-black text-xs sm:text-sm rounded-xl active:scale-95 transition">
               + Salva nel Diario di Oggi
             </button>
           </div>
         `;
       } catch (err) {
-        target.innerHTML = `
-          <div class="p-4 rounded-xl bg-red-950/40 text-red-200 text-xs border border-red-500/30 space-y-2">
-            <div class="font-bold flex items-center gap-1.5 text-sm">
-              <span>⚠️</span> <span>Errore analisi foto</span>
-            </div>
-            <p>${err.message}</p>
-            <button onclick="window.openApiKeyModal()" class="px-3 py-1.5 bg-red-900/60 hover:bg-red-800 rounded-lg text-xs font-bold text-white transition">
-              Verifica o Cambia Chiave API
-            </button>
-          </div>
-        `;
+        target.innerHTML = `<div class="p-4 rounded-xl bg-red-950/40 text-red-200 text-xs border border-red-500/30">${err.message}</div>`;
       } finally {
         loading.classList.add('hidden');
       }
     };
 
-    // Scanner Testuale / Vocale
     window.processManualFoodText = async function() {
       const input = document.getElementById('manualDishTextInput');
       const textQuery = input.value.trim();
@@ -1291,22 +1827,9 @@
 
       try {
         const prompt = `
-          Agisci come Biologo Nutrizionista.
-          Piatto descritto: "${textQuery}".
-          Fascia pasto: "${targetSlot}".
-          Profilo: Uomo 32 anni, 95kg, deficit 1.950 kcal.
-          Stima porzione e calcola calorie e macro.
+          Agisci come Nutrizionista. Piatto: "${textQuery}". Slot: "${targetSlot}".
           Restituisci ESCLUSIVAMENTE un JSON:
-          {
-            "dishName": "${textQuery}",
-            "slot": "${targetSlot}",
-            "calories": 380,
-            "protein": 30,
-            "carbs": 35,
-            "fat": 12,
-            "verdict": "Valutazione rapida",
-            "advice": "Consiglio pratico"
-          }
+          {"dishName": "${textQuery}", "slot": "${targetSlot}", "calories": 380, "protein": 30, "carbs": 35, "fat": 12}
         `;
 
         const rawText = await callGeminiApi({
@@ -1317,37 +1840,18 @@
         const jsonMatch = rawText.match(/\{[\s\S]*\}/);
         if (!jsonMatch) throw new Error("Risposta non valida.");
         const data = JSON.parse(jsonMatch[0]);
-        // Garantisce che il pasto rilevato o scelto dall'utente prevalga sempre su allucinazioni dell'AI
         data.slot = targetSlot;
 
         target.innerHTML = `
           <div class="p-4 bg-app-dark rounded-2xl border border-app-border space-y-3">
             <div class="flex items-center justify-between">
               <div>
-                <span class="text-xs text-emerald-400 font-bold uppercase tracking-wider">${data.slot}</span>
+                <span class="text-xs text-emerald-400 font-bold uppercase">${data.slot}</span>
                 <h4 class="font-display font-black text-white text-base">${data.dishName}</h4>
               </div>
-              <span class="text-base font-mono font-black text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-xl border border-emerald-500/20">
-                ${data.calories} kcal
-              </span>
+              <span class="text-base font-mono font-black text-emerald-400">${data.calories} kcal</span>
             </div>
-
-            <div class="grid grid-cols-3 gap-2 text-center text-xs">
-              <div class="p-2 rounded-xl bg-app-card border border-app-border">
-                <span class="text-[10px] text-app-textMuted uppercase font-bold">Pro</span>
-                <div class="text-sm font-bold text-white">${data.protein}g</div>
-              </div>
-              <div class="p-2 rounded-xl bg-app-card border border-app-border">
-                <span class="text-[10px] text-app-textMuted uppercase font-bold">Carbo</span>
-                <div class="text-sm font-bold text-white">${data.carbs}g</div>
-              </div>
-              <div class="p-2 rounded-xl bg-app-card border border-app-border">
-                <span class="text-[10px] text-app-textMuted uppercase font-bold">Grassi</span>
-                <div class="text-sm font-bold text-white">${data.fat}g</div>
-              </div>
-            </div>
-
-            <button onclick="window.commitMealToLog(${JSON.stringify(data).replace(/"/g, '&quot;')})" class="w-full py-3 bg-emerald-500 hover:bg-emerald-400 text-black font-black text-xs sm:text-sm rounded-xl active:scale-95 transition shadow-lg">
+            <button onclick="window.commitMealToLog(${JSON.stringify(data).replace(/"/g, '&quot;')})" class="w-full py-3 bg-emerald-500 text-black font-black text-xs sm:text-sm rounded-xl active:scale-95 transition">
               + Salva nel Diario di Oggi
             </button>
           </div>
@@ -1368,207 +1872,24 @@
       renderDualColumnDiet();
       updateDeficitCalculations();
       triggerCloudSave();
-      showNotification(`"${meal.dishName}" registrato nel diario!`);
+      showNotification(`"${meal.dishName}" registrato!`);
       document.getElementById('scannerResultBox').classList.add('hidden');
     };
 
-    function getInferredMealSlot() {
-      const now = new Date();
-      const h = now.getHours();
-      const m = now.getMinutes();
-      const timeDec = h + m / 60;
-
-      // 05:00 - 10:30 -> Colazione
-      if (timeDec >= 5 && timeDec < 10.5) return "Colazione";
-      // 10:30 - 12:30 -> Spuntino di metà mattina
-      if (timeDec >= 10.5 && timeDec < 12.5) return "Spuntino";
-      // 12:30 - 15:30 -> Pranzo (incluso post-allenamento Icon 13:00-15:00)
-      if (timeDec >= 12.5 && timeDec < 15.5) return "Pranzo";
-      // 15:30 - 19:00 -> Merenda pomeridiana
-      if (timeDec >= 15.5 && timeDec < 19.0) return "Merenda";
-      // 19:00 - 23:30 -> Cena
-      if (timeDec >= 19.0 && timeDec < 23.5) return "Cena";
-      // 23:30 - 05:00 -> Spuntino notturno
-      return "Spuntino notturno";
-    }
-
-    window.updateDetectedMealSlotUI = function() {
-      const badge = document.getElementById('detectedSlotBadge');
-      const select = document.getElementById('scannerSlotSelect');
-      if (!badge) return;
-
-      const now = new Date();
-      const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      const detected = getInferredMealSlot();
-
-      if (select && select.value !== 'auto') {
-        badge.innerText = `${select.value} (Manuale)`;
-        badge.className = "text-sm font-bold text-teal-400";
-      } else {
-        badge.innerText = `${detected} (${timeStr})`;
-        badge.className = "text-sm font-bold text-emerald-400";
-      }
-    };
-
-    // Scanner Bevanda Palestra
-    window.processGymDrinkPhoto = async function(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-
-      const preview = document.getElementById('gymDrinkPreviewImg');
-      const box = document.getElementById('gymDrinkResultBox');
-      const textTarget = document.getElementById('gymDrinkAnalysisText');
-
-      box.classList.remove('hidden');
-      textTarget.innerHTML = `<div class="text-teal-400 font-bold animate-pulse">Analisi drink/dispenser Icon in corso...</div>`;
-
-      try {
-        const processed = await prepareImageForAi(file);
-        preview.src = processed.dataUrl;
-
-        const prompt = `Analizza questa bevanda da palestra Icon. Restituisci ESCLUSIVAMENTE un JSON: {"name": "Nome bevanda", "calories": 40, "carbs": 8, "hydrationLiters": 0.5, "advice": "Valutazione rapida"}`;
-        const rawText = await callGeminiApi({
-          contents: [{
-            role: "user",
-            parts: [
-              { text: prompt },
-              { inlineData: { mimeType: processed.mimeType, data: processed.base64 } }
-            ]
-          }],
-          generationConfig: { responseMimeType: "application/json" }
-        });
-
-        const jsonMatch = rawText.match(/\{[\s\S]*\}/);
-        const res = JSON.parse(jsonMatch ? jsonMatch[0] : '{}');
-
-        textTarget.innerHTML = `
-          <div class="font-bold text-white">${res.name || 'Bevanda Palestra'}</div>
-          <div class="text-teal-300 font-mono text-[11px]">${res.calories || 0} kcal • +${res.hydrationLiters || 0.5}L idratazione</div>
-          <div class="text-app-textMuted text-[10px]">${res.advice || 'Registrata'}</div>
-        `;
-
-        if (res.hydrationLiters) {
-          window.addWaterLiters(res.hydrationLiters);
-        }
-      } catch (err) {
-        textTarget.innerHTML = `<div class="text-teal-300 font-bold">Bevanda registrata (+0.5L idratazione).</div>`;
-        window.addWaterLiters(0.5);
-      }
-    };
-
-    // Scanner Orologio / Display Smartwatch
-    window.scanWatchCalories = async function(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-
-      showNotification("Analisi orologio in corso...");
-      try {
-        const processed = await prepareImageForAi(file);
-        const prompt = `Analizza lo schermo dell'orologio fitness/cardio. Estrai le calorie attive bruciate e se visibile il BMR/riposo. Restituisci ESCLUSIVAMENTE un JSON: {"burnedKcal": 450, "restingKcal": 1950}`;
-        const rawText = await callGeminiApi({
-          contents: [{
-            role: "user",
-            parts: [
-              { text: prompt },
-              { inlineData: { mimeType: processed.mimeType, data: processed.base64 } }
-            ]
-          }],
-          generationConfig: { responseMimeType: "application/json" }
-        });
-
-        const jsonMatch = rawText.match(/\{[\s\S]*\}/);
-        const res = JSON.parse(jsonMatch ? jsonMatch[0] : '{}');
-
-        const day = getSelectedDayData();
-        if (res.burnedKcal) day.burnedCalories = parseInt(res.burnedKcal, 10);
-        if (res.restingKcal) day.restingCalories = parseInt(res.restingKcal, 10);
-
-        updateBurnedCaloriesUI();
-        updateDeficitCalculations();
-        triggerCloudSave();
-        showNotification("Calorie sincronizzate dall'orologio!");
-      } catch (err) {
-        showNotification("Impossibile leggere l'orologio automaticamente.", true);
-      }
-    };
-
-    // AI Coach Chat
-    window.handleCoachSubmit = async function(e) {
-      if (e) e.preventDefault();
-      const input = document.getElementById('coachInputText');
-      const query = input.value.trim();
-      if (!query) return;
-
-      input.value = '';
-      const box = document.getElementById('coachChatBox');
-      box.innerHTML += `<div class="bg-emerald-500 text-black font-semibold p-3.5 rounded-2xl rounded-tr-none self-end max-w-[85%] ml-auto">${query}</div>`;
-      box.scrollTop = box.scrollHeight;
-
-      const loadingId = 'loading_' + Date.now();
-      box.innerHTML += `<div id="${loadingId}" class="bg-app-dark p-3.5 rounded-2xl border border-app-border max-w-[85%] text-emerald-400 animate-pulse">Il Coach sta elaborando...</div>`;
-      box.scrollTop = box.scrollHeight;
-
-      try {
-        const day = getSelectedDayData();
-        const totalIntake = (day.foodLogs || []).reduce((acc, m) => acc + (Number(m.calories) || 0), 0);
-        const sys = `
-          Sei il PT e Nutrizionista dell'atleta.
-          Profilo atleta: Luca, 32 anni, 95kg, 177cm, Icon Palestre (4 sessioni settimanali a pranzo).
-          Deficit calorico target: 1.950 kcal/die (target 170g proteine, 3.5L acqua).
-          Dati oggi: ${totalIntake} kcal assunte, ${day.burnedCalories} kcal attive bruciate, ${day.waterLiters}L acqua bevuta.
-          Dieta: polpette di manzo magro in friggitrice ad aria (180°C), patate croccanti in friggitrice, gamberetti con riso express, salmone fresco, tonno fresco weekend, mozzarella light Milbona. NO QUARK, NO BROCCOLI.
-          Rispondi in 2 brevi paragrafi in italiano con tono diretto, scientifico ed estremamente pratico.
-        `;
-
-        const reply = await callGeminiApi({
-          contents: [{ role: "user", parts: [{ text: query }] }],
-          systemInstruction: { parts: [{ text: sys }] }
-        });
-
-        document.getElementById(loadingId)?.remove();
-        box.innerHTML += `<div class="bg-app-dark p-4 rounded-2xl border border-app-border max-w-[90%] text-gray-200 leading-relaxed shadow-sm">${reply}</div>`;
-        box.scrollTop = box.scrollHeight;
-      } catch (err) {
-        document.getElementById(loadingId)?.remove();
-        box.innerHTML += `<div class="p-3 bg-red-950/40 text-red-300 text-xs rounded-xl border border-red-500/30">${err.message}</div>`;
-      }
-    };
-
-    window.sendQuickCoachMessage = function(txt) {
-      document.getElementById('coachInputText').value = txt;
-      window.handleCoachSubmit(new Event('submit'));
-    };
-
-    window.resetCoachChat = function() {
-      document.getElementById('coachChatBox').innerHTML = `
-        <div class="bg-app-dark p-4 rounded-2xl border border-app-border text-gray-200 leading-relaxed shadow-sm">
-          Chat azzerata! Profilo attivo: 32 anni, 95kg, 1.950 kcal, Huel Black + 5g creatina, polpette e patate in friggitrice ad aria, gamberetti e riso express. Chiedimi pure!
-        </div>
-      `;
-    };
-
-    // Eliminazione Singolo Piatto
     window.deleteSingleFoodItem = function(indexToDelete) {
       const day = getSelectedDayData();
       if (!day || !day.foodLogs || !day.foodLogs[indexToDelete]) return;
-
       const item = day.foodLogs[indexToDelete];
-      const dishTitle = item.dishName || "questo piatto";
-
       day.foodLogs.splice(indexToDelete, 1);
       renderGroupedMeals();
       renderDualColumnDiet();
       updateDeficitCalculations();
       triggerCloudSave();
-      showNotification(`"${dishTitle}" rimosso dal diario.`);
+      showNotification(`"${item.dishName}" eliminato.`);
     };
 
     window.clearFoodLog = function() {
       const day = getSelectedDayData();
-      if (!day.foodLogs || day.foodLogs.length === 0) {
-        showNotification("Nessun pasto registrato.", true);
-        return;
-      }
       day.foodLogs = [];
       renderGroupedMeals();
       renderDualColumnDiet();
@@ -1585,7 +1906,7 @@
       if (!day.foodLogs || day.foodLogs.length === 0) {
         container.innerHTML = `
           <div class="col-span-full text-sm text-app-textMuted py-10 text-center bg-app-card rounded-2xl border border-app-border">
-            Nessun pasto registrato per questo giorno. Scrivi cosa hai mangiato, parla al microfono o scatta una foto!
+            Nessun pasto registrato per questo giorno.
           </div>
         `;
         return;
@@ -1602,18 +1923,16 @@
         const items = groups[slot];
         const sumKcal = items.reduce((acc, x) => acc + (Number(x.calories) || 0), 0);
         const sumPro = items.reduce((acc, x) => acc + (Number(x.protein) || 0), 0);
-        const sumCarb = items.reduce((acc, x) => acc + (Number(x.carbs) || 0), 0);
-        const sumFat = items.reduce((acc, x) => acc + (Number(x.fat) || 0), 0);
 
         const itemsHTML = items.map(m => `
           <div class="flex items-center justify-between p-2.5 rounded-xl bg-app-dark border border-app-border text-sm">
             <div class="truncate pr-2">
               <span class="font-bold text-white truncate block text-sm">${m.dishName}</span>
-              <span class="text-xs text-app-textMuted font-mono">${m.time || ''} • ${m.protein}g P | ${m.carbs}g C | ${m.fat}g F</span>
+              <span class="text-xs text-app-textMuted font-mono">${m.time || ''} • ${m.protein}g Pro</span>
             </div>
             <div class="flex items-center gap-2 shrink-0">
               <span class="font-mono font-bold text-emerald-400 text-sm">${m.calories} kcal</span>
-              <button type="button" onclick="window.deleteSingleFoodItem(${m.globalIndex})" class="w-8 h-8 rounded-lg bg-red-950/40 text-red-400 hover:bg-red-500 hover:text-white border border-red-500/30 flex items-center justify-center transition" title="Elimina piatto">
+              <button type="button" onclick="window.deleteSingleFoodItem(${m.globalIndex})" class="w-8 h-8 rounded-lg bg-red-950/40 text-red-400 hover:bg-red-500 hover:text-white border border-red-500/30 flex items-center justify-center transition">
                 🗑️
               </button>
             </div>
@@ -1629,18 +1948,9 @@
               </div>
               <div class="space-y-2">${itemsHTML}</div>
             </div>
-
             <div class="p-3.5 rounded-xl bg-gradient-to-r from-emerald-500/15 to-teal-500/15 border border-emerald-500/30 flex items-center justify-between mt-2">
-              <div>
-                <span class="text-xs uppercase font-black text-emerald-400 block">Totale ${slot}</span>
-                <div class="text-xs font-mono text-gray-200 mt-0.5">
-                  <strong class="text-white">${sumPro}g</strong> P • <strong class="text-white">${sumCarb}g</strong> C • <strong class="text-white">${sumFat}g</strong> F
-                </div>
-              </div>
-              <div class="text-right">
-                <span class="text-2xl font-mono font-black text-emerald-300">${sumKcal}</span>
-                <span class="text-xs font-mono text-emerald-400 uppercase block font-bold">KCAL</span>
-              </div>
+              <span class="text-xs uppercase font-black text-emerald-400">${sumPro}g Proteine Totali</span>
+              <span class="text-2xl font-mono font-black text-emerald-300">${sumKcal} <span class="text-xs">KCAL</span></span>
             </div>
           </div>
         `;
@@ -1663,13 +1973,11 @@
       container.innerHTML = MEAL_SLOTS.map(slotName => {
         const actualItems = loggedBySlot[slotName] || [];
         const sumKcal = actualItems.reduce((acc, x) => acc + (Number(x.calories) || 0), 0);
-        const sumPro = actualItems.reduce((acc, x) => acc + (Number(x.protein) || 0), 0);
-
         return `
           <div class="apple-glass-card p-5 rounded-2xl border border-app-border space-y-3">
             <div class="flex items-center justify-between border-b border-app-border pb-2">
               <h4 class="font-display font-black text-base text-white uppercase tracking-wider">${slotName}</h4>
-              <span class="font-mono text-sm text-emerald-400 font-bold">${sumKcal} kcal (${sumPro}g Pro)</span>
+              <span class="font-mono text-sm text-emerald-400 font-bold">${sumKcal} kcal</span>
             </div>
             <div class="space-y-1.5">
               ${actualItems.length === 0 ? '<p class="text-xs text-app-textMuted">Nessun cibo registrato in questo slot.</p>' : actualItems.map(item => `
@@ -1736,6 +2044,7 @@
       }
     }
 
+    // Calorie Riposo & Attive
     window.updateRestingFromNutrition = function() {
       const val = parseInt(document.getElementById('nutritionRestingInput').value, 10);
       if (!isNaN(val) && val > 0) {
@@ -1799,7 +2108,7 @@
       if (el) el.innerText = day.burnedCalories || 0;
     }
 
-    // Gestione Idratazione
+    // Idratazione
     window.addWaterLiters = function(delta) {
       const day = getSelectedDayData();
       day.waterLiters = parseFloat(Math.max(0, ((day.waterLiters || 0) + delta)).toFixed(2));
@@ -1855,7 +2164,7 @@
       }
     }
 
-    // Gestione Spesa Lidl
+    // Lidl Shopping
     window.switchLidlSlot = function(slotKey) {
       appData.currentLidlSlot = slotKey;
       document.getElementById('btn-lidl-slot1').className = slotKey === 'slot1'
@@ -1903,7 +2212,7 @@
       renderLidlShoppingList();
     };
 
-    // Gestione Camminata & Recupero Attivo
+    // Camminata
     window.updateEstimatedSteps = function() {
       const km = parseFloat(document.getElementById('inputWalkKm').value) || 0;
       const steps = Math.round(km * 1320);
@@ -1995,7 +2304,85 @@
       showNotification("Storico camminate azzerato.");
     };
 
-    // Gestione Misure Corporee
+    // Scanner Drink & Watch
+    window.processGymDrinkPhoto = async function(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const preview = document.getElementById('gymDrinkPreviewImg');
+      const box = document.getElementById('gymDrinkResultBox');
+      const textTarget = document.getElementById('gymDrinkAnalysisText');
+
+      box.classList.remove('hidden');
+      textTarget.innerHTML = `<div class="text-teal-400 font-bold animate-pulse">Analisi drink/dispenser Icon in corso...</div>`;
+
+      try {
+        const processed = await prepareImageForAi(file);
+        preview.src = processed.dataUrl;
+
+        const prompt = `Analizza questa bevanda da palestra Icon. Restituisci ESCLUSIVAMENTE un JSON: {"name": "Nome bevanda", "calories": 40, "carbs": 8, "hydrationLiters": 0.5, "advice": "Valutazione rapida"}`;
+        const rawText = await callGeminiApi({
+          contents: [{
+            role: "user",
+            parts: [
+              { text: prompt },
+              { inlineData: { mimeType: processed.mimeType, data: processed.base64 } }
+            ]
+          }],
+          generationConfig: { responseMimeType: "application/json" }
+        });
+
+        const jsonMatch = rawText.match(/\{[\s\S]*\}/);
+        const res = JSON.parse(jsonMatch ? jsonMatch[0] : '{}');
+
+        textTarget.innerHTML = `
+          <div class="font-bold text-white">${res.name || 'Bevanda Palestra'}</div>
+          <div class="text-teal-300 font-mono text-[11px]">${res.calories || 0} kcal • +${res.hydrationLiters || 0.5}L idratazione</div>
+        `;
+
+        if (res.hydrationLiters) window.addWaterLiters(res.hydrationLiters);
+      } catch (err) {
+        textTarget.innerHTML = `<div class="text-teal-300 font-bold">Bevanda registrata (+0.5L idratazione).</div>`;
+        window.addWaterLiters(0.5);
+      }
+    };
+
+    window.scanWatchCalories = async function(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      showNotification("Analisi orologio in corso...");
+      try {
+        const processed = await prepareImageForAi(file);
+        const prompt = `Analizza lo schermo dell'orologio fitness. Estrai calorie attive e riposo. Restituisci ESCLUSIVAMENTE un JSON: {"burnedKcal": 450, "restingKcal": 1950}`;
+        const rawText = await callGeminiApi({
+          contents: [{
+            role: "user",
+            parts: [
+              { text: prompt },
+              { inlineData: { mimeType: processed.mimeType, data: processed.base64 } }
+            ]
+          }],
+          generationConfig: { responseMimeType: "application/json" }
+        });
+
+        const jsonMatch = rawText.match(/\{[\s\S]*\}/);
+        const res = JSON.parse(jsonMatch ? jsonMatch[0] : '{}');
+
+        const day = getSelectedDayData();
+        if (res.burnedKcal) day.burnedCalories = parseInt(res.burnedKcal, 10);
+        if (res.restingKcal) day.restingCalories = parseInt(res.restingKcal, 10);
+
+        updateBurnedCaloriesUI();
+        updateDeficitCalculations();
+        triggerCloudSave();
+        showNotification("Calorie sincronizzate dall'orologio!");
+      } catch (err) {
+        showNotification("Impossibile leggere l'orologio automaticamente.", true);
+      }
+    };
+
+    // Misure Corporee
     window.saveBodyMeasurements = function() {
       const w = parseFloat(document.getElementById('quickWeightInput').value);
       const waist = parseFloat(document.getElementById('quickWaistInput').value);
@@ -2011,188 +2398,12 @@
       showNotification("Misure salvate con successo!");
     };
 
-    // Gestione Scheda Palestra
-    window.switchWorkoutDay = function(dayKey) {
-      currentWorkoutDay = dayKey;
-      ['dayA', 'dayB', 'dayC', 'dayD'].forEach(key => {
-        const btn = document.getElementById(`btn-${key}`);
-        if (!btn) return;
-        btn.className = key === dayKey
-          ? 'py-3 rounded-xl text-sm font-bold transition bg-emerald-500 text-black shadow-sm'
-          : 'py-3 rounded-xl text-sm font-medium transition text-app-textMuted hover:text-white';
-      });
-      renderWorkoutList(dayKey);
-    };
-
-    function renderWorkoutList(dayKey) {
-      const routine = ROUTINES[dayKey];
-      if (!routine) return;
-
-      document.getElementById('workoutTitle').innerText = routine.title;
-      document.getElementById('workoutSubtitle').innerText = routine.subtitle;
-
-      const container = document.getElementById('exerciseList');
-      if (!container) return;
-      container.innerHTML = '';
-
-      if (!appData.workoutExercises) appData.workoutExercises = {};
-
-      routine.exercises.forEach(ex => {
-        const key = `${dayKey}_${ex.id}`;
-        const exState = appData.workoutExercises[key] || { kg: ex.defaultKg, completedSets: [] };
-        const currentKg = (exState.kg !== null && exState.kg !== undefined) ? exState.kg : ex.defaultKg;
-        const completedSets = Array.isArray(exState.completedSets) ? exState.completedSets : [];
-
-        let setsHTML = '';
-        for (let s = 1; s <= ex.sets; s++) {
-          const isDone = completedSets.includes(s);
-          setsHTML += `
-            <button onclick="window.handleGymSetClick('${dayKey}', '${ex.id}', ${s}, ${ex.rest})" class="h-12 flex-1 min-w-[56px] rounded-xl text-sm font-black transition border flex items-center justify-center gap-1 active:scale-95 ${
-              isDone ? 'bg-emerald-500 text-black border-emerald-400 shadow-md' : 'bg-app-dark border-app-border text-gray-300 hover:border-emerald-500/40'
-            }">
-              ${isDone ? '✓ ' : ''}S${s}
-            </button>
-          `;
-        }
-
-        const card = document.createElement('div');
-        card.className = "apple-glass-card p-5 rounded-2xl border border-app-border space-y-3.5";
-        card.innerHTML = `
-          <div>
-            <div class="flex items-center justify-between gap-2">
-              <div class="flex items-center gap-2">
-                <span class="font-mono text-xs font-black px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">${ex.code}</span>
-                <h3 class="font-display font-bold text-base text-white">${ex.name}</h3>
-              </div>
-              <button onclick="window.startDiscreetTimer(${ex.rest})" class="px-3 py-1 rounded-xl bg-app-card border border-app-border text-xs sm:text-sm font-mono text-emerald-400">
-                <span>⏱️</span><span>${ex.rest}s</span>
-              </button>
-            </div>
-            <div class="text-xs text-app-textMuted font-mono mt-1">${ex.model} • ${ex.sets} × ${ex.reps}</div>
-          </div>
-
-          <div class="bg-app-dark/90 p-3 rounded-xl border border-app-border text-xs">
-            <span class="text-teal-400 font-medium">⚙️ Seduta: ${ex.seat}</span>
-          </div>
-
-          <div class="space-y-2.5">
-            <div class="flex items-center justify-between gap-2">
-              <div class="flex items-center gap-1 bg-app-dark p-1 rounded-xl border border-app-border">
-                <button onclick="window.adjustWeight('${dayKey}', '${ex.id}', -2.5)" class="w-9 h-9 rounded-lg bg-app-card text-white font-black text-base active:scale-90">-</button>
-                <div class="flex items-center px-2">
-                  <input type="number" step="0.5" value="${currentKg}" onchange="window.saveWeightLoadDirect('${dayKey}', '${ex.id}', this.value)" class="w-16 text-center bg-transparent text-emerald-400 font-display font-black text-base focus:outline-none">
-                  <span class="text-xs text-app-textMuted font-bold ml-0.5">kg</span>
-                </div>
-                <button onclick="window.adjustWeight('${dayKey}', '${ex.id}', 2.5)" class="w-9 h-9 rounded-lg bg-app-card text-white font-black text-base active:scale-90">+</button>
-              </div>
-              <span class="text-xs sm:text-sm text-app-textMuted font-medium">Serie completata:</span>
-            </div>
-            <div class="flex gap-2 w-full overflow-x-auto pb-0.5">${setsHTML}</div>
-          </div>
-        `;
-        container.appendChild(card);
-      });
-    }
-
-    window.adjustWeight = function(dayKey, exId, delta) {
-      const key = `${dayKey}_${exId}`;
-      if (!appData.workoutExercises[key]) appData.workoutExercises[key] = { kg: 50, completedSets: [] };
-      appData.workoutExercises[key].kg = Math.max(2.5, parseFloat(((parseFloat(appData.workoutExercises[key].kg) || 0) + delta).toFixed(1)));
-      renderWorkoutList(dayKey);
-      triggerCloudSave();
-    };
-
-    window.saveWeightLoadDirect = function(dayKey, exId, val) {
-      const parsed = parseFloat(val);
-      if (!isNaN(parsed) && parsed > 0) {
-        const key = `${dayKey}_${exId}`;
-        if (!appData.workoutExercises[key]) appData.workoutExercises[key] = { kg: 50, completedSets: [] };
-        appData.workoutExercises[key].kg = parseFloat(parsed.toFixed(1));
-        triggerCloudSave();
-        showNotification(`Carico: ${appData.workoutExercises[key].kg} kg`);
-      }
-    };
-
-    window.handleGymSetClick = function(dayKey, exId, setNumber, restSeconds) {
-      const key = `${dayKey}_${exId}`;
-      if (!appData.workoutExercises[key]) appData.workoutExercises[key] = { kg: null, completedSets: [] };
-      let list = Array.isArray(appData.workoutExercises[key].completedSets) ? appData.workoutExercises[key].completedSets : [];
-
-      if (list.includes(setNumber)) {
-        list = list.filter(n => n !== setNumber);
-      } else {
-        list.push(setNumber);
-        window.startDiscreetTimer(restSeconds);
-        showNotification(`Set ${setNumber} completato!`);
-      }
-
-      appData.workoutExercises[key].completedSets = list;
-      renderWorkoutList(dayKey);
-      triggerCloudSave();
-    };
-
-    window.resetCurrentDayChecks = function() {
-      const routine = ROUTINES[currentWorkoutDay];
-      if (!routine) return;
-      routine.exercises.forEach(ex => {
-        const key = `${currentWorkoutDay}_${ex.id}`;
-        if (appData.workoutExercises[key]) appData.workoutExercises[key].completedSets = [];
-      });
-      renderWorkoutList(currentWorkoutDay);
-      triggerCloudSave();
-      showNotification("Spunte azzerate.");
-    };
-
-    window.startDiscreetTimer = function(seconds) {
-      clearInterval(timerCountdown);
-      secondsRemaining = seconds;
-      updateTimerDisplay();
-
-      document.getElementById('activeTimerBar').classList.remove('hidden');
-      timerCountdown = setInterval(() => {
-        secondsRemaining--;
-        if (secondsRemaining <= 0) {
-          clearInterval(timerCountdown);
-          secondsRemaining = 0;
-          updateTimerDisplay();
-          window.stopDiscreetTimer();
-          showNotification("Recupero terminato!");
-        } else {
-          updateTimerDisplay();
-        }
-      }, 1000);
-    };
-
-    window.addTimerSeconds = function(extra) {
-      secondsRemaining += extra;
-      updateTimerDisplay();
-    };
-
-    window.stopDiscreetTimer = function() {
-      clearInterval(timerCountdown);
-      secondsRemaining = 0;
-      updateTimerDisplay();
-      document.getElementById('activeTimerBar').classList.add('hidden');
-    };
-
-    function updateTimerDisplay() {
-      const m = Math.floor(secondsRemaining / 60);
-      const s = secondsRemaining % 60;
-      const str = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-      document.getElementById('activeTimerValue').innerText = str;
-      document.getElementById('headerTimerReadout').innerText = str;
-      document.getElementById('modalTimerDigits').innerText = str;
-    }
-
-    window.toggleTimerModal = () => document.getElementById('restTimerModal').classList.toggle('hidden');
-
-    // Navigazione Giorni
+    // Navigazione e Autenticazione
     window.shiftSelectedDay = function(delta) {
       selectedDate.setDate(selectedDate.getDate() + delta);
       window.updateUIFromState();
     };
 
-    // Login e Gestione Utente
     window.handleGoogleLogin = async function() {
       const btnLabel = document.getElementById('loginBtnLabel');
       const errBox = document.getElementById('loginStatusMsg');
@@ -2223,7 +2434,6 @@
       } catch (e) {}
     };
 
-    // Aggiornamento Globale Interfaccia
     window.updateUIFromState = function() {
       const todayKey = getFormattedDateKey(new Date());
       const currentKey = getFormattedDateKey(selectedDate);
@@ -2254,7 +2464,6 @@
       document.getElementById('apiStatusDot').className = appData.userApiKey ? "w-3 h-3 rounded-full bg-emerald-400" : "w-3 h-3 rounded-full bg-amber-500";
     };
 
-    // Firebase Auth Observer
     onAuthStateChanged(auth, user => {
       currentUser = user;
       const overlay = document.getElementById('loginOverlay');
@@ -2267,7 +2476,6 @@
         cloudDocRef = doc(db, 'users', user.uid, 'gym_recomp', 'current_state');
         cloudStatus.innerText = `${user.displayName ? user.displayName.split(' ')[0] : 'Utente'} • Cloud ✓`;
 
-        // Carica automaticamente la chiave Gemini già salvata su AI-BUDGET
         const refGemini = doc(db, 'users', user.uid, 'settings', 'gemini');
         onSnapshot(refGemini, snapG => {
           if (snapG.exists() && snapG.data().apiKey) {
@@ -2302,7 +2510,6 @@
 
     window.addEventListener('DOMContentLoaded', () => {
       window.updateUIFromState();
-      // Aggiorna l'orario e il pasto automatico ogni 60 secondi
       setInterval(() => {
         if (window.updateDetectedMealSlotUI) window.updateDetectedMealSlotUI();
       }, 60000);
