@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Approvazione utenti • ICON RECOMP</title>
+  <style>
+    body{font-family:Arial,sans-serif;background:#080a0d;color:#f1f5f9;margin:0;padding:24px}
+    .box{max-width:900px;margin:auto;background:#141922;border:1px solid #293241;border-radius:18px;padding:24px}
+    h1{margin-top:0}.muted{color:#94a3b8;font-size:14px}.row{display:flex;justify-content:space-between;gap:16px;align-items:center;background:#0e1217;border:1px solid #293241;border-radius:12px;padding:14px;margin:10px 0;flex-wrap:wrap}
+    button{border:0;border-radius:9px;padding:10px 14px;font-weight:bold;cursor:pointer}.approve{background:#10b981;color:#001b12}.revoke{background:#7f1d1d;color:#fecaca}.refresh{background:#334155;color:white}.status{font-size:12px;padding:5px 8px;border-radius:8px;background:#78350f;color:#fde68a}.ok{background:#064e3b;color:#a7f3d0}
+    #msg{margin:12px 0;color:#34d399}
+  </style>
+</head>
+<body>
+<div class="box">
+  <h1>Gestione approvazioni</h1>
+  <p class="muted">Accesso riservato a lucabottiglieri94@gmail.com. Qui puoi approvare o revocare gli utenti registrati.</p>
+  <button class="refresh" id="login">Accedi con Google</button>
+  <button class="refresh" id="refresh" style="display:none">Aggiorna lista</button>
+  <div id="msg"></div>
+  <div id="list"></div>
+</div>
+<script type="module">
+import {initializeApp} from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js';
+import {getAuth,GoogleAuthProvider,signInWithPopup,onAuthStateChanged} from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js';
+import {getFirestore,collectionGroup,getDocs,doc,updateDoc} from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js';
+const config={apiKey:'AIzaSyAdZbBv6JYbYnl6CxuFVfHhSftvIxwf2DY',authDomain:'budget-luca.firebaseapp.com',projectId:'budget-luca',storageBucket:'budget-luca.firebasestorage.app',messagingSenderId:'67496424698',appId:'1:67496424698:web:efc07408543'};
+const app=initializeApp(config),auth=getAuth(app),db=getFirestore(app),provider=new GoogleAuthProvider();
+const ADMIN='lucabottiglieri94@gmail.com';
+const msg=document.getElementById('msg'),list=document.getElementById('list');
+function say(t){msg.textContent=t}
+async function load(){
+ list.innerHTML='<p class="muted">Caricamento...</p>';
+ try{
+  const snap=await getDocs(collectionGroup(db,'current_state'));
+  if(snap.empty){list.innerHTML='<p class="muted">Nessun utente trovato.</p>';return}
+  list.innerHTML='';
+  snap.forEach(s=>{
+   const d=s.data(), email=d.email||d.userEmail||'Email non salvata', approved=d.approved===true;
+   const row=document.createElement('div');row.className='row';
+   row.innerHTML=`<div><b>${d.name||'Nome non impostato'}</b><div class="muted">${email}</div><div class="muted">UID: ${s.ref.parent.parent.id}</div></div><div><span class="status ${approved?'ok':''}">${approved?'APPROVATO':'IN ATTESA'}</span> <button class="${approved?'revoke':'approve'}">${approved?'Revoca':'Approva'}</button></div>`;
+   row.querySelector('button').onclick=async()=>{try{await updateDoc(s.ref,{approved:!approved,approvalUpdatedAt:Date.now()});say(approved?'Approvazione revocata.':'Utente approvato.');load()}catch(e){say('Errore: '+e.message)}};
+   list.appendChild(row);
+  });
+ }catch(e){list.innerHTML='';say('Errore caricamento: '+e.message+' — potrebbe servire una regola collectionGroup o un indice.');}
+}
+document.getElementById('login').onclick=()=>signInWithPopup(auth,provider);
+document.getElementById('refresh').onclick=load;
+onAuthStateChanged(auth,u=>{if(u&&u.email.toLowerCase()===ADMIN){document.getElementById('login').style.display='none';document.getElementById('refresh').style.display='inline-block';say('Amministratore riconosciuto.');load()}else if(u){say('Account non autorizzato: '+u.email)}});
+</script>
+</body>
+</html>
