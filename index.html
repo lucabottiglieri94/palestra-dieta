@@ -2850,7 +2850,16 @@ async function callGeminiApi(payload) {
       Object.assign(appData, {name, age:String(age), height:String(height), weight:weight.toFixed(1), waist:waist.toFixed(1), workoutsPerWeek:String(workouts), goal, profileCompleted:true});
       localStorage.setItem('icon_user_name', appData.name); localStorage.setItem('icon_user_age', appData.age);
       localStorage.setItem('icon_height_record', appData.height); localStorage.setItem('icon_weight_record', appData.weight); localStorage.setItem('icon_waist_record', appData.waist); localStorage.setItem('icon_workouts_week', appData.workoutsPerWeek); localStorage.setItem('icon_goal', appData.goal);
-      if (cloudDocRef) await setDoc(cloudDocRef, {...appData, profileCompleted:true, updatedAt:Date.now()}, {merge:true});
+      if (cloudDocRef) {
+  await setDoc(cloudDocRef, {
+    ...appData,
+    profileCompleted: true,
+    approved: false,
+    email: currentUser?.email || '',
+    userEmail: currentUser?.email || '',
+    updatedAt: Date.now()
+  }, { merge: true });
+}
       document.getElementById('onboardingOverlay').classList.add('hidden');
       window.refreshCoachGreeting();
       window.showCoachWelcomePopup();
@@ -2928,7 +2937,7 @@ async function callGeminiApi(payload) {
       document.getElementById('apiStatusDot').className = appData.userApiKey ? "w-3 h-3 rounded-full bg-emerald-400" : "w-3 h-3 rounded-full bg-amber-500";
     };
 
-    onAuthStateChanged(auth, user => {
+    onAuthStateChanged(auth, async user => {
       currentUser = user;
       const overlay = document.getElementById('loginOverlay');
       const cloudStatus = document.getElementById('cloudStatusReadout');
@@ -2939,6 +2948,42 @@ async function callGeminiApi(payload) {
         overlay.classList.add('hidden');
         cloudDocRef = doc(db, 'users', user.uid, 'gym_recomp', 'current_state');
         const isPrimaryAdmin = (user.email || '').toLowerCase() === PRIMARY_ADMIN_EMAIL;
+        if (!isPrimaryAdmin) {
+  const approvalSnap = await getDoc(cloudDocRef);
+  const approvalData = approvalSnap.exists()
+    ? approvalSnap.data()
+    : {};
+
+  if (approvalData.approved !== true) {
+    overlay.classList.remove('hidden');
+
+    overlay.innerHTML = `
+      <div class="max-w-md w-11/12 p-8 rounded-3xl bg-app-card border border-amber-500/40 text-center shadow-2xl">
+        <div class="text-5xl mb-4">⏳</div>
+
+        <h2 class="font-display font-black text-2xl text-white mb-3">
+          Account in attesa
+        </h2>
+
+        <p class="text-sm text-gray-300 leading-relaxed">
+          Il tuo account è stato registrato correttamente,
+          ma deve essere approvato dall'amministratore.
+        </p>
+
+        <p class="text-xs text-amber-300 mt-4">
+          Potrai accedere appena il profilo sarà approvato.
+        </p>
+
+        <button onclick="window.logoutUser()"
+          class="mt-6 px-5 py-3 rounded-xl bg-app-cardSubtle border border-app-border text-gray-300 text-sm">
+          Esci
+        </button>
+      </div>
+    `;
+
+    return;
+  }
+}
         cloudStatus.innerText = `${user.displayName ? user.displayName.split(' ')[0] : 'Utente'} • Cloud ✓`;
 
         const refGemini = doc(db, 'users', user.uid, 'settings', 'gemini');
