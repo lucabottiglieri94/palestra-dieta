@@ -244,9 +244,6 @@
           <span>⏱️</span>
           <span id="headerTimerReadout">00:00</span>
         </button>
-        <button onclick="window.unlockApiKeyPanel()" class="w-10 h-10 rounded-xl bg-app-card border border-app-border text-sm flex items-center justify-center text-gray-300 hover:border-emerald-500/40 transition" title="Configura Gemini API">
-          <span id="apiStatusDot" class="w-3 h-3 rounded-full bg-emerald-400"></span>
-        </button>
         <button onclick="window.deleteUserMemory()" class="px-3 h-10 rounded-xl bg-red-950/70 border border-red-500/40 text-red-300 text-xs font-bold flex items-center gap-1.5 hover:bg-red-900/70 transition" title="Pulisci memoria">
           🗑️ <span class="hidden sm:inline">Pulisci memoria</span>
         </button>
@@ -942,20 +939,7 @@
     </div>
   </div>
 
-  <!-- MODAL: API KEY GEMINI -->
-  <div id="apiKeyModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
-    <div class="apple-glass max-w-sm w-full p-6 rounded-3xl border border-app-border space-y-4">
-      <h3 class="text-base font-bold text-white">Chiave Gemini API</h3>
-      <p class="text-xs text-app-textMuted leading-relaxed">
-        Inserisci la tua chiave API Google AI Studio per attivare l'analisi fotografica pasti e l'AI Coach.
-      </p>
-      <input type="text" id="userApiKeyInput" autocomplete="off" spellcheck="false" placeholder="AIzaSy..." class="w-full bg-app-dark border border-app-border rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500 font-mono">
-      <div class="flex gap-2 pt-1">
-        <button onclick="window.saveUserApiKey()" class="w-full py-2.5 bg-emerald-500 text-black font-bold rounded-xl text-sm">Salva</button>
-        <button onclick="window.closeApiKeyModal()" class="w-full py-2.5 bg-app-card text-white rounded-xl text-sm border border-app-border">Chiudi</button>
-      </div>
-    </div>
-  </div>
+  <!-- Gemini gestito dal backend Vercel; nessuna API key richiesta all'utente. -->
 
   <script>
     window.navigateToTab = function(tabId) {
@@ -975,48 +959,9 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
-    window.openApiKeyModal = () => document.getElementById('apiKeyModal').classList.remove('hidden');
-    window.closeApiKeyModal = () => document.getElementById('apiKeyModal').classList.add('hidden');
-
-    // Protezione API tramite autenticazione del dispositivo (PIN, impronta, Face ID o Windows Hello).
-    window.unlockApiKeyPanel = async function() {
-      try {
-        if (!window.PublicKeyCredential || !navigator.credentials) {
-          showNotification('Il dispositivo/browser non supporta lo sblocco biometrico.');
-          window.openApiKeyModal();
-          return;
-        }
-        const storedId = localStorage.getItem('icon_api_device_credential');
-        if (!storedId) {
-          const challenge = crypto.getRandomValues(new Uint8Array(32));
-          const userId = crypto.getRandomValues(new Uint8Array(16));
-          const credential = await navigator.credentials.create({ publicKey: {
-            challenge,
-            rp: { name: 'Palestra Dieta' },
-            user: { id: userId, name: 'api-access', displayName: 'Accesso API' },
-            pubKeyCredParams: [{ type: 'public-key', alg: -7 }, { type: 'public-key', alg: -257 }],
-            authenticatorSelection: { authenticatorAttachment: 'platform', userVerification: 'required' },
-            timeout: 60000,
-            attestation: 'none'
-          }});
-          if (!credential) throw new Error('Autenticazione annullata');
-          localStorage.setItem('icon_api_device_credential', btoa(String.fromCharCode(...new Uint8Array(credential.rawId))));
-        } else {
-          const rawId = Uint8Array.from(atob(storedId), c => c.charCodeAt(0));
-          const challenge = crypto.getRandomValues(new Uint8Array(32));
-          await navigator.credentials.get({ publicKey: {
-            challenge,
-            allowCredentials: [{ type: 'public-key', id: rawId }],
-            userVerification: 'required',
-            timeout: 60000
-          }});
-        }
-        window.openApiKeyModal();
-      } catch (e) {
-        console.warn('Sblocco API annullato/non riuscito:', e);
-        showNotification('Accesso API non autorizzato o annullato.', true);
-      }
-    };
+    window.openApiKeyModal = () => {};
+    window.closeApiKeyModal = () => {};
+    window.unlockApiKeyPanel = () => {};
 
     window.openPtPhotoModal = () => {
       const modal = document.getElementById('ptPhotoModal');
@@ -1084,7 +1029,6 @@
     const getFormattedDateKey = d => d.toISOString().slice(0, 10);
 
     let appData = {
-      userApiKey: localStorage.getItem('icon_gemini_key') || '',
       dailyRecords: JSON.parse(localStorage.getItem('icon_daily_records') || '{}'),
       defaultRestingCalories: parseInt(localStorage.getItem('icon_resting_calories') || '1950', 10),
       weight: localStorage.getItem('icon_weight_record') || '95.0',
@@ -1297,25 +1241,6 @@ async function callGeminiApi(payload) {
     throw error;
   }
 }
-    window.saveUserApiKey = async function() {
-      const val = document.getElementById('userApiKeyInput').value.trim();
-      appData.userApiKey = val;
-      localStorage.setItem('icon_gemini_key', val);
-      document.getElementById('apiStatusDot').className = val ? "w-3 h-3 rounded-full bg-emerald-400" : "w-3 h-3 rounded-full bg-amber-500";
-      
-      if (currentUser) {
-        try {
-          const refG = doc(db, 'users', currentUser.uid, 'settings', 'gemini');
-          await setDoc(refG, { apiKey: val, updatedAt: Date.now() }, { merge: true });
-        } catch (e) {
-          console.warn("Errore salvataggio chiave su Firebase:", e);
-        }
-      }
-      
-      window.closeApiKeyModal();
-      showNotification("Chiave API salvata e sincronizzata!");
-    };
-
     // =========================================================================
     // AI COACH & MODIFICA DINAMICA DELLA SCHEDA
     // =========================================================================
@@ -2959,14 +2884,6 @@ window.saveOnboardingProfile = async function() {
       if (!confirm('Eliminare TUTTI i dati del cliente, il profilo Firebase e uscire dall’account?')) return;
       try {
         if (cloudDocRef) await deleteDoc(cloudDocRef);
-        // Cancella anche la API key personale salvata su Firebase
-        if (currentUser) {
-          const geminiRef = doc(db, 'users', currentUser.uid, 'settings', 'gemini');
-          await deleteDoc(geminiRef).catch(() => {});
-        }
-        // Cancella anche la API key salvata nel browser
-        appData.userApiKey = '';
-        localStorage.removeItem('icon_gemini_key');
         localStorage.clear();
         if (currentUser) await signOut(auth);
         location.reload();
@@ -3002,7 +2919,6 @@ window.saveOnboardingProfile = async function() {
 
       document.getElementById('metricCurrentWeight').innerHTML = `${appData.weight} <span class="text-xs text-app-textMuted">kg</span>`;
       document.getElementById('metricCurrentWaist').innerHTML = `${appData.waist} <span class="text-xs text-app-textMuted">cm</span>`;
-      document.getElementById('apiStatusDot').className = appData.userApiKey ? "w-3 h-3 rounded-full bg-emerald-400" : "w-3 h-3 rounded-full bg-amber-500";
     };
 
     onAuthStateChanged(auth, async user => {
@@ -3092,18 +3008,6 @@ window.saveOnboardingProfile = async function() {
       }
 
       // Impostazioni Gemini legacy: lasciate compatibili, ma non più necessarie per il backend Vercel.
-      const refGemini = doc(db, 'users', user.uid, 'settings', 'gemini');
-      onSnapshot(refGemini, snapG => {
-        if (snapG.exists() && snapG.data().apiKey) {
-          appData.userApiKey = snapG.data().apiKey;
-          localStorage.setItem('icon_gemini_key', appData.userApiKey);
-          const dot = document.getElementById('apiStatusDot');
-          if (dot) dot.className = "w-3 h-3 rounded-full bg-emerald-400";
-          const inp = document.getElementById('userApiKeyInput');
-          if (inp) inp.value = appData.userApiKey;
-        }
-      }, () => {});
-
       unsubCloud = onSnapshot(cloudDocRef, snap => {
         if (snap.exists()) {
           const data = snap.data();
