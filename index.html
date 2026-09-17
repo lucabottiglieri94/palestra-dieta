@@ -244,7 +244,7 @@
           <span>⏱️</span>
           <span id="headerTimerReadout">00:00</span>
         </button>
-        <button onclick="window.openApiKeyModal()" class="w-10 h-10 rounded-xl bg-app-card border border-app-border text-sm flex items-center justify-center text-gray-300 hover:border-emerald-500/40 transition" title="Configura Gemini API">
+        <button onclick="window.unlockApiKeyPanel()" class="w-10 h-10 rounded-xl bg-app-card border border-app-border text-sm flex items-center justify-center text-gray-300 hover:border-emerald-500/40 transition" title="Configura Gemini API">
           <span id="apiStatusDot" class="w-3 h-3 rounded-full bg-emerald-400"></span>
         </button>
         <button onclick="window.deleteUserMemory()" class="px-3 h-10 rounded-xl bg-red-950/70 border border-red-500/40 text-red-300 text-xs font-bold flex items-center gap-1.5 hover:bg-red-900/70 transition" title="Pulisci memoria">
@@ -977,6 +977,46 @@
 
     window.openApiKeyModal = () => document.getElementById('apiKeyModal').classList.remove('hidden');
     window.closeApiKeyModal = () => document.getElementById('apiKeyModal').classList.add('hidden');
+
+    // Protezione API tramite autenticazione del dispositivo (PIN, impronta, Face ID o Windows Hello).
+    window.unlockApiKeyPanel = async function() {
+      try {
+        if (!window.PublicKeyCredential || !navigator.credentials) {
+          showNotification('Il dispositivo/browser non supporta lo sblocco biometrico.');
+          window.openApiKeyModal();
+          return;
+        }
+        const storedId = localStorage.getItem('icon_api_device_credential');
+        if (!storedId) {
+          const challenge = crypto.getRandomValues(new Uint8Array(32));
+          const userId = crypto.getRandomValues(new Uint8Array(16));
+          const credential = await navigator.credentials.create({ publicKey: {
+            challenge,
+            rp: { name: 'Palestra Dieta' },
+            user: { id: userId, name: 'api-access', displayName: 'Accesso API' },
+            pubKeyCredParams: [{ type: 'public-key', alg: -7 }, { type: 'public-key', alg: -257 }],
+            authenticatorSelection: { authenticatorAttachment: 'platform', userVerification: 'required' },
+            timeout: 60000,
+            attestation: 'none'
+          }});
+          if (!credential) throw new Error('Autenticazione annullata');
+          localStorage.setItem('icon_api_device_credential', btoa(String.fromCharCode(...new Uint8Array(credential.rawId))));
+        } else {
+          const rawId = Uint8Array.from(atob(storedId), c => c.charCodeAt(0));
+          const challenge = crypto.getRandomValues(new Uint8Array(32));
+          await navigator.credentials.get({ publicKey: {
+            challenge,
+            allowCredentials: [{ type: 'public-key', id: rawId }],
+            userVerification: 'required',
+            timeout: 60000
+          }});
+        }
+        window.openApiKeyModal();
+      } catch (e) {
+        console.warn('Sblocco API annullato/non riuscito:', e);
+        showNotification('Accesso API non autorizzato o annullato.', true);
+      }
+    };
 
     window.openPtPhotoModal = () => {
       const modal = document.getElementById('ptPhotoModal');
