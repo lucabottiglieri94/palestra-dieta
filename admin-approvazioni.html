@@ -24,32 +24,71 @@
 <script type="module">
 import {initializeApp} from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js';
 import {getAuth,GoogleAuthProvider,signInWithPopup,onAuthStateChanged} from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js';
-import {getFirestore,collectionGroup,getDocs,doc,updateDoc} from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js';
+import {getFirestore,collection,getDocs,doc,getDoc,updateDoc} from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js';
+
 const config={apiKey:'AIzaSyAdZbBv6JYbYnl6CxuFVfHhSftvIxwf2DY',authDomain:'budget-luca.firebaseapp.com',projectId:'budget-luca',storageBucket:'budget-luca.firebasestorage.app',messagingSenderId:'67496424698',appId:'1:67496424698:web:efc07408543'};
 const app=initializeApp(config),auth=getAuth(app),db=getFirestore(app),provider=new GoogleAuthProvider();
 const ADMIN='lucabottiglieri94@gmail.com';
 const msg=document.getElementById('msg'),list=document.getElementById('list');
 function say(t){msg.textContent=t}
+
 async function load(){
- list.innerHTML='<p class="muted">Caricamento...</p>';
- try{
-  const statesSnap=await getDocs(collectionGroup(db,'current_state'));
-  if(statesSnap.empty){list.innerHTML='<p class="muted">Nessun utente trovato.</p>';return}
-  list.innerHTML='';
-  for(const stateDoc of statesSnap.docs){
-   const d=stateDoc.data();
-   const email=d.email||d.userEmail||'Email non salvata';
-   const approved=d.approved===true;
-   const row=document.createElement('div');row.className='row';
-   row.innerHTML=`<div><b>${d.name||'Nome non impostato'}</b><div class="muted">${email}</div><div class="muted">UID: ${stateDoc.ref.parent.parent.id}</div></div><div><span class="status ${approved?'ok':''}">${approved?'APPROVATO':'IN ATTESA'}</span> <button class="${approved?'revoke':'approve'}">${approved?'Revoca':'Approva'}</button></div>`;
-   row.querySelector('button').onclick=async()=>{try{await updateDoc(stateDoc.ref,{approved:!approved,approvalUpdatedAt:Date.now()});say(approved?'Approvazione revocata.':'Utente approvato.');load()}catch(e){say('Errore: '+e.message)}};
-   list.appendChild(row);
+  list.innerHTML='<p class="muted">Caricamento utenti...</p>';
+  try{
+    // Leggiamo direttamente la collection users, evitando collectionGroup e relativi problemi di permessi.
+    const usersSnap=await getDocs(collection(db,'users'));
+    if(usersSnap.empty){list.innerHTML='<p class="muted">Nessun utente trovato.</p>';return}
+    list.innerHTML='';
+
+    for(const userDoc of usersSnap.docs){
+      const uid=userDoc.id;
+      const profile=userDoc.data()||{};
+      let state={...profile};
+
+      try{
+        const stateRef=doc(db,'users',uid,'gym_recomp','current_state');
+        const stateSnap=await getDoc(stateRef);
+        if(stateSnap.exists()) state={...profile,...stateSnap.data()};
+      }catch(e){
+        console.warn('Stato non leggibile per',uid,e);
+      }
+
+      const email=state.email||state.userEmail||profile.email||profile.userEmail||'Email non salvata';
+      const approved=state.approved===true || profile.approved===true;
+      const row=document.createElement('div');
+      row.className='row';
+      row.innerHTML=`<div><b>${state.name||profile.name||'Nome non impostato'}</b><div class="muted">${email}</div><div class="muted">UID: ${uid}</div></div><div><span class="status ${approved?'ok':''}">${approved?'APPROVATO':'IN ATTESA'}</span> <button class="${approved?'revoke':'approve'}">${approved?'Revoca':'Approva'}</button></div>`;
+
+      row.querySelector('button').onclick=async()=>{
+        try{
+          const newValue=!approved;
+          const stateRef=doc(db,'users',uid,'gym_recomp','current_state');
+          await updateDoc(stateRef,{approved:newValue,approvalUpdatedAt:Date.now()});
+          say(newValue?'Utente approvato.':'Approvazione revocata.');
+          await load();
+        }catch(e){say('Errore aggiornamento: '+e.message)}
+      };
+      list.appendChild(row);
+    }
+  }catch(e){
+    list.innerHTML='';
+    say('Errore caricamento: '+e.message);
   }
- }catch(e){list.innerHTML='';say('Errore caricamento: '+e.message);}
 }
+
 document.getElementById('login').onclick=()=>signInWithPopup(auth,provider);
 document.getElementById('refresh').onclick=load;
-onAuthStateChanged(auth,u=>{if(u&&u.email&&u.email.toLowerCase()===ADMIN){document.getElementById('login').style.display='none';document.getElementById('refresh').style.display='inline-block';say('Amministratore riconosciuto.');load()}else if(u){say('Account non autorizzato: '+u.email)}});
+
+onAuthStateChanged(auth,u=>{
+  if(u&&u.email&&u.email.toLowerCase()===ADMIN){
+    document.getElementById('login').style.display='none';
+    document.getElementById('refresh').style.display='inline-block';
+    say('Amministratore riconosciuto.');
+    load();
+  }else if(u){
+    say('Account non autorizzato: '+u.email);
+  }
+});
 </script>
 </body>
 </html>
