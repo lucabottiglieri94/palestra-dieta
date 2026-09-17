@@ -178,12 +178,12 @@
       <h2 class="font-display font-black text-2xl text-white mb-2">Configura il tuo profilo</h2>
       <p class="text-sm text-app-textMuted mb-5">Inserisci questi dati una sola volta. Verranno salvati sul tuo account Firebase.</p>
       <div class="grid grid-cols-2 gap-3">
-        <label class="text-xs text-gray-300 col-span-2">Come ti chiami?<input id="onbName" type="text" class="w-full mt-1 p-3 rounded-xl bg-app-dark border border-app-border text-white" placeholder="Nome"></label>
-        <label class="text-xs text-gray-300">Età<input id="onbAge" type="number" min="10" max="100" class="w-full mt-1 p-3 rounded-xl bg-app-dark border border-app-border text-white" placeholder="32"></label>
-        <label class="text-xs text-gray-300">Altezza (cm)<input id="onbHeight" type="number" class="w-full mt-1 p-3 rounded-xl bg-app-dark border border-app-border text-white" placeholder="177"></label>
-        <label class="text-xs text-gray-300">Peso (kg)<input id="onbWeight" type="number" step="0.1" class="w-full mt-1 p-3 rounded-xl bg-app-dark border border-app-border text-white" placeholder="95"></label>
-        <label class="text-xs text-gray-300">Circonferenza vita (cm)<input id="onbWaist" type="number" step="0.1" class="w-full mt-1 p-3 rounded-xl bg-app-dark border border-app-border text-white" placeholder="106"></label>
-        <label class="text-xs text-gray-300">Allenamenti/settimana<input id="onbWorkouts" type="number" min="1" max="7" class="w-full mt-1 p-3 rounded-xl bg-app-dark border border-app-border text-white" placeholder="4"></label>
+        <label class="text-xs text-gray-300 col-span-2">Come ti chiami?<input id="onbName" type="text" class="w-full mt-1 p-3 rounded-xl bg-app-dark border border-app-border text-white" placeholder="Nome" autocomplete="off"></label>
+        <label class="text-xs text-gray-300">Età<input id="onbAge" type="number" min="10" max="100" class="w-full mt-1 p-3 rounded-xl bg-app-dark border border-app-border text-white" placeholder="32" autocomplete="off"></label>
+        <label class="text-xs text-gray-300">Altezza (cm)<input id="onbHeight" type="number" class="w-full mt-1 p-3 rounded-xl bg-app-dark border border-app-border text-white" placeholder="177" autocomplete="off"></label>
+        <label class="text-xs text-gray-300">Peso (kg)<input id="onbWeight" type="number" step="0.1" class="w-full mt-1 p-3 rounded-xl bg-app-dark border border-app-border text-white" placeholder="95" autocomplete="off"></label>
+        <label class="text-xs text-gray-300">Circonferenza vita (cm)<input id="onbWaist" type="number" step="0.1" class="w-full mt-1 p-3 rounded-xl bg-app-dark border border-app-border text-white" placeholder="106" autocomplete="off"></label>
+        <label class="text-xs text-gray-300">Allenamenti/settimana<input id="onbWorkouts" type="number" min="1" max="7" class="w-full mt-1 p-3 rounded-xl bg-app-dark border border-app-border text-white" placeholder="4" autocomplete="off"></label>
       </div>
       <label class="block text-xs text-gray-300 mt-3">Obiettivo<select id="onbGoal" class="w-full mt-1 p-3 rounded-xl bg-app-dark border border-app-border text-white"><option>Dimagrimento</option><option>Ricomporsi: perdere grasso e aumentare muscolo</option><option>Aumento massa muscolare</option><option>Mantenimento</option></select></label>
       <button onclick="window.saveOnboardingProfile()" class="w-full mt-5 py-3.5 rounded-2xl bg-emerald-500 text-black font-black">Salva profilo e continua</button>
@@ -334,8 +334,8 @@
           </div>
 
           <div class="grid grid-cols-2 gap-3">
-        <label class="text-xs text-gray-300 col-span-2">Come ti chiami?<input id="onbName" type="text" class="w-full mt-1 p-3 rounded-xl bg-app-dark border border-app-border text-white" placeholder="Nome"></label>
-        <label class="text-xs text-gray-300">Età<input id="onbAge" type="number" min="10" max="100" class="w-full mt-1 p-3 rounded-xl bg-app-dark border border-app-border text-white" placeholder="32"></label>
+        <label class="text-xs text-gray-300 col-span-2">Come ti chiami?<input id="onbName" type="text" class="w-full mt-1 p-3 rounded-xl bg-app-dark border border-app-border text-white" placeholder="Nome" autocomplete="off"></label>
+        <label class="text-xs text-gray-300">Età<input id="onbAge" type="number" min="10" max="100" class="w-full mt-1 p-3 rounded-xl bg-app-dark border border-app-border text-white" placeholder="32" autocomplete="off"></label>
             <button onclick="window.addWaterLiters(0.5)" class="py-3.5 px-3 rounded-xl bg-gradient-to-r from-teal-500/20 to-emerald-500/20 hover:from-teal-500/30 hover:to-emerald-500/30 border border-teal-500/40 text-teal-300 font-bold text-sm flex items-center justify-center gap-2 active:scale-95 transition">
               <span class="text-lg">🚰</span>
               <span>+1 Borraccia (0.5L)</span>
@@ -396,7 +396,7 @@
             <button onclick="window.addBurnedCalories(200)" class="py-2.5 rounded-xl bg-app-card border border-app-border text-xs font-bold text-gray-200 active:scale-95 transition">+200</button>
             <button onclick="window.addBurnedCalories(350)" class="py-2.5 rounded-xl bg-app-card border border-app-border text-xs font-bold text-amber-300 active:scale-95 transition">+350</button>
             <div class="flex items-center gap-1">
-              <input type="number" id="customKcalInput" placeholder="420" class="w-full bg-app-dark border border-app-border rounded-xl px-2 py-2 text-xs text-center font-mono font-bold text-amber-400 focus:outline-none">
+              <input type="number" id="customKcalInput" placeholder="420" class="w-full bg-app-dark border border-app-border rounded-xl px-2 py-2 text-xs text-center font-mono font-bold text-amber-400 focus:outline-none" autocomplete="off">
               <button onclick="window.applyCustomKcal()" class="px-2.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-black text-xs active:scale-95 transition">OK</button>
             </div>
           </div>
@@ -454,30 +454,30 @@
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
           <div class="p-3.5 rounded-xl bg-app-card border border-app-border space-y-1">
             <label class="text-[10px] uppercase font-bold text-app-textMuted block">Distanza (km)</label>
-            <input type="number" id="inputWalkKm" step="0.1" placeholder="5.0" oninput="window.updateEstimatedSteps()" class="w-full bg-app-dark border border-app-border rounded-lg px-2.5 py-2 text-base font-mono font-bold text-teal-300 text-center focus:outline-none">
+            <input type="number" id="inputWalkKm" step="0.1" placeholder="5.0" oninput="window.updateEstimatedSteps()" class="w-full bg-app-dark border border-app-border rounded-lg px-2.5 py-2 text-base font-mono font-bold text-teal-300 text-center focus:outline-none" autocomplete="off">
             <div id="displayEstimatedSteps" class="text-[10px] text-teal-400 font-mono text-center mt-1">~0 passi</div>
           </div>
 
           <div class="p-3.5 rounded-xl bg-app-card border border-app-border space-y-1">
             <label class="text-[10px] uppercase font-bold text-app-textMuted block">Calorie (kcal)</label>
-            <input type="number" id="inputWalkKcal" placeholder="280" class="w-full bg-app-dark border border-app-border rounded-lg px-2.5 py-2 text-base font-mono font-bold text-amber-300 text-center focus:outline-none">
+            <input type="number" id="inputWalkKcal" placeholder="280" class="w-full bg-app-dark border border-app-border rounded-lg px-2.5 py-2 text-base font-mono font-bold text-amber-300 text-center focus:outline-none" autocomplete="off">
             <div class="text-[10px] text-amber-400 font-mono text-center mt-1">Attive</div>
           </div>
 
           <div class="p-3.5 rounded-xl bg-app-card border border-app-border space-y-1">
             <label class="text-[10px] uppercase font-bold text-app-textMuted block">Battito Medio</label>
-            <input type="number" id="inputWalkBpm" placeholder="112" oninput="window.updateHeartRateZoneBadge()" class="w-full bg-app-dark border border-app-border rounded-lg px-2.5 py-2 text-base font-mono font-bold text-red-300 text-center focus:outline-none">
+            <input type="number" id="inputWalkBpm" placeholder="112" oninput="window.updateHeartRateZoneBadge()" class="w-full bg-app-dark border border-app-border rounded-lg px-2.5 py-2 text-base font-mono font-bold text-red-300 text-center focus:outline-none" autocomplete="off">
             <div id="bpmZoneStatus" class="text-[10px] text-emerald-400 font-mono text-center mt-1">Zona 2 (Ottimale)</div>
           </div>
 
           <div class="p-3.5 rounded-xl bg-app-card border border-teal-500/30 bg-teal-500/[0.04] space-y-1">
             <label class="text-[10px] uppercase font-bold text-teal-300 block">Acqua al Rientro</label>
-            <input type="number" id="inputWalkWater" step="0.1" placeholder="0.5" class="w-full bg-app-dark border border-teal-500/40 rounded-lg px-2.5 py-2 text-base font-mono font-bold text-teal-200 text-center focus:outline-none">
+            <input type="number" id="inputWalkWater" step="0.1" placeholder="0.5" class="w-full bg-app-dark border border-teal-500/40 rounded-lg px-2.5 py-2 text-base font-mono font-bold text-teal-200 text-center focus:outline-none" autocomplete="off">
             <div class="text-[10px] text-teal-300 font-mono text-center mt-1">Reidratazione (L)</div>
           </div>
         </div>
 
-        <input type="text" id="inputWalkNotes" placeholder="Note (es. passeggiata al tramonto con la ragazza)..." class="w-full bg-app-dark border border-app-border rounded-xl px-4 py-3 text-xs sm:text-sm text-white placeholder-app-textMuted focus:outline-none">
+        <input type="text" id="inputWalkNotes" placeholder="Note (es. passeggiata al tramonto con la ragazza)..." class="w-full bg-app-dark border border-app-border rounded-xl px-4 py-3 text-xs sm:text-sm text-white placeholder-app-textMuted focus:outline-none" autocomplete="off">
 
         <button onclick="window.saveWalkSession()" class="w-full py-4 rounded-xl bg-gradient-to-r from-teal-500 to-emerald-500 active:scale-95 text-black font-black text-sm transition shadow-lg flex items-center justify-center gap-2">
           <span>👟</span>
@@ -553,7 +553,7 @@
               <span class="text-xs text-app-textMuted">Metabolismo basale giornaliero</span>
             </div>
             <div class="flex items-center gap-2">
-              <input type="number" id="nutritionRestingInput" placeholder="es. 1950" class="w-28 bg-app-card border border-app-border rounded-xl px-3 py-2 text-sm text-center font-mono font-bold text-teal-300 focus:outline-none">
+              <input type="number" id="nutritionRestingInput" placeholder="es. 1950" class="w-28 bg-app-card border border-app-border rounded-xl px-3 py-2 text-sm text-center font-mono font-bold text-teal-300 focus:outline-none" autocomplete="off">
               <button onclick="window.updateRestingFromNutrition()" class="px-4 py-2 rounded-xl bg-teal-500 hover:bg-teal-400 text-black font-bold text-sm transition">
                 Salva
               </button>
@@ -566,7 +566,7 @@
               <span class="text-xs text-app-textMuted">Dispendio da smartwatch</span>
             </div>
             <div class="flex items-center gap-2">
-              <input type="number" id="nutritionBurnedInput" placeholder="es. 450" class="w-28 bg-app-card border border-app-border rounded-xl px-3 py-2 text-sm text-center font-mono font-bold text-amber-300 focus:outline-none">
+              <input type="number" id="nutritionBurnedInput" placeholder="es. 450" class="w-28 bg-app-card border border-app-border rounded-xl px-3 py-2 text-sm text-center font-mono font-bold text-amber-300 focus:outline-none" autocomplete="off">
               <button onclick="window.updateBurnedFromNutrition()" class="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-bold text-sm transition">
                 Salva
               </button>
@@ -690,7 +690,7 @@
         <!-- Input Testo con Microfono Attivo -->
         <div class="space-y-2 text-left">
           <div class="flex gap-2">
-            <input type="text" id="manualDishTextInput" placeholder="es. 200g polpette manzo magro con patate al forno..." class="w-full bg-app-dark border border-app-border focus:border-emerald-500 rounded-2xl px-4 py-3.5 text-sm sm:text-base text-white placeholder-app-textMuted focus:outline-none">
+            <input type="text" id="manualDishTextInput" placeholder="es. 200g polpette manzo magro con patate al forno..." class="w-full bg-app-dark border border-app-border focus:border-emerald-500 rounded-2xl px-4 py-3.5 text-sm sm:text-base text-white placeholder-app-textMuted focus:outline-none" autocomplete="off">
             <button id="voiceInputBtn" onclick="window.toggleVoiceInput()" class="px-4 py-3.5 rounded-2xl bg-app-card hover:bg-app-cardSubtle border border-emerald-500/40 text-emerald-300 font-bold text-lg flex items-center justify-center transition active:scale-95" title="Detta a voce">
               🎙️
             </button>
@@ -771,12 +771,12 @@
 
       <div id="coachChatBox" class="h-96 overflow-y-auto space-y-3.5 p-5 rounded-2xl bg-app-card/70 border border-app-border flex flex-col text-sm sm:text-base">
         <div class="bg-app-dark p-4 rounded-2xl border border-app-border text-gray-200 leading-relaxed shadow-sm">
-          Bella Luca! Ho sott'occhio tutti i numeri di oggi: calorie assunte, calorie bruciate, litri d'acqua e scheda Icon. Se hai un fastidio, poco tempo o vuoi variare l'allenamento, chiedimelo: posso modificare e caricare direttamente la nuova scheda sul tuo schermo!
+          Eccoti, <span id="coachInlineUserName">atleta</span>. Mettiamoci comodi e scrivimi tutto quello che vuoi fare e qual è il tuo obiettivo. Sono qui per aiutarti a costruire allenamento, alimentazione e percorso personalizzato.
         </div>
       </div>
 
-      <form onsubmit="window.handleCoachSubmit(event)" class="flex gap-2.5">
-        <input type="text" id="coachInputText" placeholder="Chiedi al coach (es. adattami la scheda per tutelare il gomito)..." class="w-full bg-app-card border border-app-border focus:border-emerald-500 rounded-xl px-4 py-3.5 text-sm text-white focus:outline-none">
+      <form autocomplete="off" onsubmit="window.handleCoachSubmit(event)" class="flex gap-2.5">
+        <input type="text" id="coachInputText" placeholder="Chiedi al coach (es. adattami la scheda per tutelare il gomito)..." class="w-full bg-app-card border border-app-border focus:border-emerald-500 rounded-xl px-4 py-3.5 text-sm text-white focus:outline-none" autocomplete="off">
         <button type="button" id="coachVoiceBtn" onclick="window.toggleCoachVoiceInput()" class="px-4 py-3.5 rounded-xl bg-app-card hover:bg-app-cardSubtle border border-emerald-500/40 text-emerald-300 font-bold text-lg flex items-center justify-center transition active:scale-95" title="Parla al Coach">
           🎙️
         </button>
@@ -813,8 +813,8 @@
         <div class="p-5 rounded-2xl bg-app-dark border border-app-border space-y-3.5">
           <div class="text-sm font-bold text-white">Aggiorna Misure Mattutine</div>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-            <input type="number" id="quickWeightInput" step="0.1" placeholder="Peso (kg)" class="w-full bg-app-card border border-app-border rounded-xl px-4 py-2.5 text-base text-emerald-400 font-mono text-center focus:outline-none">
-            <input type="number" id="quickWaistInput" step="0.5" placeholder="Vita (cm)" class="w-full bg-app-card border border-app-border rounded-xl px-4 py-2.5 text-base text-teal-400 font-mono text-center focus:outline-none">
+            <input type="number" id="quickWeightInput" step="0.1" placeholder="Peso (kg)" class="w-full bg-app-card border border-app-border rounded-xl px-4 py-2.5 text-base text-emerald-400 font-mono text-center focus:outline-none" autocomplete="off">
+            <input type="number" id="quickWaistInput" step="0.5" placeholder="Vita (cm)" class="w-full bg-app-card border border-app-border rounded-xl px-4 py-2.5 text-base text-teal-400 font-mono text-center focus:outline-none" autocomplete="off">
           </div>
           <button onclick="window.saveBodyMeasurements()" class="w-full py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black text-sm font-bold active:scale-95 transition">Salva Misure</button>
         </div>
@@ -949,7 +949,7 @@
       <p class="text-xs text-app-textMuted leading-relaxed">
         Inserisci la tua chiave API Google AI Studio per attivare l'analisi fotografica pasti e l'AI Coach.
       </p>
-      <input type="password" id="userApiKeyInput" placeholder="AIzaSy..." class="w-full bg-app-dark border border-app-border rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500 font-mono">
+      <input type="text" id="userApiKeyInput" autocomplete="off" spellcheck="false" placeholder="AIzaSy..." class="w-full bg-app-dark border border-app-border rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500 font-mono">
       <div class="flex gap-2 pt-1">
         <button onclick="window.saveUserApiKey()" class="w-full py-2.5 bg-emerald-500 text-black font-bold rounded-xl text-sm">Salva</button>
         <button onclick="window.closeApiKeyModal()" class="w-full py-2.5 bg-app-card text-white rounded-xl text-sm border border-app-border">Chiudi</button>
@@ -1014,7 +1014,7 @@
   <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js';
     import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js';
-    import { getFirestore, doc, onSnapshot, setDoc } from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js';
+    import { getFirestore, doc, onSnapshot, setDoc, deleteDoc } from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js';
 
     const firebaseConfig = {
       apiKey: 'AIzaSyAdZbBv6JYbYnl6CxuFVfHhSftvIxwf2DY',
@@ -1219,8 +1219,15 @@
       });
     }
 
+    // Chiave Gemini condivisa per tutti gli utenti autenticati.
+    // Inserisci qui la tua chiave Gemini: gli utenti non dovranno inserirne una propria.
+    // Per maggiore sicurezza, in produzione è preferibile usare una Cloud Function/server proxy.
+    window.SHARED_GEMINI_API_KEY = window.SHARED_GEMINI_API_KEY || '';
+    // Utente principale/amministratore: non deve compilare il questionario.
+    const PRIMARY_ADMIN_EMAIL = 'lucabottiglieri94@gmail.com';
+
     async function callGeminiApi(payload) {
-      const activeKey = appData.userApiKey || localStorage.getItem('icon_gemini_key') || '';
+      const activeKey = window.SHARED_GEMINI_API_KEY || appData.userApiKey || localStorage.getItem('icon_gemini_key') || '';
 
       let lastError = "";
       for (const model of AI_MODELS) {
@@ -1290,8 +1297,8 @@
         const totalIntake = (day.foodLogs || []).reduce((acc, m) => acc + (Number(m.calories) || 0), 0);
         
         const sys = `
-          Sei il PT e Nutrizionista personale dell'atleta Luca.
-          Profilo atleta: Luca, 32 anni, 95kg, 177cm, Icon Palestre (4 sessioni a pranzo, 50 min, macchine Technogym Selection e Pure).
+          Sei il PT e Nutrizionista personale dell'atleta ${appData.name || 'atleta'}.
+          Profilo atleta: ${appData.name || 'atleta'}, ${appData.age || 'età non indicata'} anni, ${appData.weight || 'peso non indicato'}kg, ${appData.height || 'altezza non indicata'}cm, circonferenza vita ${appData.waist || 'non indicata'}cm, obiettivo ${appData.goal || 'da definire'}, ${appData.workoutsPerWeek || '4'} sessioni settimanali.
           Deficit calorico target: 1.950 kcal/die (target 170g proteine, 3.5L acqua).
           Dati oggi: ${totalIntake} kcal assunte, ${day.burnedCalories} kcal attive bruciate, ${day.waterLiters}L acqua bevuta.
           Dieta: polpette di manzo magro in friggitrice ad aria, patate croccanti, gamberetti con riso express, salmone, tonno fresco weekend, mozzarella light Milbona. NO QUARK, NO BROCCOLI.
@@ -1628,7 +1635,7 @@
               <div class="flex items-center gap-1 bg-app-dark p-1 rounded-xl border border-app-border">
                 <button onclick="window.adjustWeight('${dayKey}', '${ex.id}', -2.5)" class="w-9 h-9 rounded-lg bg-app-card text-white font-black text-base active:scale-90">-</button>
                 <div class="flex items-center px-2">
-                  <input type="number" step="0.5" value="${currentKg}" onchange="window.saveWeightLoadDirect('${dayKey}', '${ex.id}', this.value)" class="w-16 text-center bg-transparent text-emerald-400 font-display font-black text-base focus:outline-none">
+                  <input type="number" step="0.5" value="${currentKg}" onchange="window.saveWeightLoadDirect('${dayKey}', '${ex.id}', this.value)" class="w-16 text-center bg-transparent text-emerald-400 font-display font-black text-base focus:outline-none" autocomplete="off">
                   <span class="text-xs text-app-textMuted font-bold ml-0.5">kg</span>
                 </div>
                 <button onclick="window.adjustWeight('${dayKey}', '${ex.id}', 2.5)" class="w-9 h-9 rounded-lg bg-app-card text-white font-black text-base active:scale-90">+</button>
@@ -2832,7 +2839,7 @@
     window.deleteUserMemory = async function() {
       if (!confirm('Eliminare TUTTI i dati del cliente, il profilo Firebase e uscire dall’account?')) return;
       try {
-        if (cloudDocRef) await setDoc(cloudDocRef, {}, {merge:false});
+        if (cloudDocRef) await deleteDoc(cloudDocRef);
         localStorage.clear();
         if (currentUser) await signOut(auth);
         location.reload();
@@ -2840,6 +2847,8 @@
     };
 
     window.updateUIFromState = function() {
+      const coachNameEl = document.getElementById('coachInlineUserName');
+      if (coachNameEl) coachNameEl.textContent = appData.name || 'atleta';
       const todayKey = getFormattedDateKey(new Date());
       const currentKey = getFormattedDateKey(selectedDate);
       const label = document.getElementById('headerCurrentDateLabel');
@@ -2879,6 +2888,7 @@
       } else {
         overlay.classList.add('hidden');
         cloudDocRef = doc(db, 'users', user.uid, 'gym_recomp', 'current_state');
+        const isPrimaryAdmin = (user.email || '').toLowerCase() === PRIMARY_ADMIN_EMAIL;
         cloudStatus.innerText = `${user.displayName ? user.displayName.split(' ')[0] : 'Utente'} • Cloud ✓`;
 
         const refGemini = doc(db, 'users', user.uid, 'settings', 'gemini');
@@ -2912,8 +2922,23 @@
             if (data.walkLogs) appData.walkLogs = data.walkLogs;
             window.refreshCoachGreeting();
             window.updateUIFromState();
+            // Mostra il questionario se il profilo non è ancora completo,
+            // anche quando esiste già un documento Firebase parziale.
+            if (!isPrimaryAdmin && (data.profileCompleted !== true || !data.name || !data.age)) {
+              document.getElementById('onboardingOverlay').classList.remove('hidden');
+            } else {
+              document.getElementById('onboardingOverlay').classList.add('hidden');
+            }
           } else {
-            document.getElementById('onboardingOverlay').classList.remove('hidden');
+            if (isPrimaryAdmin) {
+              appData.name = appData.name || user.displayName || 'Luca';
+              appData.profileCompleted = true;
+              setDoc(cloudDocRef, {...appData, name: appData.name, profileCompleted: true, updatedAt: Date.now()}, {merge:true}).catch(()=>{});
+              document.getElementById('onboardingOverlay').classList.add('hidden');
+              window.refreshCoachGreeting();
+            } else {
+              document.getElementById('onboardingOverlay').classList.remove('hidden');
+            }
           }
         }, err => {
           console.warn("Snapshot Cloud:", err);
