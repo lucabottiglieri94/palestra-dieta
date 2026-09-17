@@ -168,6 +168,8 @@
       <h2 class="font-display font-black text-2xl text-white mb-2">Configura il tuo profilo</h2>
       <p class="text-sm text-app-textMuted mb-5">Inserisci questi dati una sola volta. Verranno salvati sul tuo account Firebase.</p>
       <div class="grid grid-cols-2 gap-3">
+        <label class="text-xs text-gray-300 col-span-2">Come ti chiami?<input id="onbName" type="text" class="w-full mt-1 p-3 rounded-xl bg-app-dark border border-app-border text-white" placeholder="Nome"></label>
+        <label class="text-xs text-gray-300">Età<input id="onbAge" type="number" min="10" max="100" class="w-full mt-1 p-3 rounded-xl bg-app-dark border border-app-border text-white" placeholder="32"></label>
         <label class="text-xs text-gray-300">Altezza (cm)<input id="onbHeight" type="number" class="w-full mt-1 p-3 rounded-xl bg-app-dark border border-app-border text-white" placeholder="177"></label>
         <label class="text-xs text-gray-300">Peso (kg)<input id="onbWeight" type="number" step="0.1" class="w-full mt-1 p-3 rounded-xl bg-app-dark border border-app-border text-white" placeholder="95"></label>
         <label class="text-xs text-gray-300">Circonferenza vita (cm)<input id="onbWaist" type="number" step="0.1" class="w-full mt-1 p-3 rounded-xl bg-app-dark border border-app-border text-white" placeholder="106"></label>
@@ -176,6 +178,12 @@
       <label class="block text-xs text-gray-300 mt-3">Obiettivo<select id="onbGoal" class="w-full mt-1 p-3 rounded-xl bg-app-dark border border-app-border text-white"><option>Dimagrimento</option><option>Ricomporsi: perdere grasso e aumentare muscolo</option><option>Aumento massa muscolare</option><option>Mantenimento</option></select></label>
       <button onclick="window.saveOnboardingProfile()" class="w-full mt-5 py-3.5 rounded-2xl bg-emerald-500 text-black font-black">Salva profilo e continua</button>
     </div>
+  </div>
+
+  <!-- PROFILO UTENTE E CANCELLAZIONE MEMORIA -->
+  <div id="accountActions" class="fixed bottom-4 left-4 z-40 flex gap-2">
+    <button onclick="window.logoutUser()" class="px-3 py-2 rounded-xl bg-app-card border border-app-border text-xs text-gray-300">Logout</button>
+    <button onclick="window.deleteUserMemory()" class="px-3 py-2 rounded-xl bg-red-950/80 border border-red-500/40 text-xs text-red-300">Elimina memoria</button>
   </div>
 
   <!-- BARRA RECUPERO LIVE (STICKY) -->
@@ -313,6 +321,8 @@
           </div>
 
           <div class="grid grid-cols-2 gap-3">
+        <label class="text-xs text-gray-300 col-span-2">Come ti chiami?<input id="onbName" type="text" class="w-full mt-1 p-3 rounded-xl bg-app-dark border border-app-border text-white" placeholder="Nome"></label>
+        <label class="text-xs text-gray-300">Età<input id="onbAge" type="number" min="10" max="100" class="w-full mt-1 p-3 rounded-xl bg-app-dark border border-app-border text-white" placeholder="32"></label>
             <button onclick="window.addWaterLiters(0.5)" class="py-3.5 px-3 rounded-xl bg-gradient-to-r from-teal-500/20 to-emerald-500/20 hover:from-teal-500/30 hover:to-emerald-500/30 border border-teal-500/40 text-teal-300 font-bold text-sm flex items-center justify-center gap-2 active:scale-95 transition">
               <span class="text-lg">🚰</span>
               <span>+1 Borraccia (0.5L)</span>
@@ -1029,6 +1039,8 @@
       height: localStorage.getItem('icon_height_record') || '177',
       workoutsPerWeek: localStorage.getItem('icon_workouts_week') || '4',
       goal: localStorage.getItem('icon_goal') || 'Ricomporsi: perdere grasso e aumentare muscolo',
+      name: localStorage.getItem('icon_user_name') || '',
+      age: localStorage.getItem('icon_user_age') || '',
       profileCompleted: false,
       workoutExercises: JSON.parse(localStorage.getItem('icon_workout_exercises') || '{}'),
       walkLogs: JSON.parse(localStorage.getItem('icon_walk_logs') || '[]'),
@@ -1387,7 +1399,7 @@
     window.resetCoachChat = function() {
       document.getElementById('coachChatBox').innerHTML = `
         <div class="bg-app-dark p-4 rounded-2xl border border-app-border text-gray-200 leading-relaxed shadow-sm">
-          Chat azzerata! Profilo attivo: 32 anni, 95kg, 1.950 kcal, Huel Black + 5g creatina, polpette e patate in friggitrice ad aria, gamberetti e riso express. Chiedimi pure qualsiasi modifica alla scheda!
+          Chat azzerata! Ciao. Sono il tuo coach e sono qua per fare insieme la scheda che ti aiuterà nel tuo obiettivo. Dopo passa da me e scrivimi come vogliamo iniziare: dimmi il tuo obiettivo ed io ti creerò la tua scheda personale. DAJEEEEE!
         </div>
       `;
     };
@@ -2763,19 +2775,29 @@
     };
 
     window.saveOnboardingProfile = async function() {
+      const name = document.getElementById('onbName').value.trim();
+      const age = parseInt(document.getElementById('onbAge').value, 10);
       const height = parseFloat(document.getElementById('onbHeight').value);
       const weight = parseFloat(document.getElementById('onbWeight').value);
       const waist = parseFloat(document.getElementById('onbWaist').value);
       const workouts = parseInt(document.getElementById('onbWorkouts').value, 10);
       const goal = document.getElementById('onbGoal').value;
-      if (!(height > 100 && height < 250) || !(weight > 30 && weight < 300) || !(waist > 40 && waist < 200) || !(workouts >= 1 && workouts <= 7)) {
+      if (!name || !(age >= 10 && age <= 100) || !(height > 100 && height < 250) || !(weight > 30 && weight < 300) || !(waist > 40 && waist < 200) || !(workouts >= 1 && workouts <= 7)) {
         showNotification('Compila correttamente tutti i dati richiesti.', true); return;
       }
-      Object.assign(appData, {height:String(height), weight:weight.toFixed(1), waist:waist.toFixed(1), workoutsPerWeek:String(workouts), goal, profileCompleted:true});
+      Object.assign(appData, {name, age:String(age), height:String(height), weight:weight.toFixed(1), waist:waist.toFixed(1), workoutsPerWeek:String(workouts), goal, profileCompleted:true});
+      localStorage.setItem('icon_user_name', appData.name); localStorage.setItem('icon_user_age', appData.age);
       localStorage.setItem('icon_height_record', appData.height); localStorage.setItem('icon_weight_record', appData.weight); localStorage.setItem('icon_waist_record', appData.waist); localStorage.setItem('icon_workouts_week', appData.workoutsPerWeek); localStorage.setItem('icon_goal', appData.goal);
       if (cloudDocRef) await setDoc(cloudDocRef, {...appData, profileCompleted:true, updatedAt:Date.now()}, {merge:true});
       document.getElementById('onboardingOverlay').classList.add('hidden');
+      window.refreshCoachGreeting();
       window.updateUIFromState(); showNotification('Profilo salvato su Firebase.');
+    };
+
+    window.refreshCoachGreeting = function() {
+      const box = document.getElementById('coachChatBox'); if (!box) return;
+      const n = appData.name || 'atleta';
+      box.innerHTML = `<div class="bg-app-dark p-4 rounded-2xl border border-app-border text-gray-200 leading-relaxed shadow-sm">Ciao, ${n}! Sono il tuo coach e sono qua per fare insieme la scheda che ti aiuterà nel tuo obiettivo.<br><br>Passa da me e scrivimi come vogliamo iniziare: dimmi il tuo obiettivo ed io ti creerò la tua scheda personale.<br><br><b>DAJEEEEE!</b></div>`;
     };
 
     window.logoutUser = async function() {
@@ -2784,6 +2806,16 @@
         document.getElementById('loginOverlay').classList.remove('hidden');
         showNotification("Disconnesso.");
       } catch (e) {}
+    };
+
+    window.deleteUserMemory = async function() {
+      if (!confirm('Eliminare TUTTI i dati del cliente, il profilo Firebase e uscire dall’account?')) return;
+      try {
+        if (cloudDocRef) await setDoc(cloudDocRef, {}, {merge:false});
+        localStorage.clear();
+        if (currentUser) await signOut(auth);
+        location.reload();
+      } catch (e) { showNotification('Errore durante eliminazione memoria.', true); console.error(e); }
     };
 
     window.updateUIFromState = function() {
@@ -2850,11 +2882,14 @@
             if (data.ptSheetDate) appData.ptSheetDate = data.ptSheetDate;
             if (data.weight) appData.weight = data.weight;
             if (data.waist) appData.waist = data.waist;
+            if (data.name) appData.name = data.name;
+            if (data.age) appData.age = data.age;
             if (data.height) appData.height = data.height;
             if (data.workoutsPerWeek) appData.workoutsPerWeek = data.workoutsPerWeek;
             if (data.goal) appData.goal = data.goal;
             appData.profileCompleted = data.profileCompleted === true;
             if (data.walkLogs) appData.walkLogs = data.walkLogs;
+            window.refreshCoachGreeting();
             window.updateUIFromState();
           } else {
             document.getElementById('onboardingOverlay').classList.remove('hidden');
