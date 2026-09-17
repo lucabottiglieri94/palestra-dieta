@@ -1022,58 +1022,51 @@
     let timerCountdown = null;
     let secondsRemaining = 0;
 
-    // Routines Base Technogym
+    // Routines Base - Scheda Personal Trainer
     const BASE_ROUTINES = {
-      dayA: {
-        title: "Giorno A: Petto, Deltoidi & Tricipiti",
-        subtitle: "Spinta • 50 min • Focus Tensione",
-        exercises: [
-          { id: "ex_A1", code: "M01", name: "Chest Press Orizzontale", model: "Technogym Selection 900", sets: 4, reps: "8-10", rest: 90, defaultKg: 65, seat: "Maniglie a metà altezza petto.", cue: "Scapole addotte. Spinta controllata." },
-          { id: "ex_A2", code: "M02", name: "Incline Chest Press 30°", model: "Technogym Pure Strength", sets: 3, reps: "10-12", rest: 75, defaultKg: 50, seat: "Impugnature ad altezza clavicole.", cue: "Gomiti a 45°." },
-          { id: "ex_A3", code: "M03", name: "Pectoral Machine", model: "Technogym Selection", sets: 3, reps: "12-15", rest: 60, defaultKg: 40, seat: "Gomiti al centro dei cuscinetti.", cue: "Petto aperto." },
-          { id: "ex_A4", code: "M04", name: "Shoulder Press Machine", model: "Technogym Selection", sets: 3, reps: "8-10", rest: 90, defaultKg: 45, seat: "Maniglie ad altezza orecchie.", cue: "Spingi senza inarcare la schiena." },
-          { id: "ex_A5", code: "M05", name: "Alzate Laterali Cavo Basso", model: "Technogym DAP Cavi", sets: 3, reps: "12-15", rest: 60, defaultKg: 7.5, seat: "Carrucola al foro più basso.", cue: "Guida con il gomito." },
-          { id: "ex_A6", code: "M06", name: "Pushdown Tricipiti Corda", model: "Technogym Ercolina", sets: 3, reps: "10-12", rest: 60, defaultKg: 22.5, seat: "Carrucola in alto.", cue: "Gomiti bloccati ai fianchi." }
-        ]
-      },
-      dayB: {
-        title: "Giorno B: Dorso, Spalle Post & Bicipiti",
-        subtitle: "Trazione • 50 min • Spessore V-Taper",
-        exercises: [
-          { id: "ex_B1", code: "M07", name: "Lat Machine Presa Larga", model: "Technogym Selection", sets: 4, reps: "8-10", rest: 90, defaultKg: 55, seat: "Rulli cosce ben saldi.", cue: "Gomiti ai fianchi." },
-          { id: "ex_B2", code: "M08", name: "Vertical Traction Divergente", model: "Technogym Selection", sets: 3, reps: "10-12", rest: 75, defaultKg: 50, seat: "Presa comoda.", cue: "Traiettoria convergente." },
-          { id: "ex_B3", code: "M09", name: "Pulley Basso", model: "Technogym Selection", sets: 3, reps: "10-12", rest: 75, defaultKg: 50, seat: "Ginocchia flesse.", cue: "Tira all'ombelico." },
-          { id: "ex_B4", code: "M10", name: "Reverse Fly", model: "Technogym Selection", sets: 3, reps: "12-15", rest: 60, defaultKg: 35, seat: "Petto contro il cuscino.", cue: "Apri a croce." },
-          { id: "ex_B5", code: "M11", name: "Arm Curl Panca Scott", model: "Technogym Selection", sets: 3, reps: "10-12", rest: 60, defaultKg: 30, seat: "Ascelle sul bordo.", cue: "Fletti isolando il bicipite." },
-          { id: "ex_B6", code: "M12", name: "Hammer Curl Cavo", model: "Technogym Ercolina", sets: 3, reps: "10-12", rest: 60, defaultKg: 20, seat: "Carrucola al suolo.", cue: "Presa neutra." }
-        ]
-      },
-      dayC: {
-        title: "Giorno C: Gambe, Polpacci & Addome",
-        subtitle: "Gambe & Core • 50 min",
-        exercises: [
-          { id: "ex_C1", code: "M13", name: "Leg Press 45° a Slitta", model: "Technogym Pure Strength", sets: 4, reps: "10-12", rest: 90, defaultKg: 130, seat: "Piedi a larghezza spalle.", cue: "Ginocchia a 90°." },
-          { id: "ex_C2", code: "M14", name: "Leg Extension Isolamento", model: "Technogym Selection", sets: 3, reps: "12-15", rest: 60, defaultKg: 40, seat: "Perno sul ginocchio.", cue: "1 secondo di tenuta." },
-          { id: "ex_C3", code: "M15", name: "Seated Leg Curl Femorali", model: "Technogym Selection", sets: 4, reps: "10-12", rest: 75, defaultKg: 45, seat: "Cuscino cosce bloccato.", cue: "Talloni sotto il sedile." },
-          { id: "ex_C4", code: "M16", name: "Calf Machine Polpacci", model: "Technogym Selection", sets: 4, reps: "15", rest: 45, defaultKg: 65, seat: "Solo avampiede sulla pedana.", cue: "Allungamento profondo." },
-          { id: "ex_C5", code: "M17", name: "Abdominal Crunch Machine", model: "Technogym Selection", sets: 3, reps: "15-20", rest: 60, defaultKg: 35, seat: "Piedi vincolati.", cue: "Arrotola la cassa toracica." }
-        ]
-      },
-      dayD: {
-        title: "Giorno D: Upper Body & Cardio",
-        subtitle: "Alta Densità • 50 min",
-        exercises: [
-          { id: "ex_D1", code: "M18", name: "Spinte Panca Inclinata 30°", model: "Technogym Pure Incline", sets: 3, reps: "8-10", rest: 75, defaultKg: 24, seat: "Seduta a 30°.", cue: "Focus parte alta petto." },
-          { id: "ex_D2", code: "M19", name: "Lat Machine Presa Inversa", model: "Technogym Selection", sets: 3, reps: "8-10", rest: 75, defaultKg: 60, seat: "Presa supina.", cue: "Tira fino alle clavicole." },
-          { id: "ex_D3", code: "M20", name: "Crossover Cavi Alti", model: "Technogym DAP Cavi", sets: 3, reps: "12-15", rest: 60, defaultKg: 15, seat: "Carrucole in alto.", cue: "Braccia quasi distese." },
-          { id: "ex_D4", code: "M21", name: "Superset Corda + Curl Cavo", model: "Technogym Ercolina", sets: 3, reps: "10 + 10", rest: 60, defaultKg: 20, seat: "Prima tricipiti, poi bicipiti.", cue: "Zero pause." }
-        ]
-      },
-      dayPT: {
-        title: "Scheda del Tuo Personal Trainer",
-        subtitle: "Scatta la foto del foglio per caricarla o digitalizzarla",
-        exercises: []
-      }
+      dayA: { title: "Giorno A: Dorso, Bicipiti & Core", subtitle: "Trazione • 50 min", exercises: [
+        {id:"ex_A1",code:"A1",name:"Tapis roulant",model:"Cardio",sets:1,reps:"10 min",rest:0,defaultKg:0,seat:"",cue:"Riscaldamento"},
+        {id:"ex_A2",code:"A2",name:"Back Squat bilanciere pump",model:"Bilanciere",sets:3,reps:"15",rest:60,defaultKg:0,seat:"",cue:"Movimento controllato"},
+        {id:"ex_A3",code:"A3",name:"Adductor Machine",model:"Macchina",sets:3,reps:"20",rest:45,defaultKg:0,seat:"",cue:"Controlla apertura e chiusura"},
+        {id:"ex_A4",code:"A4",name:"Ellittica",model:"Cardio",sets:1,reps:"10 min",rest:0,defaultKg:0,seat:"",cue:"Ritmo costante"},
+        {id:"ex_A5",code:"A5",name:"Lat Pulldown presa larga",model:"Lat machine",sets:4,reps:"15",rest:60,defaultKg:0,seat:"",cue:"Tira i gomiti verso il basso"},
+        {id:"ex_A6",code:"A6",name:"Rowing Machine presa neutra",model:"Rematore macchina",sets:4,reps:"15",rest:60,defaultKg:0,seat:"",cue:"Schiena stabile"},
+        {id:"ex_A7",code:"A7",name:"Crunch gambe a terra",model:"Corpo libero",sets:3,reps:"20",rest:45,defaultKg:0,seat:"",cue:"Espira durante la contrazione"},
+        {id:"ex_A8",code:"A8",name:"Cyclette",model:"Cardio",sets:1,reps:"10 min",rest:0,defaultKg:0,seat:"",cue:"Ritmo costante"}
+      ]},
+      dayB: { title: "Giorno B: Petto, Tricipiti, Spalle & Bicipiti", subtitle: "Spinta • 50 min", exercises: [
+        {id:"ex_B1",code:"B1",name:"Tapis roulant inclinato",model:"Cardio",sets:1,reps:"10 min",rest:0,defaultKg:0,seat:"",cue:"Camminata in salita"},
+        {id:"ex_B2",code:"B2",name:"Vertical Chest Press presa larga",model:"Macchina",sets:4,reps:"15",rest:60,defaultKg:0,seat:"",cue:"Spinta controllata"},
+        {id:"ex_B3",code:"B3",name:"Croci panca piana con 2 manubri",model:"Manubri",sets:4,reps:"15",rest:60,defaultKg:0,seat:"",cue:"Allungamento controllato"},
+        {id:"ex_B4",code:"B4",name:"Push Down corda",model:"Cavo",sets:4,reps:"15",rest:60,defaultKg:0,seat:"",cue:"Gomiti fermi"},
+        {id:"ex_B5",code:"B5",name:"Cyclette",model:"Cardio",sets:1,reps:"10 min",rest:0,defaultKg:0,seat:"",cue:"Ritmo costante"},
+        {id:"ex_B6",code:"B6",name:"Alzate laterali con 2 manubri",model:"Manubri",sets:3,reps:"15",rest:45,defaultKg:0,seat:"",cue:"Non slanciare"},
+        {id:"ex_B7",code:"B7",name:"Curl alternato con 2 manubri",model:"Manubri",sets:3,reps:"15",rest:45,defaultKg:0,seat:"",cue:"Controlla la discesa"},
+        {id:"ex_B8",code:"B8",name:"Plank in scorrimento isometria",model:"Corpo libero",sets:3,reps:"30 sec",rest:45,defaultKg:0,seat:"",cue:"Addome contratto"},
+        {id:"ex_B9",code:"B9",name:"Tapis roulant",model:"Cardio",sets:1,reps:"10 min",rest:0,defaultKg:0,seat:"",cue:"Defaticamento"}
+      ]},
+      dayC: { title: "Giorno C: Petto, Dorso, Bicipiti & Addome", subtitle: "Upper body • 50 min", exercises: [
+        {id:"ex_C1",code:"C1",name:"Tapis roulant",model:"Cardio",sets:1,reps:"10 min",rest:0,defaultKg:0,seat:"",cue:"Riscaldamento"},
+        {id:"ex_C2",code:"C2",name:"Vertical Chest Press presa stretta",model:"Macchina",sets:4,reps:"12",rest:60,defaultKg:0,seat:"",cue:"Spinta controllata"},
+        {id:"ex_C3",code:"C3",name:"Good Morning pump",model:"Bilanciere",sets:4,reps:"15",rest:60,defaultKg:0,seat:"",cue:"Schiena neutra"},
+        {id:"ex_C4",code:"C4",name:"Lat Pulldown presa inversa",model:"Lat machine",sets:4,reps:"12",rest:60,defaultKg:0,seat:"",cue:"Tira verso il petto"},
+        {id:"ex_C5",code:"C5",name:"Pulley",model:"Cavo",sets:4,reps:"15",rest:60,defaultKg:0,seat:"",cue:"Tira all'ombelico"},
+        {id:"ex_C6",code:"C6",name:"Cyclette",model:"Cardio",sets:1,reps:"10 min",rest:0,defaultKg:0,seat:"",cue:"Ritmo costante"},
+        {id:"ex_C7",code:"C7",name:"Curl bicipiti con 2 manubri su panca",model:"Manubri",sets:4,reps:"15",rest:45,defaultKg:0,seat:"",cue:"Movimento completo"},
+        {id:"ex_C8",code:"C8",name:"Sit-up",model:"Corpo libero",sets:3,reps:"15",rest:45,defaultKg:0,seat:"",cue:"Controlla la discesa"},
+        {id:"ex_C9",code:"C9",name:"Ellittica",model:"Cardio",sets:1,reps:"10 min",rest:0,defaultKg:0,seat:"",cue:"Defaticamento"}
+      ]},
+      dayD: { title: "Giorno D: Gambe, Spalle & Core", subtitle: "Gambe • 50 min", exercises: [
+        {id:"ex_D1",code:"D1",name:"Tapis roulant",model:"Cardio",sets:1,reps:"10 min",rest:0,defaultKg:0,seat:"",cue:"Riscaldamento"},
+        {id:"ex_D2",code:"D2",name:"Leg Press 45°",model:"Macchina",sets:4,reps:"12",rest:75,defaultKg:0,seat:"",cue:"Ginocchia in linea con i piedi"},
+        {id:"ex_D3",code:"D3",name:"Retro affondo con manubri",model:"Manubri",sets:3,reps:"20",rest:60,defaultKg:0,seat:"",cue:"10 per gamba"},
+        {id:"ex_D4",code:"D4",name:"Ellittica",model:"Cardio",sets:1,reps:"10 min",rest:0,defaultKg:0,seat:"",cue:"Ritmo costante"},
+        {id:"ex_D5",code:"D5",name:"Shoulder Press",model:"Macchina",sets:4,reps:"12",rest:60,defaultKg:0,seat:"",cue:"Non inarcare la schiena"},
+        {id:"ex_D6",code:"D6",name:"Alzate frontali con manubri in piedi",model:"Manubri",sets:3,reps:"15",rest:45,defaultKg:0,seat:"",cue:"Movimento controllato"},
+        {id:"ex_D7",code:"D7",name:"Crunch inverso",model:"Corpo libero",sets:3,reps:"15",rest:45,defaultKg:0,seat:"",cue:"Retroversione del bacino"},
+        {id:"ex_D8",code:"D8",name:"Cyclette",model:"Cardio",sets:1,reps:"10 min",rest:0,defaultKg:0,seat:"",cue:"Defaticamento"}
+      ]},
+      dayPT: { title: "Scheda del Tuo Personal Trainer", subtitle: "Scheda aggiornata", exercises: [] }
     };
 
     // Lidl Grocery Data
