@@ -2840,6 +2840,14 @@
       if (!confirm('Eliminare TUTTI i dati del cliente, il profilo Firebase e uscire dall’account?')) return;
       try {
         if (cloudDocRef) await deleteDoc(cloudDocRef);
+        // Cancella anche la API key personale salvata su Firebase
+        if (currentUser) {
+          const geminiRef = doc(db, 'users', currentUser.uid, 'settings', 'gemini');
+          await deleteDoc(geminiRef).catch(() => {});
+        }
+        // Cancella anche la API key salvata nel browser
+        appData.userApiKey = '';
+        localStorage.removeItem('icon_gemini_key');
         localStorage.clear();
         if (currentUser) await signOut(auth);
         location.reload();
