@@ -2836,36 +2836,93 @@ async function callGeminiApi(payload) {
       showNotification("Modalità locale attiva: dati salvati nel browser.");
     };
 
-    window.saveOnboardingProfile = async function() {
-      const name = document.getElementById('onbName').value.trim();
-      const age = parseInt(document.getElementById('onbAge').value, 10);
-      const height = parseFloat(document.getElementById('onbHeight').value);
-      const weight = parseFloat(document.getElementById('onbWeight').value);
-      const waist = parseFloat(document.getElementById('onbWaist').value);
-      const workouts = parseInt(document.getElementById('onbWorkouts').value, 10);
-      const goal = document.getElementById('onbGoal').value;
-      if (!name || !(age >= 10 && age <= 100) || !(height > 100 && height < 250) || !(weight > 30 && weight < 300) || !(waist > 40 && waist < 200) || !(workouts >= 1 && workouts <= 7)) {
-        showNotification('Compila correttamente tutti i dati richiesti.', true); return;
-      }
-      Object.assign(appData, {name, age:String(age), height:String(height), weight:weight.toFixed(1), waist:waist.toFixed(1), workoutsPerWeek:String(workouts), goal, profileCompleted:true});
-      localStorage.setItem('icon_user_name', appData.name); localStorage.setItem('icon_user_age', appData.age);
-      localStorage.setItem('icon_height_record', appData.height); localStorage.setItem('icon_weight_record', appData.weight); localStorage.setItem('icon_waist_record', appData.waist); localStorage.setItem('icon_workouts_week', appData.workoutsPerWeek); localStorage.setItem('icon_goal', appData.goal);
-      if (cloudDocRef) {
-  await setDoc(cloudDocRef, {
-    ...appData,
-    profileCompleted: true,
-    approved: false,
-    email: currentUser?.email || '',
-    userEmail: currentUser?.email || '',
-    updatedAt: Date.now()
-  }, { merge: true });
-}
-      document.getElementById('onboardingOverlay').classList.add('hidden');
-      window.refreshCoachGreeting();
-      window.showCoachWelcomePopup();
-      window.updateUIFromState(); showNotification('Profilo salvato su Firebase.');
-    };
+window.saveOnboardingProfile = async function() {
+  const name = document.getElementById('onbName').value.trim();
+  const age = parseInt(document.getElementById('onbAge').value, 10);
+  const height = parseFloat(document.getElementById('onbHeight').value);
+  const weight = parseFloat(document.getElementById('onbWeight').value);
+  const waist = parseFloat(document.getElementById('onbWaist').value);
+  const workouts = parseInt(document.getElementById('onbWorkouts').value, 10);
+  const goal = document.getElementById('onbGoal').value;
 
+  if (
+    !name ||
+    !(age >= 10 && age <= 100) ||
+    !(height > 100 && height < 250) ||
+    !(weight > 30 && weight < 300) ||
+    !(waist > 40 && waist < 200) ||
+    !(workouts >= 1 && workouts <= 7)
+  ) {
+    showNotification('Compila correttamente tutti i dati richiesti.', true);
+    return;
+  }
+
+  Object.assign(appData, {
+    name,
+    age: String(age),
+    height: String(height),
+    weight: weight.toFixed(1),
+    waist: waist.toFixed(1),
+    workoutsPerWeek: String(workouts),
+    goal,
+    profileCompleted: true,
+    approved: false
+  });
+
+  localStorage.setItem('icon_user_name', appData.name);
+  localStorage.setItem('icon_user_age', appData.age);
+  localStorage.setItem('icon_height_record', appData.height);
+  localStorage.setItem('icon_weight_record', appData.weight);
+  localStorage.setItem('icon_waist_record', appData.waist);
+  localStorage.setItem('icon_workouts_week', appData.workoutsPerWeek);
+  localStorage.setItem('icon_goal', appData.goal);
+
+  if (cloudDocRef) {
+    await setDoc(cloudDocRef, {
+      ...appData,
+      profileCompleted: true,
+      approved: false,
+      email: currentUser?.email || '',
+      userEmail: currentUser?.email || '',
+      updatedAt: Date.now()
+    }, { merge: true });
+  }
+
+  // Nasconde il questionario
+  document.getElementById('onboardingOverlay').classList.add('hidden');
+
+  // Mostra attesa approvazione
+  const overlay = document.getElementById('loginOverlay');
+
+  overlay.classList.remove('hidden');
+
+  overlay.innerHTML = `
+    <div class="max-w-md w-11/12 p-8 rounded-3xl bg-app-card border border-amber-500/40 text-center shadow-2xl">
+      <div class="text-5xl mb-4">⏳</div>
+
+      <h2 class="font-display font-black text-2xl text-white mb-3">
+        Account in attesa
+      </h2>
+
+      <p class="text-sm text-gray-300 leading-relaxed">
+        Il profilo è stato registrato correttamente.
+        Ora deve essere approvato dall'amministratore.
+      </p>
+
+      <p class="text-xs text-amber-300 mt-4">
+        Potrai utilizzare l'app appena sarai approvato.
+      </p>
+
+      <button
+        onclick="window.logoutUser()"
+        class="mt-6 px-5 py-3 rounded-xl bg-app-cardSubtle border border-app-border text-gray-300 text-sm">
+        Esci
+      </button>
+    </div>
+  `;
+
+  showNotification('Profilo registrato. In attesa di approvazione.');
+};
     window.showCoachWelcomePopup = function() {
       const n = appData.name || 'atleta';
       const text = document.getElementById('coachWelcomeText');
