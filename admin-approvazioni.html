@@ -24,7 +24,7 @@
 <script type="module">
 import {initializeApp} from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js';
 import {getAuth,GoogleAuthProvider,signInWithPopup,onAuthStateChanged} from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js';
-import {getFirestore,collection,getDocs,getDoc,doc,updateDoc} from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js';
+import {getFirestore,collectionGroup,getDocs,doc,updateDoc} from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js';
 const config={apiKey:'AIzaSyAdZbBv6JYbYnl6CxuFVfHhSftvIxwf2DY',authDomain:'budget-luca.firebaseapp.com',projectId:'budget-luca',storageBucket:'budget-luca.firebasestorage.app',messagingSenderId:'67496424698',appId:'1:67496424698:web:efc07408543'};
 const app=initializeApp(config),auth=getAuth(app),db=getFirestore(app),provider=new GoogleAuthProvider();
 const ADMIN='lucabottiglieri94@gmail.com';
@@ -33,18 +33,16 @@ function say(t){msg.textContent=t}
 async function load(){
  list.innerHTML='<p class="muted">Caricamento...</p>';
  try{
-  const usersSnap=await getDocs(collection(db,'users'));
-  if(usersSnap.empty){list.innerHTML='<p class="muted">Nessun utente trovato.</p>';return}
+  const statesSnap=await getDocs(collectionGroup(db,'current_state'));
+  if(statesSnap.empty){list.innerHTML='<p class="muted">Nessun utente trovato.</p>';return}
   list.innerHTML='';
-  for(const userDoc of usersSnap.docs){
-   const stateRef=doc(db,'users',userDoc.id,'gym_recomp','current_state');
-   const stateSnap=await getDoc(stateRef);
-   const d=stateSnap.exists()?stateSnap.data():userDoc.data();
-   const email=d.email||d.userEmail||userDoc.data().email||'Email non salvata';
+  for(const stateDoc of statesSnap.docs){
+   const d=stateDoc.data();
+   const email=d.email||d.userEmail||'Email non salvata';
    const approved=d.approved===true;
    const row=document.createElement('div');row.className='row';
-   row.innerHTML=`<div><b>${d.name||userDoc.data().name||'Nome non impostato'}</b><div class="muted">${email}</div><div class="muted">UID: ${userDoc.id}</div></div><div><span class="status ${approved?'ok':''}">${approved?'APPROVATO':'IN ATTESA'}</span> <button class="${approved?'revoke':'approve'}">${approved?'Revoca':'Approva'}</button></div>`;
-   row.querySelector('button').onclick=async()=>{try{await updateDoc(stateRef,{approved:!approved,approvalUpdatedAt:Date.now()});say(approved?'Approvazione revocata.':'Utente approvato.');load()}catch(e){say('Errore: '+e.message)}};
+   row.innerHTML=`<div><b>${d.name||'Nome non impostato'}</b><div class="muted">${email}</div><div class="muted">UID: ${stateDoc.ref.parent.parent.id}</div></div><div><span class="status ${approved?'ok':''}">${approved?'APPROVATO':'IN ATTESA'}</span> <button class="${approved?'revoke':'approve'}">${approved?'Revoca':'Approva'}</button></div>`;
+   row.querySelector('button').onclick=async()=>{try{await updateDoc(stateDoc.ref,{approved:!approved,approvalUpdatedAt:Date.now()});say(approved?'Approvazione revocata.':'Utente approvato.');load()}catch(e){say('Errore: '+e.message)}};
    list.appendChild(row);
   }
  }catch(e){list.innerHTML='';say('Errore caricamento: '+e.message);}
