@@ -1266,35 +1266,37 @@
     // Utente principale/amministratore: non deve compilare il questionario.
     const PRIMARY_ADMIN_EMAIL = 'lucabottiglieri94@gmail.com';
 
-    async function callGeminiApi(payload) {
-      const activeKey = window.SHARED_GEMINI_API_KEY || appData.userApiKey || localStorage.getItem('icon_gemini_key') || '';
+async function callGeminiApi(payload) {
+  const BACKEND_AI_URL =
+    'https://palestra-ai-backend-32o30ajq0-lucas-projects-93ba30e7.vercel.app/api/ai';
 
-      let lastError = "";
-      for (const model of AI_MODELS) {
-        try {
-          const keyParam = activeKey ? `key=${encodeURIComponent(activeKey)}` : 'key=';
-          const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?${keyParam}`;
-          const resp = await fetch(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload)
-          });
+  try {
+    const response = await fetch(BACKEND_AI_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        payload
+      })
+    });
 
-          const data = await resp.json();
-          if (resp.ok && data.candidates?.[0]?.content?.parts?.[0]?.text) {
-            return data.candidates[0].content.parts[0].text;
-          }
-          if (data.error) {
-            lastError = data.error.message || `Errore ${resp.status}`;
-            console.warn(`Tentativo modello ${model} non riuscito:`, data.error);
-          }
-        } catch (e) {
-          lastError = e.message;
-        }
-      }
-      throw new Error(lastError || "Impossibile contattare Gemini. Verifica la chiave API.");
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || `Errore backend AI ${response.status}`);
     }
 
+    if (data.text) {
+      return data.text;
+    }
+
+    throw new Error('Il backend non ha restituito una risposta testuale.');
+  } catch (error) {
+    console.error('Errore chiamata backend AI:', error);
+    throw error;
+  }
+}
     window.saveUserApiKey = async function() {
       const val = document.getElementById('userApiKeyInput').value.trim();
       appData.userApiKey = val;
