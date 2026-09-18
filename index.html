@@ -1216,9 +1216,9 @@
     // Utente principale/amministratore: non deve compilare il questionario.
     const PRIMARY_ADMIN_EMAIL = 'lucabottiglieri94@gmail.com';
 
-async function callGeminiApi(payload) {
+async function callGeminiApi(payload) { // Backend: Groq per testo, Gemini 2.5 Flash solo per immagini
 const BACKEND_AI_URL =
-    'https://palestra-ai-backend.vercel.app/api/ai';
+    'https://palestra-ai-backend-git-main-lucas-projects-93ba30e7.vercel.app/api/ai';
  try {
     const response = await fetch(BACKEND_AI_URL, {
       method: 'POST',
