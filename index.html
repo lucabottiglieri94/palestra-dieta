@@ -1263,6 +1263,59 @@ const BACKEND_AI_URL =
     // =========================================================================
     // AI COACH & MODIFICA DINAMICA DELLA SCHEDA
     // =========================================================================
+    function getWeeklyCoachStats() {
+      const end = new Date(selectedDate);
+      end.setHours(0, 0, 0, 0);
+      const days = []; let totalIntake = 0; let totalResting = 0; let totalActive = 0;
+      for (let i = 6; i >= 0; i--) {
+        const d = new Date(end); d.setDate(end.getDate() - i);
+        const key = getFormattedDateKey(d); const rec = appData.dailyRecords?.[key];
+        if (!rec) continue;
+        const intake = (rec.foodLogs || []).reduce((sum, m) => sum + (Number(m.calories) || 0), 0);
+        const resting = Number(rec.restingCalories) || Number(appData.defaultRestingCalories) || 1950;
+        const active = Number(rec.burnedCalories) || 0;
+        if (intake <= 0 && active <= 0) continue;
+        days.push({ key, intake, resting, active, expenditure: resting + active, balance: (resting + active) - intake });
+        totalIntake += intake; totalResting += resting; totalActive += active;
+      }
+      const count = days.length;
+      return { days, count, totalIntake, totalResting, totalActive, totalExpenditure: totalResting + totalActive, totalBalance: (totalResting + totalActive) - totalIntake, avgIntake: count ? Math.round(totalIntake / count) : 0, avgResting: count ? Math.round(totalResting / count) : 0, avgActive: count ? Math.round(totalActive / count) : 0, avgExpenditure: count ? Math.round((totalResting + totalActive) / count) : 0, avgBalance: count ? Math.round(((totalResting + totalActive) - totalIntake) / count) : 0 };
+    }
+
+    function isWeeklyCoachQuery(query) {
+      return /settimana|ultimi\s*7\s*giorni|7\s*giorni|questa\s*settimana|come\s*[eè]\s*andata/i.test(query);
+    }
+
+    function getWeeklyBalanceStyle(balance) {
+      if (balance >= 0) return { label: 'DEFICIT', color: 'text-emerald-400', bg: 'bg-emerald-500/10', border: 'border-emerald-500/30' };
+      if (balance >= -300) return { label: 'LEGGERO SURPLUS', color: 'text-orange-400', bg: 'bg-orange-500/10', border: 'border-orange-500/30' };
+      return { label: 'SURPLUS ELEVATO', color: 'text-red-400', bg: 'bg-red-500/10', border: 'border-red-500/30' };
+    }
+
+    function formatCoachText(text) {
+      return String(text || '')
+        .replace(/\[GREEN\]([\s\S]*?)\[\/GREEN\]/gi, '<span class="text-emerald-400 font-bold">$1</span>')
+        .replace(/\[ORANGE\]([\s\S]*?)\[\/ORANGE\]/gi, '<span class="text-orange-400 font-bold">$1</span>')
+        .replace(/\[RED\]([\s\S]*?)\[\/RED\]/gi, '<span class="text-red-400 font-bold">$1</span>')
+        .replace(/\n/g, '<br>');
+    }
+
+    function buildWeeklyCoachCard(stats) {
+      if (!stats.count) return '<div class="p-4 rounded-2xl bg-app-dark border border-app-border text-sm text-app-textMuted">Non ho abbastanza dati registrati negli ultimi 7 giorni per fare il calcolo.</div>';
+      const style = getWeeklyBalanceStyle(stats.avgBalance);
+      const sign = stats.avgBalance >= 0 ? '-' : '+'; const abs = Math.abs(stats.avgBalance);
+      const totalSign = stats.totalBalance >= 0 ? '-' : '+'; const totalAbs = Math.abs(stats.totalBalance);
+      return '<div class="p-4 rounded-2xl '+style.bg+' border '+style.border+' space-y-3">' +
+        '<div class="flex items-center justify-between"><span class="text-xs font-black uppercase tracking-wider '+style.color+'">📊 Report ultimi 7 giorni</span><span class="text-[11px] font-mono text-app-textMuted">'+stats.count+'/7 giorni</span></div>' +
+        '<div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center">' +
+        '<div class="p-2 rounded-xl bg-app-dark border border-app-border"><div class="text-[10px] text-app-textMuted uppercase">Media assunte</div><div class="font-mono font-black text-white">'+stats.avgIntake+' kcal</div></div>' +
+        '<div class="p-2 rounded-xl bg-app-dark border border-app-border"><div class="text-[10px] text-app-textMuted uppercase">Riposo</div><div class="font-mono font-black text-white">'+stats.avgResting+' kcal</div></div>' +
+        '<div class="p-2 rounded-xl bg-app-dark border border-app-border"><div class="text-[10px] text-app-textMuted uppercase">Attive</div><div class="font-mono font-black text-white">'+stats.avgActive+' kcal</div></div>' +
+        '<div class="p-2 rounded-xl bg-app-dark border border-app-border"><div class="text-[10px] text-app-textMuted uppercase">Dispendio totale</div><div class="font-mono font-black text-white">'+stats.avgExpenditure+' kcal</div></div></div>' +
+        '<div class="flex items-center justify-between gap-3 pt-2 border-t border-app-border"><div><div class="text-[10px] text-app-textMuted uppercase">Media giornaliera</div><div class="text-lg font-mono font-black '+style.color+'">'+sign+abs+' kcal</div></div><div class="text-right"><div class="text-[10px] text-app-textMuted uppercase">Risultato 7 giorni</div><div class="text-sm font-mono font-black '+style.color+'">'+totalSign+totalAbs+' kcal</div></div></div>' +
+        '<div class="text-xs font-black '+style.color+'">'+style.label+'</div></div>';
+    }
+
     window.handleCoachSubmit = async function(e) {
       if (e) e.preventDefault();
       const input = document.getElementById('coachInputText');
@@ -1281,6 +1334,8 @@ const BACKEND_AI_URL =
       try {
         const day = getSelectedDayData();
         const totalIntake = (day.foodLogs || []).reduce((acc, m) => acc + (Number(m.calories) || 0), 0);
+        const weeklyQuery = isWeeklyCoachQuery(query);
+        const weeklyStats = weeklyQuery ? getWeeklyCoachStats() : null;
         const coachName = getAuthenticatedCoachName();
         const coachEmail = getAuthenticatedCoachEmail();
         const coachUid = currentUser?.uid || 'locale';
@@ -1294,12 +1349,20 @@ const BACKEND_AI_URL =
           Non usare MAI il nome, il profilo o i dati di un altro account. Il nome dell'utente deve essere determinato dall'account Firebase corrente e dal relativo profilo salvato per quel UID.
           Chiama sempre l'utente usando esclusivamente il nome dell'account corrente: ${coachName}.
           Profilo atleta: ${appData.name || 'atleta'}, ${appData.age || 'età non indicata'} anni, ${appData.weight || 'peso non indicato'}kg, ${appData.height || 'altezza non indicata'}cm, circonferenza vita ${appData.waist || 'non indicata'}cm, obiettivo ${appData.goal || 'da definire'}, ${appData.workoutsPerWeek || '4'} sessioni settimanali.
-          Deficit calorico target: 1.950 kcal/die (target 170g proteine, 3.5L acqua).
-          Dati oggi: ${totalIntake} kcal assunte, ${day.burnedCalories} kcal attive bruciate, ${day.waterLiters}L acqua bevuta.
+          Target alimentare: 1.950 kcal/die (target 170g proteine, 3.5L acqua).
+          Dati oggi: ${totalIntake} kcal assunte, ${day.burnedCalories} kcal attive bruciate, ${day.restingCalories} kcal a riposo, ${day.waterLiters}L acqua bevuta.
+          ${weeklyQuery && weeklyStats ? `REPORT ULTIMI 7 GIORNI: ${weeklyStats.count} giorni con dati; media assunte ${weeklyStats.avgIntake} kcal/die; media riposo ${weeklyStats.avgResting} kcal/die; media attive ${weeklyStats.avgActive} kcal/die; media dispendio totale ${weeklyStats.avgExpenditure} kcal/die; media bilancio ${weeklyStats.avgBalance} kcal/die; bilancio totale ${weeklyStats.totalBalance} kcal. Bilancio = dispendio totale meno calorie assunte: positivo = deficit, negativo = surplus. Non conteggiare giorni senza dati.` : ''}
           Dieta: polpette di manzo magro in friggitrice ad aria, patate croccanti, gamberetti con riso express, salmone, tonno fresco weekend, mozzarella light Milbona. NO QUARK, NO BROCCOLI.
 
+          STILE DEL COACH:
+          - Tono giovane, diretto, naturale e motivante. Zero giri di parole.
+          - Frasi brevi e concrete, massimo 3 brevi paragrafi quando non serve una scheda.
+          - Evidenzia numeri e risultato con [GREEN]...[/GREEN], [ORANGE]...[/ORANGE] o [RED]...[/RED].
+          - [GREEN] = deficit; [ORANGE] = surplus piccolo/accettabile fino a 300 kcal/die; [RED] = surplus oltre 300 kcal/die.
+          ${weeklyQuery ? '- Se chiede come è andata la settimana, riporta sempre giorni analizzati, media assunte, media riposo, media attive, media dispendio totale, media deficit/surplus e risultato complessivo. Usa solo i dati forniti nel REPORT.' : ''}
+
           REGOLE FONDAMENTALI:
-          1. Rispondi con tono clinico, scientifico, diretto e pratico (2 brevi paragrafi).
+          1. Rispondi in modo conciso e pratico.
           2. SE L'UTENTE CHIEDE DI FARE UN TIPO DI ALLENAMENTO, SEGNALA UN FASTIDIO/DOLORE (es. gomito, spalle, schiena), CHIEDE UNA VARIANTE, UN CIRCUITO O UNA MODIFICA ALLA SCHEDA:
              DEVI ASSOLUTAMENTE includere alla fine della tua risposta una scheda Technogym personalizzata racchiusa ESATTAMENTE tra i tag:
              \`\`\`workout_json
@@ -1347,7 +1410,8 @@ const BACKEND_AI_URL =
         }
 
         let bubbleContent = `<div class="bg-app-dark p-4 rounded-2xl border border-app-border max-w-[90%] text-gray-200 leading-relaxed shadow-sm space-y-3">
-          <p>${textOnly.replace(/\n/g, '<br>')}</p>
+          ${weeklyQuery ? buildWeeklyCoachCard(weeklyStats) : ''}
+          <p>${formatCoachText(textOnly)}</p>
         `;
 
         if (routineData && Array.isArray(routineData.exercises) && routineData.exercises.length > 0) {
