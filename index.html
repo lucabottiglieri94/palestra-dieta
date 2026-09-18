@@ -1216,6 +1216,20 @@
     // Utente principale/amministratore: non deve compilare il questionario.
     const PRIMARY_ADMIN_EMAIL = 'lucabottiglieri94@gmail.com';
 
+    // Identità del Coach: l'account Firebase corrente è la fonte di verità.
+    // Il nome non può provenire da una sessione/account precedente.
+    function getAuthenticatedCoachName() {
+      const email = (currentUser?.email || '').trim().toLowerCase();
+      if (email === PRIMARY_ADMIN_EMAIL) {
+        return (currentUser?.displayName || '').trim().split(/\s+/)[0] || 'Luca';
+      }
+      return appData.name || (currentUser?.displayName || '').trim().split(/\s+/)[0] || 'atleta';
+    }
+
+    function getAuthenticatedCoachEmail() {
+      return (currentUser?.email || '').trim().toLowerCase();
+    }
+
 async function callGeminiApi(payload) { // Backend: Groq per testo, Gemini 2.5 Flash solo per immagini
 const BACKEND_AI_URL =
     'https://palestra-ai-backend.vercel.app/api/ai';
@@ -1267,11 +1281,18 @@ const BACKEND_AI_URL =
       try {
         const day = getSelectedDayData();
         const totalIntake = (day.foodLogs || []).reduce((acc, m) => acc + (Number(m.calories) || 0), 0);
+        const coachName = getAuthenticatedCoachName();
+        const coachEmail = getAuthenticatedCoachEmail();
+        const coachUid = currentUser?.uid || 'locale';
         
         const sys = `
-          Sei il PT e Nutrizionista personale dell'atleta ${appData.name || 'atleta'}.
-          Identità account: ${currentUser?.uid || 'locale'}.
-          Chiama sempre l'utente usando il nome salvato nel profilo: ${appData.name || 'atleta'}.
+          Sei il PT e Nutrizionista personale dell'atleta ${coachName}.
+          IDENTITÀ ACCOUNT VINCOLANTE:
+          - Email account Firebase corrente: ${coachEmail || 'locale'}
+          - UID account Firebase corrente: ${coachUid}
+          - Nome da usare: ${coachName}
+          Non usare MAI il nome, il profilo o i dati di un altro account. Il nome dell'utente deve essere determinato dall'account Firebase corrente e dal relativo profilo salvato per quel UID.
+          Chiama sempre l'utente usando esclusivamente il nome dell'account corrente: ${coachName}.
           Profilo atleta: ${appData.name || 'atleta'}, ${appData.age || 'età non indicata'} anni, ${appData.weight || 'peso non indicato'}kg, ${appData.height || 'altezza non indicata'}cm, circonferenza vita ${appData.waist || 'non indicata'}cm, obiettivo ${appData.goal || 'da definire'}, ${appData.workoutsPerWeek || '4'} sessioni settimanali.
           Deficit calorico target: 1.950 kcal/die (target 170g proteine, 3.5L acqua).
           Dati oggi: ${totalIntake} kcal assunte, ${day.burnedCalories} kcal attive bruciate, ${day.waterLiters}L acqua bevuta.
@@ -2857,7 +2878,7 @@ window.saveOnboardingProfile = async function() {
 
     window.refreshCoachGreeting = function() {
       const box = document.getElementById('coachChatBox'); if (!box) return;
-      const n = appData.name || 'atleta';
+      const n = getAuthenticatedCoachName();
       box.innerHTML = `<div class="bg-app-dark p-4 rounded-2xl border border-app-border text-gray-200 leading-relaxed shadow-sm">Ciao, ${n}! Sono il tuo coach e sono qua per fare insieme la scheda che ti aiuterà nel tuo obiettivo.<br><br>Passa da me e scrivimi come vogliamo iniziare: dimmi il tuo obiettivo ed io ti creerò la tua scheda personale.<br><br><b>DAJEEEEE!</b></div>`;
     };
 
@@ -3026,12 +3047,24 @@ window.saveOnboardingProfile = async function() {
           if (data.ptSheetDate) appData.ptSheetDate = data.ptSheetDate;
           if (data.weight) appData.weight = data.weight;
           if (data.waist) appData.waist = data.waist;
-          if (data.name) appData.name = data.name;
+          // Per l'admin l'identità è vincolata all'email Firebase: non permettere
+          // che un vecchio campo "name" nel documento Cloud cambi il nome del Coach.
+          if (isPrimaryAdmin) {
+            appData.name = (user.displayName || '').trim().split(/\s+/)[0] || 'Luca';
+          } else if (data.name) {
+            appData.name = data.name;
+          }
           if (data.age) appData.age = data.age;
           if (data.height) appData.height = data.height;
           if (data.workoutsPerWeek) appData.workoutsPerWeek = data.workoutsPerWeek;
           if (data.goal) appData.goal = data.goal;
-          appData.profileCompleted = data.profileCompleted === true;
+          if (isPrimaryAdmin) {
+            appData.profileCompleted = true;
+            appData.approved = true;
+          } else {
+            appData.profileCompleted = data.profileCompleted === true;
+            appData.approved = data.approved === true;
+          }
           appData.approved = data.approved === true;
           if (data.walkLogs) appData.walkLogs = data.walkLogs;
           window.refreshCoachGreeting();
