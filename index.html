@@ -1263,13 +1263,35 @@ const BACKEND_AI_URL =
     // =========================================================================
     // AI COACH & MODIFICA DINAMICA DELLA SCHEDA
     // =========================================================================
-    function getWeeklyCoachStats() {
+        function getWeeklyCoachStats() {
       const end = new Date(selectedDate);
       end.setHours(0, 0, 0, 0);
-      const days = []; let totalIntake = 0; let totalResting = 0; let totalActive = 0;
-      for (let i = 6; i >= 0; i--) {
-        const d = new Date(end); d.setDate(end.getDate() - i);
-        const key = getFormattedDateKey(d); const rec = appData.dailyRecords?.[key];
+      const firstDataDate = new Date(2026, 8, 16);
+      const firstSunday = new Date(2026, 8, 20);
+      firstDataDate.setHours(0, 0, 0, 0);
+      firstSunday.setHours(0, 0, 0, 0);
+
+      let start;
+      let periodLabel;
+      if (end >= firstDataDate && end <= firstSunday) {
+        start = new Date(firstDataDate);
+        periodLabel = '16–20 settembre';
+      } else if (end >= firstSunday) {
+        const dayOfWeek = end.getDay();
+        const daysSinceMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+        start = new Date(end);
+        start.setDate(end.getDate() - daysSinceMonday);
+        periodLabel = 'settimana lunedì–domenica';
+      } else {
+        return { days: [], count: 0, periodLabel: 'dal 16 settembre' };
+      }
+
+      const days = [];
+      let totalIntake = 0; let totalResting = 0; let totalActive = 0;
+      for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+        const current = new Date(d);
+        const key = getFormattedDateKey(current);
+        const rec = appData.dailyRecords?.[key];
         if (!rec) continue;
         const intake = (rec.foodLogs || []).reduce((sum, m) => sum + (Number(m.calories) || 0), 0);
         const resting = Number(rec.restingCalories) || Number(appData.defaultRestingCalories) || 1950;
@@ -1279,11 +1301,7 @@ const BACKEND_AI_URL =
         totalIntake += intake; totalResting += resting; totalActive += active;
       }
       const count = days.length;
-      return { days, count, totalIntake, totalResting, totalActive, totalExpenditure: totalResting + totalActive, totalBalance: (totalResting + totalActive) - totalIntake, avgIntake: count ? Math.round(totalIntake / count) : 0, avgResting: count ? Math.round(totalResting / count) : 0, avgActive: count ? Math.round(totalActive / count) : 0, avgExpenditure: count ? Math.round((totalResting + totalActive) / count) : 0, avgBalance: count ? Math.round(((totalResting + totalActive) - totalIntake) / count) : 0 };
-    }
-
-    function isWeeklyCoachQuery(query) {
-      return /settimana|ultimi\s*7\s*giorni|7\s*giorni|questa\s*settimana|come\s*[eè]\s*andata/i.test(query);
+      return { days, count, totalIntake, totalResting, totalActive, totalExpenditure: totalResting + totalActive, totalBalance: (totalResting + totalActive) - totalIntake, avgIntake: count ? Math.round(totalIntake / count) : 0, avgResting: count ? Math.round(totalResting / count) : 0, avgActive: count ? Math.round(totalActive / count) : 0, avgExpenditure: count ? Math.round((totalResting + totalActive) / count) : 0, avgBalance: count ? Math.round(((totalResting + totalActive) - totalIntake) / count) : 0, periodLabel };
     }
 
     function getWeeklyBalanceStyle(balance) {
@@ -1306,7 +1324,7 @@ const BACKEND_AI_URL =
       const sign = stats.avgBalance >= 0 ? '-' : '+'; const abs = Math.abs(stats.avgBalance);
       const totalSign = stats.totalBalance >= 0 ? '-' : '+'; const totalAbs = Math.abs(stats.totalBalance);
       return '<div class="p-4 rounded-2xl '+style.bg+' border '+style.border+' space-y-3">' +
-        '<div class="flex items-center justify-between"><span class="text-xs font-black uppercase tracking-wider '+style.color+'">📊 Report ultimi 7 giorni</span><span class="text-[11px] font-mono text-app-textMuted">'+stats.count+'/7 giorni</span></div>' +
+        '<div class="flex items-center justify-between"><span class="text-xs font-black uppercase tracking-wider '+style.color+'">📊 Report ${stats.periodLabel || 'periodo'}</span><span class="text-[11px] font-mono text-app-textMuted">'+stats.count+'/7 giorni</span></div>' +
         '<div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center">' +
         '<div class="p-2 rounded-xl bg-app-dark border border-app-border"><div class="text-[10px] text-app-textMuted uppercase">Media assunte</div><div class="font-mono font-black text-white">'+stats.avgIntake+' kcal</div></div>' +
         '<div class="p-2 rounded-xl bg-app-dark border border-app-border"><div class="text-[10px] text-app-textMuted uppercase">Riposo</div><div class="font-mono font-black text-white">'+stats.avgResting+' kcal</div></div>' +
@@ -1359,7 +1377,7 @@ const BACKEND_AI_URL =
           - Frasi brevi e concrete, massimo 3 brevi paragrafi quando non serve una scheda.
           - Evidenzia numeri e risultato con [GREEN]...[/GREEN], [ORANGE]...[/ORANGE] o [RED]...[/RED].
           - [GREEN] = deficit; [ORANGE] = surplus piccolo/accettabile fino a 300 kcal/die; [RED] = surplus oltre 300 kcal/die.
-          ${weeklyQuery ? '- Se chiede come è andata la settimana, riporta sempre giorni analizzati, media assunte, media riposo, media attive, media dispendio totale, media deficit/surplus e risultato complessivo. Usa solo i dati forniti nel REPORT.' : ''}
+          ${weeklyQuery ? '- Se chiede come sta andando la dieta o come è andata la settimana, usa il REPORT del periodo corrente: dal 16/09/2026 al 20/09/2026 il periodo iniziale parte dal 16 settembre; dalla settimana successiva usa settimane complete lunedì-domenica. Riporta sempre giorni analizzati, media assunte, media riposo, media attive, media dispendio totale, media deficit/surplus e risultato complessivo. Usa solo i dati forniti nel REPORT.' : ''}
 
           REGOLE FONDAMENTALI:
           1. Rispondi in modo conciso e pratico.
