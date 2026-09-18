@@ -1028,24 +1028,36 @@
     let selectedDate = new Date();
     const getFormattedDateKey = d => d.toISOString().slice(0, 10);
 
+    // Stato iniziale neutro: i dati autenticati arrivano dal documento Firebase dell'utente corrente.
     let appData = {
-      dailyRecords: JSON.parse(localStorage.getItem('icon_daily_records') || '{}'),
-      defaultRestingCalories: parseInt(localStorage.getItem('icon_resting_calories') || '1950', 10),
-      weight: localStorage.getItem('icon_weight_record') || '95.0',
-      waist: localStorage.getItem('icon_waist_record') || '104.0',
-      height: localStorage.getItem('icon_height_record') || '177',
-      workoutsPerWeek: localStorage.getItem('icon_workouts_week') || '4',
-      goal: localStorage.getItem('icon_goal') || 'Ricomporsi: perdere grasso e aumentare muscolo',
-      name: localStorage.getItem('icon_user_name') || '',
-      age: localStorage.getItem('icon_user_age') || '',
-      profileCompleted: false,
-      workoutExercises: JSON.parse(localStorage.getItem('icon_workout_exercises') || '{}'),
-      walkLogs: JSON.parse(localStorage.getItem('icon_walk_logs') || '[]'),
-      customRoutines: JSON.parse(localStorage.getItem('icon_custom_routines') || '{}'),
-      ptSheetImage: localStorage.getItem('icon_pt_sheet_image') || null,
-      ptSheetDate: localStorage.getItem('icon_pt_sheet_date') || null,
-      currentLidlSlot: 'slot1'
+      dailyRecords: {}, defaultRestingCalories: 1950, weight: '95.0', waist: '104.0',
+      height: '177', workoutsPerWeek: '4',
+      goal: 'Ricomporsi: perdere grasso e aumentare muscolo',
+      name: '', age: '', profileCompleted: false, approved: false,
+      workoutExercises: {}, walkLogs: [], customRoutines: {},
+      ptSheetImage: null, ptSheetDate: null, currentLidlSlot: 'slot1'
     };
+    let localStateKey = 'icon_guest_state';
+
+    function resetAppData() {
+      appData = {
+        dailyRecords: {}, defaultRestingCalories: 1950, weight: '95.0', waist: '104.0',
+        height: '177', workoutsPerWeek: '4',
+        goal: 'Ricomporsi: perdere grasso e aumentare muscolo',
+        name: '', age: '', profileCompleted: false, approved: false,
+        workoutExercises: {}, walkLogs: [], customRoutines: {},
+        ptSheetImage: null, ptSheetDate: null, currentLidlSlot: 'slot1'
+      };
+    }
+
+    function loadLocalState(key) {
+      try {
+        const raw = localStorage.getItem(key);
+        if (raw) appData = { ...appData, ...JSON.parse(raw) };
+      } catch (e) {
+        console.warn('Locale state:', e);
+      }
+    }
 
     let currentWorkoutDay = 'dayA';
     let timerCountdown = null;
@@ -1145,13 +1157,7 @@
 
     function triggerCloudSave() {
       try {
-        localStorage.setItem('icon_daily_records', JSON.stringify(appData.dailyRecords));
-        localStorage.setItem('icon_resting_calories', (appData.defaultRestingCalories || 1950).toString());
-        localStorage.setItem('icon_weight_record', appData.weight);
-        localStorage.setItem('icon_waist_record', appData.waist);
-        localStorage.setItem('icon_workout_exercises', JSON.stringify(appData.workoutExercises));
-        localStorage.setItem('icon_walk_logs', JSON.stringify(appData.walkLogs));
-        localStorage.setItem('icon_custom_routines', JSON.stringify(appData.customRoutines));
+        localStorage.setItem(localStateKey, JSON.stringify(appData));
       } catch (e) {}
 
       if (!currentUser || !cloudDocRef) return;
@@ -1264,6 +1270,8 @@ const BACKEND_AI_URL =
         
         const sys = `
           Sei il PT e Nutrizionista personale dell'atleta ${appData.name || 'atleta'}.
+          Identità account: ${currentUser?.uid || 'locale'}.
+          Chiama sempre l'utente usando il nome salvato nel profilo: ${appData.name || 'atleta'}.
           Profilo atleta: ${appData.name || 'atleta'}, ${appData.age || 'età non indicata'} anni, ${appData.weight || 'peso non indicato'}kg, ${appData.height || 'altezza non indicata'}cm, circonferenza vita ${appData.waist || 'non indicata'}cm, obiettivo ${appData.goal || 'da definire'}, ${appData.workoutsPerWeek || '4'} sessioni settimanali.
           Deficit calorico target: 1.950 kcal/die (target 170g proteine, 3.5L acqua).
           Dati oggi: ${totalIntake} kcal assunte, ${day.burnedCalories} kcal attive bruciate, ${day.waterLiters}L acqua bevuta.
@@ -1927,116 +1935,104 @@ const BACKEND_AI_URL =
 
     window.toggleTimerModal = () => document.getElementById('restTimerModal').classList.toggle('hidden');
 
-    // Speech Recognition
+    // Speech Recognition: indipendente dal backend Gemini Vision.
     let scannerRecognition = null;
     let isScannerRecording = false;
-
-    window.toggleVoiceInput = function() {
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      if (!SpeechRecognition) {
-        showNotification("Riconoscimento vocale non supportato nel browser.", true);
-        return;
-      }
-      const btn = document.getElementById('voiceInputBtn');
-      const input = document.getElementById('manualDishTextInput');
-
-      if (isScannerRecording && scannerRecognition) {
-        scannerRecognition.stop();
-        return;
-      }
-
-      try {
-        scannerRecognition = new SpeechRecognition();
-        scannerRecognition.lang = 'it-IT';
-        scannerRecognition.continuous = false;
-        scannerRecognition.interimResults = true;
-
-        scannerRecognition.onstart = () => {
-          isScannerRecording = true;
-          if (btn) btn.classList.add('mic-active');
-          showNotification("🎙️ In ascolto... detta il pasto");
-        };
-
-        scannerRecognition.onresult = event => {
-          let transcript = '';
-          for (let i = event.resultIndex; i < event.results.length; i++) {
-            transcript += event.results[i][0].transcript;
-          }
-          if (input && transcript) input.value = transcript;
-        };
-
-        scannerRecognition.onerror = event => {
-          isScannerRecording = false;
-          if (btn) btn.classList.remove('mic-active');
-          if (event.error !== 'no-speech') showNotification(`Microfono: ${event.error}`, true);
-        };
-
-        scannerRecognition.onend = () => {
-          isScannerRecording = false;
-          if (btn) btn.classList.remove('mic-active');
-          if (input && input.value.trim()) showNotification("Voce registrata! Tocca Calcola.");
-        };
-
-        scannerRecognition.start();
-      } catch (e) {
-        isScannerRecording = false;
-        if (btn) btn.classList.remove('mic-active');
-      }
-    };
-
     let coachRecognition = null;
     let isCoachRecording = false;
 
-    window.toggleCoachVoiceInput = function() {
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      if (!SpeechRecognition) {
-        showNotification("Riconoscimento vocale non supportato.", true);
-        return;
-      }
-      const btn = document.getElementById('coachVoiceBtn');
-      const input = document.getElementById('coachInputText');
+    function getSpeechRecognitionClass() {
+      return window.SpeechRecognition || window.webkitSpeechRecognition || null;
+    }
 
-      if (isCoachRecording && coachRecognition) {
-        coachRecognition.stop();
+    function stopRecognition(kind) {
+      const isCoach = kind === 'coach';
+      const recognition = isCoach ? coachRecognition : scannerRecognition;
+      try { recognition?.abort(); } catch (e) {}
+      if (isCoach) { isCoachRecording = false; coachRecognition = null; }
+      else { isScannerRecording = false; scannerRecognition = null; }
+      document.getElementById(isCoach ? 'coachVoiceBtn' : 'voiceInputBtn')?.classList.remove('mic-active');
+    }
+
+    function startRecognition({kind, btnId, inputId, startMsg, onFinal}) {
+      const SpeechRecognition = getSpeechRecognitionClass();
+      if (!SpeechRecognition) {
+        showNotification('Riconoscimento vocale non disponibile. Usa Chrome/Edge e consenti il microfono al sito.', true);
         return;
       }
+
+      const isCoach = kind === 'coach';
+      const btn = document.getElementById(btnId);
+      const input = document.getElementById(inputId);
+      stopRecognition(kind);
 
       try {
-        coachRecognition = new SpeechRecognition();
-        coachRecognition.lang = 'it-IT';
-        coachRecognition.continuous = false;
-        coachRecognition.interimResults = true;
+        const recognition = new SpeechRecognition();
+        recognition.lang = 'it-IT';
+        recognition.continuous = false;
+        recognition.interimResults = false;
+        recognition.maxAlternatives = 1;
 
-        coachRecognition.onstart = () => {
-          isCoachRecording = true;
-          if (btn) btn.classList.add('mic-active');
-          showNotification("🎙️ Parla con il Coach...");
+        if (isCoach) coachRecognition = recognition;
+        else scannerRecognition = recognition;
+
+        recognition.onstart = () => {
+          if (isCoach) isCoachRecording = true; else isScannerRecording = true;
+          btn?.classList.add('mic-active');
+          showNotification(startMsg);
         };
 
-        coachRecognition.onresult = event => {
-          let transcript = '';
-          for (let i = event.resultIndex; i < event.results.length; i++) {
-            transcript += event.results[i][0].transcript;
-          }
-          if (input && transcript) input.value = transcript;
+        recognition.onresult = event => {
+          const transcript = Array.from(event.results || [])
+            .map(r => r?.[0]?.transcript || '')
+            .join(' ')
+            .trim();
+          if (transcript && input) input.value = transcript;
         };
 
-        coachRecognition.onerror = () => {
-          isCoachRecording = false;
-          if (btn) btn.classList.remove('mic-active');
+        recognition.onerror = event => {
+          const messages = {
+            'not-allowed': 'Permesso microfono negato.',
+            'service-not-allowed': 'Servizio vocale non disponibile.',
+            'audio-capture': 'Microfono non trovato.',
+            'network': 'Servizio vocale temporaneamente non disponibile.',
+            'no-speech': 'Nessuna voce rilevata.',
+            'aborted': ''
+          };
+          const msg = messages[event.error] ?? ('Microfono: ' + event.error);
+          if (msg) showNotification(msg, true);
         };
 
-        coachRecognition.onend = () => {
-          isCoachRecording = false;
-          if (btn) btn.classList.remove('mic-active');
-          if (input && input.value.trim()) window.handleCoachSubmit(new Event('submit'));
+        recognition.onend = () => {
+          if (isCoach) { isCoachRecording = false; coachRecognition = null; }
+          else { isScannerRecording = false; scannerRecognition = null; }
+          btn?.classList.remove('mic-active');
+          if (input?.value.trim()) onFinal?.();
         };
 
-        coachRecognition.start();
+        recognition.start();
       } catch (e) {
-        isCoachRecording = false;
-        if (btn) btn.classList.remove('mic-active');
+        stopRecognition(kind);
+        showNotification('Impossibile avviare il microfono. Controlla i permessi del sito.', true);
       }
+    }
+
+    window.toggleVoiceInput = function() {
+      if (isScannerRecording) { stopRecognition('scanner'); return; }
+      startRecognition({
+        kind:'scanner', btnId:'voiceInputBtn', inputId:'manualDishTextInput',
+        startMsg:'🎙️ In ascolto... detta il pasto',
+        onFinal:()=>showNotification('Voce registrata! Tocca Calcola.')
+      });
+    };
+
+    window.toggleCoachVoiceInput = function() {
+      if (isCoachRecording) { stopRecognition('coach'); return; }
+      startRecognition({
+        kind:'coach', btnId:'coachVoiceBtn', inputId:'coachInputText',
+        startMsg:'🎙️ Parla con il Coach...',
+        onFinal:()=>window.handleCoachSubmit(new Event('submit'))
+      });
     };
 
     // Scanner Pasti
@@ -2793,13 +2789,7 @@ window.saveOnboardingProfile = async function() {
     approved: false
   });
 
-  localStorage.setItem('icon_user_name', appData.name);
-  localStorage.setItem('icon_user_age', appData.age);
-  localStorage.setItem('icon_height_record', appData.height);
-  localStorage.setItem('icon_weight_record', appData.weight);
-  localStorage.setItem('icon_waist_record', appData.waist);
-  localStorage.setItem('icon_workouts_week', appData.workoutsPerWeek);
-  localStorage.setItem('icon_goal', appData.goal);
+  try { localStorage.setItem(localStateKey, JSON.stringify(appData)); } catch (e) {}
 
   if (cloudDocRef) {
     await setDoc(cloudDocRef, {
@@ -2873,17 +2863,26 @@ window.saveOnboardingProfile = async function() {
 
     window.logoutUser = async function() {
       try {
+        if (scannerRecognition) { try { scannerRecognition.abort(); } catch (e) {} }
+        if (coachRecognition) { try { coachRecognition.abort(); } catch (e) {} }
+        if (unsubCloud) { try { unsubCloud(); } catch (e) {} unsubCloud = null; }
         await signOut(auth);
+        resetAppData();
+        currentUser = null;
+        cloudDocRef = null;
+        localStateKey = 'icon_guest_state';
         document.getElementById('loginOverlay').classList.remove('hidden');
+        document.getElementById('onboardingOverlay')?.classList.add('hidden');
         showNotification("Disconnesso.");
-      } catch (e) {}
+      } catch (e) { console.warn('Logout:', e); }
     };
 
     window.deleteUserMemory = async function() {
       if (!confirm('Eliminare TUTTI i dati del cliente, il profilo Firebase e uscire dall’account?')) return;
       try {
         if (cloudDocRef) await deleteDoc(cloudDocRef);
-        localStorage.clear();
+        localStorage.removeItem(localStateKey);
+        localStorage.removeItem('icon_guest_state');
         if (currentUser) await signOut(auth);
         location.reload();
       } catch (e) { showNotification('Errore durante eliminazione memoria.', true); console.error(e); }
@@ -2927,11 +2926,21 @@ window.saveOnboardingProfile = async function() {
       const onboarding = document.getElementById('onboardingOverlay');
 
       if (!user) {
+        if (unsubCloud) { try { unsubCloud(); } catch (e) {} unsubCloud = null; }
+        resetAppData();
+        localStateKey = 'icon_guest_state';
+        loadLocalState(localStateKey);
+        cloudDocRef = null;
         cloudStatus.innerText = "Offline / Locale";
         if (onboarding) onboarding.classList.add('hidden');
+        window.refreshCoachGreeting();
+        window.updateUIFromState();
         return;
       }
 
+      if (unsubCloud) { try { unsubCloud(); } catch (e) {} unsubCloud = null; }
+      resetAppData();
+      localStateKey = `icon_user_state_${user.uid}`;
       cloudDocRef = doc(db, 'users', user.uid, 'gym_recomp', 'current_state');
       const isPrimaryAdmin = (user.email || '').toLowerCase() === PRIMARY_ADMIN_EMAIL;
 
