@@ -1020,6 +1020,19 @@
         ]);
         const app = getApps().length ? getApp() : initializeApp(window.__firebaseConfig);
         const auth = getAuth(app);
+        // Listener di sicurezza: se il login riesce, sblocca subito la pagina anche se
+        // il listener principale dell'app viene eseguito dopo.
+        const { onAuthStateChanged } = await import('https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js');
+        onAuthStateChanged(auth, user => {
+          if (!user) return;
+          const overlay = document.getElementById('loginOverlay');
+          const status = document.getElementById('cloudStatusReadout');
+          const admin = (user.email || '').toLowerCase() === 'lucabottiglieri94@gmail.com';
+          if (admin && overlay) {
+            overlay.classList.add('hidden');
+            if (status) status.innerText = (user.displayName ? user.displayName.split(' ')[0] : 'Luca') + ' • Cloud ✓';
+          }
+        });
         const provider = new GoogleAuthProvider();
         provider.setCustomParameters({ prompt: 'select_account' });
         try {
