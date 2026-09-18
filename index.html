@@ -995,13 +995,60 @@
     }
   </script>
 
+  <!-- LOGIN BOOTSTRAP: il pulsante resta funzionante anche se il modulo principale ha un problema di caricamento -->
+  <script>
+    window.__firebaseConfig = {
+      apiKey: 'AIzaSyAdZbBv6JYbYnl6CxuFVfHhSftvIxwf2DY',
+      authDomain: 'budget-luca.firebaseapp.com',
+      projectId: 'budget-luca',
+      storageBucket: 'budget-luca.firebasestorage.app',
+      messagingSenderId: '67496424698',
+      appId: '1:67496424698:web:efc07408543',
+      measurementId: 'G-7LEYRZE9QN'
+    };
+    window.handleGoogleLogin = async function() {
+      const btn = document.getElementById('loginBtn');
+      const label = document.getElementById('loginBtnLabel');
+      const errBox = document.getElementById('loginStatusMsg');
+      try {
+        if (btn) btn.disabled = true;
+        if (label) label.innerText = 'Accesso in corso...';
+        if (errBox) errBox.classList.add('hidden');
+        const [{ getApps, getApp, initializeApp }, { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect }] = await Promise.all([
+          import('https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js'),
+          import('https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js')
+        ]);
+        const app = getApps().length ? getApp() : initializeApp(window.__firebaseConfig);
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
+        provider.setCustomParameters({ prompt: 'select_account' });
+        try {
+          await signInWithPopup(auth, provider);
+        } catch (err) {
+          const fallback = ['auth/popup-blocked','auth/popup-closed-by-user','auth/cancelled-popup-request','auth/operation-not-supported-in-this-environment','auth/internal-error'];
+          if (fallback.includes(err?.code)) await signInWithRedirect(auth, provider);
+          else throw err;
+        }
+      } catch (err) {
+        console.error('Google Login:', err);
+        if (errBox) {
+          errBox.innerText = err?.message || 'Accesso Google non riuscito.';
+          errBox.classList.remove('hidden');
+        }
+      } finally {
+        if (btn) btn.disabled = false;
+        if (label) label.innerText = 'Accedi con Google';
+      }
+    };
+  </script>
+
   <!-- FIREBASE & CORE LOGIC -->
   <script type="module">
-    import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js';
+    import { initializeApp, getApps, getApp } from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js';
     import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js';
     import { getFirestore, doc, getDoc, onSnapshot, setDoc, deleteDoc } from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js';
 
-    const firebaseConfig = {
+    const firebaseConfig = window.__firebaseConfig || {
       apiKey: 'AIzaSyAdZbBv6JYbYnl6CxuFVfHhSftvIxwf2DY',
       authDomain: 'budget-luca.firebaseapp.com',
       projectId: 'budget-luca',
@@ -1011,7 +1058,7 @@
       measurementId: 'G-7LEYRZE9QN'
     };
 
-    const app = initializeApp(firebaseConfig);
+    const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
     const provider = new GoogleAuthProvider();
