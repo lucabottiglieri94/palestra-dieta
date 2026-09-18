@@ -998,7 +998,7 @@
   <!-- FIREBASE & CORE LOGIC -->
   <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js';
-    import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js';
+    import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js';
     import { getFirestore, doc, getDoc, onSnapshot, setDoc, deleteDoc } from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js';
 
     const firebaseConfig = {
@@ -2846,12 +2846,33 @@ const BACKEND_AI_URL =
       const errBox = document.getElementById('loginStatusMsg');
       try {
         if (btnLabel) btnLabel.innerText = "Accesso in corso...";
-        errBox.classList.add('hidden');
+        if (errBox) errBox.classList.add('hidden');
         await signInWithPopup(auth, provider);
       } catch (err) {
         console.warn("Login popup fallito:", err);
-        errBox.innerText = "Accesso popup non disponibile. Puoi continuare in modalità Locale.";
-        errBox.classList.remove('hidden');
+        // Fallback reale: alcuni browser bloccano il popup/COOP su GitHub Pages.
+        const fallbackCodes = [
+          'auth/popup-blocked',
+          'auth/popup-closed-by-user',
+          'auth/cancelled-popup-request',
+          'auth/operation-not-supported-in-this-environment',
+          'auth/internal-error'
+        ];
+        if (fallbackCodes.includes(err?.code)) {
+          try {
+            await signInWithRedirect(auth, provider);
+            return;
+          } catch (redirectErr) {
+            console.error("Login redirect fallito:", redirectErr);
+            if (errBox) {
+              errBox.innerText = "Accesso Google non riuscito. Riprova.";
+              errBox.classList.remove('hidden');
+            }
+          }
+        } else if (errBox) {
+          errBox.innerText = err?.message || "Accesso Google non riuscito.";
+          errBox.classList.remove('hidden');
+        }
       } finally {
         if (btnLabel) btnLabel.innerText = "Accedi con Google";
       }
@@ -3026,6 +3047,18 @@ window.saveOnboardingProfile = async function() {
       document.getElementById('metricCurrentWaist').innerHTML = `${appData.waist} <span class="text-xs text-app-textMuted">cm</span>`;
     };
 
+    // Completa l'accesso se Firebase ci ha riportato alla pagina dopo il fallback redirect.
+    getRedirectResult(auth).catch(err => {
+      if (err && err.code !== 'auth/no-auth-event') {
+        console.warn("Login redirect:", err);
+        const errBox = document.getElementById('loginStatusMsg');
+        if (errBox) {
+          errBox.innerText = err.message || "Accesso Google non riuscito.";
+          errBox.classList.remove('hidden');
+        }
+      }
+    });
+
     onAuthStateChanged(auth, async user => {
       currentUser = user;
       const overlay = document.getElementById('loginOverlay');
@@ -3151,7 +3184,6 @@ window.saveOnboardingProfile = async function() {
             appData.profileCompleted = data.profileCompleted === true;
             appData.approved = data.approved === true;
           }
-          appData.approved = data.approved === true;
           if (data.walkLogs) appData.walkLogs = data.walkLogs;
           window.refreshCoachGreeting();
           window.updateUIFromState();
