@@ -3198,7 +3198,6 @@ window.saveOnboardingProfile = async function() {
             appData.profileCompleted = data.profileCompleted === true;
             appData.approved = data.approved === true;
           }
-          appData.approved = data.approved === true;
           if (data.walkLogs) appData.walkLogs = data.walkLogs;
           window.refreshCoachGreeting();
           window.updateUIFromState();
