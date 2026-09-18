@@ -1282,6 +1282,27 @@ const BACKEND_AI_URL =
       return { days, count, totalIntake, totalResting, totalActive, totalExpenditure: totalResting + totalActive, totalBalance: (totalResting + totalActive) - totalIntake, avgIntake: count ? Math.round(totalIntake / count) : 0, avgResting: count ? Math.round(totalResting / count) : 0, avgActive: count ? Math.round(totalActive / count) : 0, avgExpenditure: count ? Math.round((totalResting + totalActive) / count) : 0, avgBalance: count ? Math.round(((totalResting + totalActive) - totalIntake) / count) : 0 };
     }
 
+    function isReportQuery(query) {
+      return /dammi\s+(il\s+)?(mio\s+)?report|fammi\s+(il\s+)?report|mio\s+report/i.test(String(query || ""));
+    }
+
+    function getCoachReportStats() {
+      const endKey = getFormattedDateKey(selectedDate);
+      const records = appData.dailyRecords || {};
+      const keys = Object.keys(records).filter(k => /^\d{4}-\d{2}-\d{2}$/.test(k) && k <= endKey).sort();
+      const days = []; let totalIntake = 0; let totalResting = 0; let totalActive = 0;
+      for (const key of keys) {
+        const rec = records[key] || {};
+        const intake = (rec.foodLogs || []).reduce((sum, m) => sum + (Number(m.calories) || 0), 0);
+        const resting = Number(rec.restingCalories) || Number(appData.defaultRestingCalories) || 1950;
+        const active = Number(rec.burnedCalories) || 0;
+        if (intake <= 0 && active <= 0) continue;
+        days.push({ key, intake, resting, active });
+        totalIntake += intake; totalResting += resting; totalActive += active;
+      }
+      const count = days.length;
+      return { count, firstDay: count ? days[0].key : null, lastDay: count ? days[count - 1].key : null, totalIntake, totalResting, totalActive, totalExpenditure: totalResting + totalActive, totalBalance: (totalResting + totalActive) - totalIntake, avgIntake: count ? Math.round(totalIntake / count) : 0, avgResting: count ? Math.round(totalResting / count) : 0, avgActive: count ? Math.round(totalActive / count) : 0, avgExpenditure: count ? Math.round((totalResting + totalActive) / count) : 0, avgBalance: count ? Math.round(((totalResting + totalActive) - totalIntake) / count) : 0 };
+    }
     function isWeeklyCoachQuery(query) {
       return /settimana|ultimi\s*7\s*giorni|7\s*giorni|questa\s*settimana|come\s*[eè]\s*andata/i.test(query);
     }
@@ -1335,7 +1356,9 @@ const BACKEND_AI_URL =
         const day = getSelectedDayData();
         const totalIntake = (day.foodLogs || []).reduce((acc, m) => acc + (Number(m.calories) || 0), 0);
         const weeklyQuery = isWeeklyCoachQuery(query);
+        const reportQuery = isReportQuery(query);
         const weeklyStats = weeklyQuery ? getWeeklyCoachStats() : null;
+        const reportStats = reportQuery ? getCoachReportStats() : null;
         const coachName = getAuthenticatedCoachName();
         const coachEmail = getAuthenticatedCoachEmail();
         const coachUid = currentUser?.uid || 'locale';
@@ -1351,6 +1374,7 @@ const BACKEND_AI_URL =
           Profilo atleta: ${appData.name || 'atleta'}, ${appData.age || 'età non indicata'} anni, ${appData.weight || 'peso non indicato'}kg, ${appData.height || 'altezza non indicata'}cm, circonferenza vita ${appData.waist || 'non indicata'}cm, obiettivo ${appData.goal || 'da definire'}, ${appData.workoutsPerWeek || '4'} sessioni settimanali.
           Target alimentare: 1.950 kcal/die (target 170g proteine, 3.5L acqua).
           Dati oggi: ${totalIntake} kcal assunte, ${day.burnedCalories} kcal attive bruciate, ${day.restingCalories} kcal a riposo, ${day.waterLiters}L acqua bevuta.
+          ${reportQuery && reportStats ? `REPORT COMPLETO: dal ${reportStats.firstDay} al ${reportStats.lastDay}; ${reportStats.count} giorni analizzati; media assunte ${reportStats.avgIntake} kcal/die; media riposo ${reportStats.avgResting} kcal/die; media attive ${reportStats.avgActive} kcal/die; media totali bruciate ${reportStats.avgExpenditure} kcal/die; media bilancio ${reportStats.avgBalance} kcal/die; bilancio totale ${reportStats.totalBalance} kcal. Positivo = deficit, negativo = surplus. Usa tutti i giorni disponibili dal primo giorno con dati e non contare giorni senza dati.` : ""}
           ${weeklyQuery && weeklyStats ? `REPORT ULTIMI 7 GIORNI: ${weeklyStats.count} giorni con dati; media assunte ${weeklyStats.avgIntake} kcal/die; media riposo ${weeklyStats.avgResting} kcal/die; media attive ${weeklyStats.avgActive} kcal/die; media dispendio totale ${weeklyStats.avgExpenditure} kcal/die; media bilancio ${weeklyStats.avgBalance} kcal/die; bilancio totale ${weeklyStats.totalBalance} kcal. Bilancio = dispendio totale meno calorie assunte: positivo = deficit, negativo = surplus. Non conteggiare giorni senza dati.` : ''}
           Dieta: polpette di manzo magro in friggitrice ad aria, patate croccanti, gamberetti con riso express, salmone, tonno fresco weekend, mozzarella light Milbona. NO QUARK, NO BROCCOLI.
 
