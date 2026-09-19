@@ -2547,6 +2547,12 @@ const BACKEND_AI_URL =
       }).join('');
     }
 
+    function formatResultNumber(value) {
+      const n = Number(value);
+      if (!Number.isFinite(n)) return '0';
+      return Number.isInteger(n) ? String(n) : n.toFixed(2);
+    }
+
     function updateDeficitCalculations() {
       const day = getSelectedDayData();
       const totalIntake = (day.foodLogs || []).reduce((acc, m) => acc + (Number(m.calories) || 0), 0);
@@ -2566,10 +2572,10 @@ const BACKEND_AI_URL =
       const badgeEl = document.getElementById('deficitSurplusBadge');
       const gymDeficitEl = document.getElementById('displayTotalDeficit');
 
-      if (intakeEl) intakeEl.innerText = totalIntake;
-      if (restEl) restEl.innerText = resting;
-      if (burnedEl) burnedEl.innerText = burned;
-      if (totalBurnedEl) totalBurnedEl.innerText = totalExpenditure;
+      if (intakeEl) intakeEl.innerText = formatResultNumber(totalIntake);
+      if (restEl) restEl.innerText = formatResultNumber(resting);
+      if (burnedEl) burnedEl.innerText = formatResultNumber(burned);
+      if (totalBurnedEl) totalBurnedEl.innerText = formatResultNumber(totalExpenditure);
 
       const deficitStr = deficitValue >= 0 ? `-${deficitValue.toFixed(2)} kcal` : `+${Math.abs(deficitValue).toFixed(2)} kcal`;
 
