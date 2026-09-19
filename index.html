@@ -725,14 +725,34 @@
 
       <!-- Diario Pasti con Eliminazione Singola -->
       <div class="space-y-4">
-        <div class="flex items-center justify-between px-1">
-          <div>
-            <h4 class="font-display font-black text-lg sm:text-xl text-white">Diario Pasti del Giorno</h4>
-            <p class="text-xs sm:text-sm text-app-textMuted mt-0.5">Tocca il cestino 🗑️ per eliminare un singolo piatto</p>
+        <div class="flex flex-col gap-3 px-1">
+          <div class="flex items-center justify-between gap-3">
+            <div>
+              <h4 class="font-display font-black text-lg sm:text-xl text-white">Diario Pasti del Giorno</h4>
+              <p class="text-xs sm:text-sm text-app-textMuted mt-0.5">I totali vengono presi direttamente dai piatti salvati nello Scanner.</p>
+            </div>
+            <button onclick="window.clearFoodLog()" class="text-xs sm:text-sm text-app-textMuted hover:text-red-400 px-3.5 py-1.5 rounded-xl bg-app-card border border-app-border transition shrink-0">
+              Azzera Giorno
+            </button>
           </div>
-          <button onclick="window.clearFoodLog()" class="text-xs sm:text-sm text-app-textMuted hover:text-red-400 px-3.5 py-1.5 rounded-xl bg-app-card border border-app-border transition">
-            Azzera Giorno
-          </button>
+
+          <div class="grid grid-cols-2 gap-3">
+            <button type="button" class="p-4 rounded-2xl bg-app-card border border-cyan-500/30 text-left shadow-sm">
+              <div class="flex items-center justify-between gap-2">
+                <span class="text-xl">🍝</span>
+                <span class="text-[10px] uppercase font-black text-cyan-300">Totale Carboidrati</span>
+              </div>
+              <div id="dietTotalCarbs" class="mt-1 text-2xl sm:text-3xl font-mono font-black text-cyan-200">0.00 g</div>
+            </button>
+
+            <button type="button" class="p-4 rounded-2xl bg-app-card border border-amber-500/30 text-left shadow-sm">
+              <div class="flex items-center justify-between gap-2">
+                <span class="text-xl">🍗</span>
+                <span class="text-[10px] uppercase font-black text-amber-300">Totale Proteine</span>
+              </div>
+              <div id="dietTotalProtein" class="mt-1 text-2xl sm:text-3xl font-mono font-black text-amber-200">0.00 g</div>
+            </button>
+          </div>
         </div>
         <div id="groupedMealsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
       </div>
@@ -2402,7 +2422,23 @@ const BACKEND_AI_URL =
       showNotification("Diario pasti azzerato.");
     };
 
+    function updateDietMacroButtons() {
+      const day = getSelectedDayData();
+      const logs = day?.foodLogs || [];
+
+      // I valori arrivano esclusivamente dai piatti salvati dallo Scanner.
+      const totalCarbs = logs.reduce((sum, item) => sum + (Number(item.carbs) || 0), 0);
+      const totalProtein = logs.reduce((sum, item) => sum + (Number(item.protein) || 0), 0);
+
+      const carbsEl = document.getElementById('dietTotalCarbs');
+      const proteinEl = document.getElementById('dietTotalProtein');
+
+      if (carbsEl) carbsEl.textContent = totalCarbs.toFixed(2) + ' g';
+      if (proteinEl) proteinEl.textContent = totalProtein.toFixed(2) + ' g';
+    }
+
     function renderGroupedMeals() {
+      updateDietMacroButtons();
       const container = document.getElementById('groupedMealsContainer');
       if (!container) return;
 
@@ -2476,6 +2512,7 @@ const BACKEND_AI_URL =
     }
 
     function renderDualColumnDiet() {
+      updateDietMacroButtons();
       const container = document.getElementById('dualColumnMealGrid');
       if (!container) return;
 
