@@ -2383,12 +2383,13 @@ const BACKEND_AI_URL =
         const items = groups[slot];
         const sumKcal = items.reduce((acc, x) => acc + (Number(x.calories) || 0), 0);
         const sumPro = items.reduce((acc, x) => acc + (Number(x.protein) || 0), 0);
+        const sumCarbs = items.reduce((acc, x) => acc + (Number(x.carbs) || 0), 0);
 
         const itemsHTML = items.map(m => `
           <div class="flex items-center justify-between p-2.5 rounded-xl bg-app-dark border border-app-border text-sm">
             <div class="truncate pr-2">
               <span class="font-bold text-white truncate block text-sm">${m.dishName}</span>
-              <span class="text-xs text-app-textMuted font-mono">${m.time || ''} • ${m.protein}g Pro</span>
+              <span class="text-xs text-app-textMuted font-mono">${m.time || ''} • ${Number(m.protein) || 0}g Pro • ${Number(m.carbs) || 0}g Carb</span>
             </div>
             <div class="flex items-center gap-2 shrink-0">
               <span class="font-mono font-bold text-emerald-400 text-sm">${m.calories} kcal</span>
@@ -2408,9 +2409,22 @@ const BACKEND_AI_URL =
               </div>
               <div class="space-y-2">${itemsHTML}</div>
             </div>
-            <div class="p-3.5 rounded-xl bg-gradient-to-r from-emerald-500/15 to-teal-500/15 border border-emerald-500/30 flex items-center justify-between mt-2">
-              <span class="text-xs uppercase font-black text-emerald-400">${sumPro}g Proteine Totali</span>
-              <span class="text-2xl font-mono font-black text-emerald-300">${sumKcal} <span class="text-xs">KCAL</span></span>
+            <div class="p-3.5 rounded-xl bg-gradient-to-r from-emerald-500/15 to-teal-500/15 border border-emerald-500/30 mt-2">
+              <div class="grid grid-cols-3 gap-2 text-center">
+                <div>
+                  <span class="block text-[10px] uppercase font-black text-emerald-400">Proteine</span>
+                  <span class="text-lg font-mono font-black text-emerald-300">${sumPro}g</span>
+                </div>
+                <div>
+                  <span class="block text-[10px] uppercase font-black text-cyan-300">Carboidrati</span>
+                  <span class="text-lg font-mono font-black text-cyan-200">${sumCarbs}g</span>
+                </div>
+                <div>
+                  <span class="block text-[10px] uppercase font-black text-amber-300">Calorie</span>
+                  <span class="text-lg font-mono font-black text-amber-200">${sumKcal}</span>
+                  <span class="text-[10px] font-bold text-amber-300">KCAL</span>
+                </div>
+              </div>
             </div>
           </div>
         `;
