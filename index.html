@@ -1026,7 +1026,23 @@
     const MEAL_SLOTS = ["Colazione", "Spuntino", "Pranzo", "Merenda", "Cena", "Spuntino notturno"];
 
     let selectedDate = new Date();
-    const getFormattedDateKey = d => d.toISOString().slice(0, 10);
+
+    // Data del diario sempre riferita all'Italia, indipendentemente dal fuso orario del dispositivo.
+    const getItalyDateKey = (date = new Date()) => {
+      const parts = new Intl.DateTimeFormat('en-US', {
+        timeZone: 'Europe/Rome',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+      }).formatToParts(date);
+
+      const year = parts.find(p => p.type === 'year')?.value;
+      const month = parts.find(p => p.type === 'month')?.value;
+      const day = parts.find(p => p.type === 'day')?.value;
+      return `${year}-${month}-${day}`;
+    };
+
+    const getFormattedDateKey = d => getItalyDateKey(d);
 
     // Stato iniziale neutro: i dati autenticati arrivano dal documento Firebase dell'utente corrente.
     let appData = {
@@ -1062,6 +1078,34 @@
     let currentWorkoutDay = 'dayA';
     let timerCountdown = null;
     let secondsRemaining = 0;
+
+    // Se l'utente sta guardando "Oggi", al cambio di mezzanotte italiana
+    // il diario passa automaticamente al nuovo giorno.
+    let lastItalyDateKey = getItalyDateKey();
+
+    function checkItalyMidnightRollover() {
+      const todayItalyKey = getItalyDateKey();
+      if (todayItalyKey === lastItalyDateKey) return;
+
+      const selectedKeyBefore = getFormattedDateKey(selectedDate);
+      lastItalyDateKey = todayItalyKey;
+
+      // Cambia automaticamente solo se era selezionato il giorno corrente.
+      // Se l'utente sta consultando un giorno precedente, non interrompiamo la consultazione.
+      if (selectedKeyBefore === getDateKeyFromOffset(todayItalyKey, -1)) {
+        const [y, m, d] = todayItalyKey.split('-').map(Number);
+        selectedDate = new Date(y, m - 1, d);
+        window.updateUIFromState();
+        showNotification('Nuovo giorno: diario aggiornato a oggi.');
+      }
+    }
+
+    function getDateKeyFromOffset(dateKey, offsetDays) {
+      const [y, m, d] = dateKey.split('-').map(Number);
+      const date = new Date(y, m - 1, d);
+      date.setDate(date.getDate() + offsetDays);
+      return getFormattedDateKey(date);
+    }
 
     // Routines Base - Scheda Personal Trainer
     const BASE_ROUTINES = {
@@ -3232,9 +3276,13 @@ window.saveOnboardingProfile = async function() {
 
     window.addEventListener('DOMContentLoaded', () => {
       window.updateUIFromState();
+
+      // Controllo frequente per intercettare la mezzanotte italiana
+      // anche quando la pagina rimane aperta tutta la notte.
       setInterval(() => {
+        checkItalyMidnightRollover();
         if (window.updateDetectedMealSlotUI) window.updateDetectedMealSlotUI();
-      }, 60000);
+      }, 10000);
     });
   </script>
   <script src="youtube-guide.js"></script>
