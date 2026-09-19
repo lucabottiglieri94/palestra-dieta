@@ -2121,6 +2121,18 @@ const BACKEND_AI_URL =
           if (input?.value.trim()) onFinal?.();
         };
 
+        // Richiedi esplicitamente l'accesso al microfono prima di avviare SpeechRecognition.
+        if (navigator.mediaDevices?.getUserMedia) {
+          try {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            stream.getTracks().forEach(track => track.stop());
+          } catch (micErr) {
+            stopRecognition(kind);
+            const code = micErr?.name === 'NotAllowedError' ? 'Permesso microfono negato dal browser.' : 'Microfono non disponibile.';
+            showNotification(code + ' Controlla il lucchetto nella barra degli indirizzi.', true);
+            return;
+          }
+        }
         recognition.start();
       } catch (e) {
         stopRecognition(kind);
@@ -2273,8 +2285,11 @@ const BACKEND_AI_URL =
       try {
         const prompt = `
           Agisci come Nutrizionista. Piatto: "${textQuery}". Slot: "${targetSlot}".
+          Stima il piatto in modo realistico usando quantità/porzione tipica e gli ingredienti indicati.
+          NON usare valori fissi o preimpostati: le calorie, proteine, carboidrati e grassi devono essere calcolati per questo specifico alimento.
+          Se la quantità non è indicata, usa una porzione standard e dichiarala nel nome/risultato.
           Restituisci ESCLUSIVAMENTE un JSON:
-          {"dishName": "${textQuery}", "slot": "${targetSlot}", "calories": 380, "protein": 30, "carbs": 35, "fat": 12}
+          {"dishName": "${textQuery}", "slot": "${targetSlot}", "calories": 0, "protein": 0, "carbs": 0, "fat": 0}
         `;
 
         const rawText = await callGeminiApi({
