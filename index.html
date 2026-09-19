@@ -2474,6 +2474,7 @@ const BACKEND_AI_URL =
       
       const totalExpenditure = resting + burned;
       const actualDeficit = totalExpenditure - totalIntake;
+      const deficitValue = Number(actualDeficit.toFixed(2));
 
       const intakeEl = document.getElementById('summaryIntakeKcal');
       const restEl = document.getElementById('summaryRestingKcal');
@@ -2489,7 +2490,7 @@ const BACKEND_AI_URL =
       if (burnedEl) burnedEl.innerText = burned;
       if (totalBurnedEl) totalBurnedEl.innerText = totalExpenditure;
 
-      const deficitStr = actualDeficit >= 0 ? `-${actualDeficit} kcal` : `+${Math.abs(actualDeficit)} kcal`;
+      const deficitStr = deficitValue >= 0 ? `-${deficitValue.toFixed(2)} kcal` : `+${Math.abs(deficitValue).toFixed(2)} kcal`;
 
       if (gymDeficitEl) {
         gymDeficitEl.innerText = deficitStr;
@@ -2511,7 +2512,7 @@ const BACKEND_AI_URL =
       }
 
       if (badgeEl) {
-        badgeEl.innerText = actualDeficit >= 0 ? `DEFICIT -${actualDeficit} KCAL` : `SURPLUS +${Math.abs(actualDeficit)} KCAL`;
+        badgeEl.innerText = deficitValue >= 0 ? `DEFICIT -${deficitValue.toFixed(2)} KCAL` : `SURPLUS +${Math.abs(deficitValue).toFixed(2)} KCAL`;
         badgeEl.className = actualDeficit >= 0
           ? "self-start sm:self-auto px-4 py-2 rounded-xl font-mono font-black text-sm sm:text-base bg-emerald-500/20 text-emerald-300 border border-emerald-500/40"
           : "self-start sm:self-auto px-4 py-2 rounded-xl font-mono font-black text-sm sm:text-base bg-amber-500/20 text-amber-300 border border-amber-500/40";
