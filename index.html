@@ -2065,7 +2065,7 @@ const BACKEND_AI_URL =
       document.getElementById(isCoach ? 'coachVoiceBtn' : 'voiceInputBtn')?.classList.remove('mic-active');
     }
 
-    function startRecognition({kind, btnId, inputId, startMsg, onFinal}) {
+    async function startRecognition({kind, btnId, inputId, startMsg, onFinal}) {
       const SpeechRecognition = getSpeechRecognitionClass();
       if (!SpeechRecognition) {
         showNotification('Riconoscimento vocale non disponibile. Usa Chrome/Edge e consenti il microfono al sito.', true);
