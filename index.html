@@ -382,6 +382,45 @@
       }
     }
 
+    /* Banner laterali NexaFit: fissi durante tutto lo scroll, solo desktop + tema scuro. */
+    .nexa-side-banner {
+      display: none;
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      width: 10vw;
+      max-width: 190px;
+      min-width: 120px;
+      z-index: 1;
+      pointer-events: none;
+      overflow: hidden;
+      background: #07090c;
+    }
+    .nexa-side-banner img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .nexa-side-banner-left { left: 0; }
+    .nexa-side-banner-right { right: 0; }
+
+    @media (min-width: 1200px) {
+      .nexa-side-banner { display: block; }
+      body:not(.light-theme) main {
+        width: calc(100% - 20vw - 32px);
+        max-width: 1280px;
+      }
+    }
+
+    .light-theme .nexa-side-banner {
+      display: none !important;
+    }
+
+    @media (max-width: 1199px) {
+      .nexa-side-banner { display: none !important; }
+    }
+
     .login-overlay {
       position: fixed;
       inset: 0;
@@ -444,6 +483,13 @@
 </head>
 
 <body class="font-sans min-h-screen pb-32">
+  <!-- Banner laterali decorativi: solo tema scuro e desktop -->
+  <div class="nexa-side-banner nexa-side-banner-left" aria-hidden="true">
+    <img src="https://raw.githubusercontent.com/lucabottiglieri94/palestra-dieta/main/nexafitsinistra.jpeg" alt="">
+  </div>
+  <div class="nexa-side-banner nexa-side-banner-right" aria-hidden="true">
+    <img src="https://raw.githubusercontent.com/lucabottiglieri94/palestra-dieta/main/nexafitdestra.jpeg" alt="">
+  </div>
 
   <!-- OVERLAY ACCESSO GOOGLE CON OPZIONE LOCALE IMMEDIATA -->
   <div id="loginOverlay" class="login-overlay">
