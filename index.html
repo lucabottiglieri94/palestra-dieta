@@ -132,14 +132,19 @@
     .light-theme input,
     .light-theme select,
     .light-theme textarea { background-color: #ffffff !important; color: #17202a !important; border-color: #cbd5e1 !important; }
-    /* Header Light: elimina le fasce bianche incluse nell'immagine del banner */
-    .light-theme #appHeader > div:first-child {
-      height: clamp(190px, 30vw, 580px);
+    /* Header: il contenitore del banner ha la stessa proporzione del banner scuro (1591x244)
+       in entrambi i temi, quindi Light e Dark hanno sempre identica altezza.
+       Il PNG chiaro contiene fasce bianche sopra/sotto: viene ritagliato sulla parte centrale. */
+    #appHeader > div:first-child {
+      position: relative;
+      aspect-ratio: 1591 / 244;
       overflow: hidden;
       margin: 0 !important;
       padding: 0 !important;
     }
-    .light-theme #nexaTopBanner {
+    #nexaTopBanner {
+      position: absolute;
+      inset: 0;
       width: 100%;
       height: 100%;
       display: block;
@@ -148,6 +153,7 @@
       margin: 0 !important;
       padding: 0 !important;
     }
+    .light-theme #nexaTopBanner { object-position: center 58%; }
     .light-theme #appHeaderControls {
       margin-top: 0 !important;
     }
@@ -409,7 +415,8 @@
       top: var(--nexa-side-top, 0px);
       bottom: auto;
       height: var(--nexa-side-height, 100vh);
-      width: max(0px, calc((100vw - 1280px) / 2));
+      /* 100% e non 100vw: esclude la scrollbar, così il bordo interno coincide col contenuto centrale */
+      width: max(0px, calc((100% - 1280px) / 2));
       max-width: none;
       min-width: 0;
       z-index: 1;
@@ -443,12 +450,12 @@
       transform-origin: center center;
     }
 
-    @media (min-width: 1400px) {
+    @media (min-width: 1281px) {
       /* La barra dei controlli deve avere esattamente la stessa larghezza
          del body centrale, così i banner laterali arrivano a toccarla. */
       #appHeaderControls {
         width: 1280px !important;
-        max-width: calc(100vw - 2 * max(0px, calc((100vw - 1280px) / 2))) !important;
+        max-width: 100% !important;
         margin-left: auto !important;
         margin-right: auto !important;
         box-sizing: border-box !important;
@@ -458,7 +465,7 @@
       /* Identica geometria del contenuto centrale in entrambi i temi. */
       body main {
         width: 1280px !important;
-        max-width: calc(100vw - 2 * max(0px, calc((100vw - 1280px) / 2))) !important;
+        max-width: 100% !important;
         margin-left: auto !important;
         margin-right: auto !important;
         padding-left: 0 !important;
@@ -478,23 +485,29 @@
       }
     }
 
-    .light-theme .nexa-side-banner {
-      display: block !important;
-    }
-
     /* Light desktop: l'header non deve riempire tutta la larghezza, altrimenti crea
        la banda bianca tra banner superiore e banner laterali. Come nel tema scuro,
        resta pieno solo il pannello controlli centrale (#appHeaderControls). */
     @media (min-width: 1281px) {
+      #appHeader,
       .light-theme #appHeader {
         background: transparent !important;
-        border-color: transparent !important;
+        border-bottom-color: transparent !important;
         box-shadow: none !important;
       }
-    }
+      /* il filo di chiusura resta solo sotto il pannello controlli centrale */
+      #appHeaderControls { border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
+      .light-theme #appHeaderControls { border-bottom-color: #d2d6dc; }
 
-    @media (max-width: 1199px) {
-      .nexa-side-banner { display: none !important; }
+      /* Barra inferiore: larga come il contenuto, così non tronca i banner laterali. */
+      nav.apple-nav {
+        width: 1280px;
+        max-width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      /* Duplicati di ✕ e 🗑 dell'header (prima nascosti dietro la barra a tutta larghezza). */
+      #accountActions { display: none; }
     }
 
     .login-overlay {
@@ -713,26 +726,15 @@
   <script>
     (() => {
       const syncNexaSideTop = () => {
-        const banner = document.getElementById('nexaTopBanner');
-        if (!banner) return;
-        const top = banner.getBoundingClientRect().height;
-        const main = document.querySelector('main');
-        const mainBottom = main
-          ? main.getBoundingClientRect().bottom + window.scrollY
-          : document.documentElement.scrollHeight;
+        // I laterali coprono tutta la pagina, dal bordo alto (dietro il banner superiore)
+        // al fondo del body. Si misura il body, non scrollHeight del documento, che include
+        // i laterali stessi e non permetterebbe mai alla pagina di accorciarsi.
         const pageBottom = Math.max(
-          mainBottom,
-          document.body.scrollHeight,
-          document.documentElement.scrollHeight
+          document.body.getBoundingClientRect().bottom + window.scrollY,
+          window.innerHeight
         );
-        // Dark e Light: i laterali partono dal bordo alto della pagina, dietro il banner
-        // superiore, così proseguono in continuità fino ad esso senza fasce vuote.
-        const sideTop = 0;
-        document.documentElement.style.setProperty('--nexa-side-top', sideTop + 'px');
-        document.documentElement.style.setProperty(
-          '--nexa-side-height',
-          Math.max(0, pageBottom - sideTop) + 'px'
-        );
+        document.documentElement.style.setProperty('--nexa-side-top', '0px');
+        document.documentElement.style.setProperty('--nexa-side-height', Math.round(pageBottom) + 'px');
       };
       window.addEventListener('load', syncNexaSideTop);
       window.addEventListener('resize', syncNexaSideTop);
