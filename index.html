@@ -181,8 +181,36 @@
 
     .light-theme .bg-app-card,
     .light-theme .bg-app-cardSubtle,
-    .light-theme .bg-app-dark {
+    .light-theme .bg-app-dark,
+    .light-theme [class*="bg-app-dark/"],
+    .light-theme [class*="bg-app-card/"] {
+      background-color: #ffffff !important;
+      color: #1d1d1f !important;
       box-shadow: 0 1px 3px rgba(0,0,0,.04);
+    }
+
+    .light-theme .bg-app-dark\/90,
+    .light-theme .bg-app-dark\/80,
+    .light-theme .bg-app-dark\/70 {
+      background-color: #ffffff !important;
+      color: #1d1d1f !important;
+    }
+
+    .light-theme #coachChatBox > div,
+    .light-theme #exerciseList .bg-app-dark\/90 {
+      background: #ffffff !important;
+      color: #1d1d1f !important;
+      border-color: #d2d6dc !important;
+    }
+
+    .confirm-action {
+      background-color: #52b788 !important;
+      border-color: #52b788 !important;
+      color: #07130d !important;
+    }
+    .confirm-action:hover {
+      background-color: #43a477 !important;
+      border-color: #43a477 !important;
     }
 
     .light-theme input,
@@ -1716,7 +1744,7 @@ const BACKEND_AI_URL =
               <div class="text-[11px] text-teal-300 font-mono space-y-0.5">
                 ${routineData.exercises.map(x => `<div>• <strong>${x.name}</strong> (${x.sets}×${x.reps})</div>`).join('')}
               </div>
-              <button onclick="window.applyCoachWorkout(${serialized})" class="w-full py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-400 text-black font-black text-xs sm:text-sm active:scale-95 transition shadow-lg flex items-center justify-center gap-2">
+              <button onclick="window.applyCoachWorkout(${serialized})" class="w-full py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-400 text-black font-black text-xs sm:text-sm active:scale-95 transition shadow-lg flex items-center justify-center gap-2 confirm-action">
                 <span>⚡</span>
                 <span>Applica Subito alla Scheda Palestra</span>
               </button>
@@ -2513,7 +2541,7 @@ const BACKEND_AI_URL =
               <div class="p-2 rounded-xl bg-app-card border border-app-border font-bold text-white">${data.carbs}g Carbo</div>
               <div class="p-2 rounded-xl bg-app-card border border-app-border font-bold text-white">${data.fat}g Grassi</div>
             </div>
-            <button onclick="window.commitMealToLog(${JSON.stringify(data).replace(/"/g, '&quot;')})" class="w-full py-3 bg-emerald-500 text-black font-black text-xs sm:text-sm rounded-xl active:scale-95 transition">
+            <button onclick="window.commitMealToLog(${JSON.stringify(data).replace(/"/g, '&quot;')})" class="w-full py-3 bg-emerald-500 text-black font-black text-xs sm:text-sm rounded-xl active:scale-95 transition confirm-action">
               + Salva nel Diario di Oggi
             </button>
           </div>
@@ -2574,7 +2602,7 @@ const BACKEND_AI_URL =
               </div>
               <span class="text-base font-mono font-black text-emerald-400">${data.calories} kcal</span>
             </div>
-            <button onclick="window.commitMealToLog(${JSON.stringify(data).replace(/"/g, '&quot;')})" class="w-full py-3 bg-emerald-500 text-black font-black text-xs sm:text-sm rounded-xl active:scale-95 transition">
+            <button onclick="window.commitMealToLog(${JSON.stringify(data).replace(/"/g, '&quot;')})" class="w-full py-3 bg-emerald-500 text-black font-black text-xs sm:text-sm rounded-xl active:scale-95 transition confirm-action">
               + Salva nel Diario di Oggi
             </button>
           </div>
