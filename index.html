@@ -407,6 +407,10 @@
     }
     .nexa-side-banner-left { left: 0; }
     .nexa-side-banner-right { right: 0; }
+    .nexa-side-light { display: none !important; }
+    .light-theme .nexa-side-dark { display: none !important; }
+    .light-theme .nexa-side-light { display: block !important; }
+    .light-theme .nexa-side-banner { background: #f3f5f7; }
 
     @media (min-width: 1400px) {
       .nexa-side-banner { display: block; }
@@ -433,7 +437,7 @@
     }
 
     .light-theme .nexa-side-banner {
-      display: none !important;
+      display: block !important;
     }
 
     @media (max-width: 1199px) {
@@ -502,12 +506,14 @@
 </head>
 
 <body class="font-sans min-h-screen pb-32">
-  <!-- Banner laterali decorativi: solo tema scuro e desktop -->
+  <!-- Banner laterali: stessa costruzione desktop/scroll per Dark e Light -->
   <div class="nexa-side-banner nexa-side-banner-left" aria-hidden="true">
-    <img src="https://raw.githubusercontent.com/lucabottiglieri94/palestra-dieta/main/nexafitsinistra.jpeg" alt="">
+    <img class="nexa-side-dark" src="https://raw.githubusercontent.com/lucabottiglieri94/palestra-dieta/main/nexafitsinistra.jpeg" alt="">
+    <img class="nexa-side-light" src="https://raw.githubusercontent.com/lucabottiglieri94/palestra-dieta/main/nexafitleftlight.jpeg" alt="">
   </div>
   <div class="nexa-side-banner nexa-side-banner-right" aria-hidden="true">
-    <img src="https://raw.githubusercontent.com/lucabottiglieri94/palestra-dieta/main/nexafitdestra.jpeg" alt="">
+    <img class="nexa-side-dark" src="https://raw.githubusercontent.com/lucabottiglieri94/palestra-dieta/main/nexafitdestra.jpeg" alt="">
+    <img class="nexa-side-light" src="https://raw.githubusercontent.com/lucabottiglieri94/palestra-dieta/main/nexafitrightlight.jpeg" alt="">
   </div>
 
   <!-- OVERLAY ACCESSO GOOGLE CON OPZIONE LOCALE IMMEDIATA -->
