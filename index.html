@@ -391,7 +391,7 @@
       width: 10vw;
       max-width: 190px;
       min-width: 120px;
-      z-index: 1;
+      z-index: 2;
       pointer-events: none;
       overflow: hidden;
       background: #07090c;
@@ -410,12 +410,10 @@
     @media (min-width: 1200px) {
       .nexa-side-banner { display: block; }
       body:not(.light-theme) main {
-        width: calc(100% - 20vw) !important;
+        width: 100% !important;
         max-width: none !important;
-        margin-left: 10vw !important;
-        margin-right: 10vw !important;
-        padding-left: 0 !important;
-        padding-right: 0 !important;
+        margin: 0 !important;
+        padding: 0 0 8rem 0 !important;
       }
       body:not(.light-theme) main > section,
       body:not(.light-theme) main > div {
@@ -428,6 +426,16 @@
       body:not(.light-theme) #view-coach,
       body:not(.light-theme) #view-progress {
         width: 100% !important;
+        padding-left: 3vw !important;
+        padding-right: 3vw !important;
+      }
+
+      /* Il contenuto centrale resta nella fascia tra i due banner, senza bande vuote. */
+      body:not(.light-theme) .tab-view > .max-w-3xl,
+      body:not(.light-theme) .tab-view > .max-w-lg,
+      body:not(.light-theme) .tab-view > .max-w-md,
+      body:not(.light-theme) .tab-view > .max-w-7xl {
+        max-width: none !important;
       }
     }
 
