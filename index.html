@@ -713,6 +713,7 @@
           <button onclick="window.toggleTimerModal()" class="hidden sm:flex items-center gap-1.5 px-3 h-9 rounded-xl bg-app-card border border-app-border text-app-textMuted font-mono font-bold text-xs">⏱️ <span id="headerTimerValue">00:00</span></button>
           <button onclick="window.toggleUserTheme()" id="themeToggleBtn" class="px-2.5 sm:px-3 h-9 rounded-xl bg-app-card border border-app-border text-app-textMuted text-xs font-bold">☀️ <span class="hidden md:inline">Tema</span></button>
           <button onclick="window.toggleUserDisplayMode()" id="modeToggleBtn" class="px-2.5 sm:px-3 h-9 rounded-xl bg-app-card border border-app-border text-app-textMuted text-xs font-bold">⚡ <span class="hidden md:inline">Modalità</span></button>
+          <button onclick="document.getElementById('firebaseBackupInput').click()" class="hidden md:block px-3 h-9 rounded-xl bg-emerald-950/80 border border-emerald-500/40 text-emerald-300 text-xs font-bold" title="Ripristina backup Firebase">↻ Backup</button>
           <button onclick="window.deleteUserMemory()" class="hidden md:block px-3 h-9 rounded-xl bg-red-950/70 border border-red-500/40 text-red-300 text-xs font-bold">🗑 Memoria</button>
           <button onclick="window.logoutUser()" class="w-9 h-9 rounded-xl bg-app-card border border-app-border text-app-textMuted text-sm" title="Esci">✕</button>
         </div>
