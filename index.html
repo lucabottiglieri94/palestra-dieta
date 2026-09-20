@@ -65,7 +65,7 @@
     ::-webkit-scrollbar-thumb { background: #1b222e; border-radius: 9999px; }
 
     .apple-glass-card {
-      background: rgba(20, 25, 34, 0.78);
+      background: rgba(20, 25, 34, 0.86);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       border: 1px solid rgba(255, 255, 255, 0.07);
@@ -407,14 +407,13 @@
       }
     }
 
-    /* Banner laterali NexaFit: fissi durante tutto lo scroll, solo desktop + tema scuro. */
-    /* FOTO UNICA (tema scuro e chiaro). Il banner superiore ne mostra la parte alta; ai lati la stessa
-       foto prosegue verso il basso alla stessa scala (larghezza pagina): nessuna giunzione tra sopra e lati.
-       In fondo la foto sfuma in un colore morbido che si estende (secondo sfondo) fino al fondo di pagine
-       di qualsiasi altezza. Le immagini arrivano da #nexaTopBanner (data-light-* / data-dark-*) via JS.
-       Il layer sta sotto tutto (z-index -1); il foglio centrale (main) lo copre. */
+    /* FOTO UNICA (tema scuro e chiaro), su tutte le larghezze. Il banner superiore ne mostra la parte alta;
+       sotto la stessa foto prosegue alla stessa scala (larghezza pagina): nessuna giunzione. In fondo sfuma
+       in un colore morbido che si estende (secondo sfondo) fino al fondo di pagine di qualsiasi altezza.
+       Le immagini arrivano da #nexaTopBanner (data-light-* / data-dark-*) via JS.
+       Il layer sta sotto tutto (z-index -1): body, header e main sono trasparenti, si vedono solo i widget. */
     #nexaPhoto {
-      display: none;
+      display: block;
       position: absolute;
       top: 0;
       left: 0;
@@ -428,28 +427,39 @@
         var(--nexa-fill) center top / 100% 100% no-repeat;
     }
 
+    /* Body trasparente: il colore di pagina sta su <html>, sotto la foto. */
+    html:not(.light-theme) { background-color: #080a0d; }
+    html body[class] { background-color: transparent !important; }
+
+    /* Header trasparente: restano solo il banner (foto) e il pannello controlli come widget. */
+    #appHeader,
+    .light-theme #appHeader {
+      background: transparent !important;
+      border-color: transparent !important;
+      box-shadow: none !important;
+    }
+    #appHeaderControls { border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
+    .light-theme #appHeaderControls { border-bottom-color: #d2d6dc; }
+
     @media (min-width: 1281px) {
-      /* La barra dei controlli deve avere esattamente la stessa larghezza
-         del body centrale, così i banner laterali arrivano a toccarla. */
-      #appHeaderControls {
-        width: 1280px !important;
-        max-width: 100% !important;
-        margin-left: auto !important;
-        margin-right: auto !important;
+      /* Pannello controlli = widget flottante, stessa larghezza dei widget sotto (1280 - 2x16 di margine). */
+      #appHeaderControls,
+      .light-theme #appHeaderControls {
+        width: calc(1280px - 32px) !important;
+        max-width: calc(100% - 32px) !important;
+        margin: 14px auto 0 !important;
         box-sizing: border-box !important;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 22px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+      }
+      .light-theme #appHeaderControls {
+        border-color: #d2d6dc;
+        box-shadow: 0 8px 24px rgba(15, 23, 42, 0.10);
       }
 
-      #nexaPhoto { display: block; }
-
-      /* Il body diventa trasparente: lo sfondo di pagina sta su <html>, la foto sotto, il foglio centrale sopra. */
-      html:not(.light-theme) { background-color: #080a0d; }
-      html body[class] {
-        background-color: transparent !important;
-        padding-bottom: 0 !important;
-      }
-
-      /* Identica geometria del contenuto centrale in entrambi i temi: un foglio con angoli tondi (stile Apple)
-         che parte dal pannello controlli e arriva al fondo pagina. */
+      /* Contenuto centrale: nessuno sfondo, solo i widget (le card) sopra la foto. */
+      html body[class] { padding-bottom: 0 !important; }
       body main {
         width: 1280px !important;
         max-width: 100% !important;
@@ -458,11 +468,8 @@
         padding-left: 16px !important;
         padding-right: 16px !important;
         padding-bottom: 8rem !important;
-        min-height: calc(100vh - 15.336vw - 58px);
-        background-color: #080a0d;
-        border-radius: 0 0 28px 28px;
+        background: transparent;
       }
-      .light-theme body main { background-color: #f3f5f7; }
       body main > section,
       body main > div {
         max-width: none !important;
@@ -475,26 +482,8 @@
       body #view-progress {
         width: 100% !important;
       }
-    }
 
-    /* Light desktop: l'header non deve riempire tutta la larghezza, altrimenti crea
-       la banda bianca tra banner superiore e banner laterali. Come nel tema scuro,
-       resta pieno solo il pannello controlli centrale (#appHeaderControls). */
-    @media (min-width: 1281px) {
-      #appHeader,
-      .light-theme #appHeader {
-        background: transparent !important;
-        border-bottom-color: transparent !important;
-        box-shadow: none !important;
-      }
-      /* il filo di chiusura resta solo sotto il pannello controlli centrale */
-      #appHeaderControls {
-        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-        border-radius: 28px 28px 0 0;
-      }
-      .light-theme #appHeaderControls { border-bottom-color: #d2d6dc; }
-
-      /* Barra inferiore: flottante, tonda, larga come il foglio centrale (meno i margini). */
+      /* Barra inferiore: flottante, tonda, larga come i widget. */
       nav.apple-nav {
         bottom: 14px;
         width: calc(1280px - 32px);
@@ -505,7 +494,7 @@
         border-radius: 26px;
         box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
       }
-      /* Duplicati di ✕ e 🗑 dell'header (prima nascosti dietro la barra a tutta larghezza). */
+      /* Duplicati di ✕, ⌫ Memoria e Backup dell'header. */
       #accountActions { display: none; }
     }
 
@@ -1125,7 +1114,7 @@
       </div>
 
       <!-- Piano Pasti a Colonne -->
-      <div class="space-y-4">
+      <div class="space-y-4 apple-glass-card rounded-3xl border border-app-border p-5 sm:p-6">
         <div class="flex items-center justify-between px-1">
           <h3 id="currentDayTitle" class="font-display font-black text-xl text-white">Pasti Consumati Oggi</h3>
           <span id="currentDayBadge" class="text-xs sm:text-sm font-bold px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Giorno Registrato</span>
@@ -1234,7 +1223,7 @@
       </div>
 
       <!-- Diario Pasti con Eliminazione Singola -->
-      <div class="space-y-4">
+      <div class="space-y-4 apple-glass-card rounded-3xl border border-app-border p-5 sm:p-6">
         <div class="flex flex-col gap-3 px-1">
           <div class="flex items-center justify-between gap-3">
             <div>
@@ -1284,7 +1273,7 @@
       </div>
 
       <!-- Quick prompts -->
-      <div class="flex items-center gap-3 py-1">
+      <div class="flex items-center gap-3 py-3 px-4 apple-glass-card rounded-2xl border border-app-border">
         <span class="shrink-0 text-[10px] uppercase font-black tracking-wider text-app-textMuted">Esempi:</span>
         <div class="flex gap-2 overflow-x-auto no-scrollbar flex-1">
         <button onclick="window.sendQuickCoachMessage('Ho un leggero fastidio alla piega del gomito: adattami la scheda di oggi con macchine sicure!')" class="whitespace-nowrap px-3.5 py-2 rounded-xl bg-app-card hover:bg-app-cardSubtle border border-emerald-500/30 text-xs text-emerald-300 transition">
@@ -1305,7 +1294,7 @@
         </div>
       </div>
 
-      <form autocomplete="off" onsubmit="window.handleCoachSubmit(event)" class="flex gap-2.5">
+      <form autocomplete="off" onsubmit="window.handleCoachSubmit(event)" class="flex gap-2.5 apple-glass-card rounded-2xl border border-app-border p-3">
         <input type="text" id="coachInputText" placeholder="Chiedi al coach (es. adattami la scheda per tutelare il gomito)..." class="w-full bg-app-card border border-app-border focus:border-emerald-500 rounded-xl px-4 py-3.5 text-sm text-white focus:outline-none" autocomplete="off">
         <button type="button" id="coachVoiceBtn" onclick="window.toggleCoachVoiceInput()" class="px-4 py-3.5 rounded-xl bg-app-card hover:bg-app-cardSubtle border border-emerald-500/40 text-emerald-300 font-bold text-lg flex items-center justify-center transition active:scale-95" title="Parla al Coach">
           🎙️
