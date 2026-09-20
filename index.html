@@ -385,9 +385,10 @@
     /* Banner laterali NexaFit: fissi durante tutto lo scroll, solo desktop + tema scuro. */
     .nexa-side-banner {
       display: none;
-      position: fixed;
+      position: absolute;
       top: var(--nexa-side-top, 0px);
-      bottom: 0;
+      bottom: auto;
+      height: var(--nexa-side-height, 100vh);
       width: max(0px, calc((100vw - 1280px) / 2));
       max-width: none;
       min-width: 0;
@@ -655,13 +656,23 @@
       const syncNexaSideTop = () => {
         const banner = document.getElementById('nexaTopBanner');
         if (!banner) return;
+        const top = banner.getBoundingClientRect().height;
+        const pageHeight = Math.max(
+          document.body.scrollHeight,
+          document.documentElement.scrollHeight
+        );
+        document.documentElement.style.setProperty('--nexa-side-top', top + 'px');
         document.documentElement.style.setProperty(
-          '--nexa-side-top',
-          banner.getBoundingClientRect().height + 'px'
+          '--nexa-side-height',
+          Math.max(0, pageHeight - top) + 'px'
         );
       };
       window.addEventListener('load', syncNexaSideTop);
       window.addEventListener('resize', syncNexaSideTop);
+      window.addEventListener('scroll', syncNexaSideTop, { passive: true });
+      if (window.ResizeObserver) {
+        new ResizeObserver(syncNexaSideTop).observe(document.body);
+      }
       const banner = document.getElementById('nexaTopBanner');
       if (banner) {
         if (banner.complete) syncNexaSideTop();
