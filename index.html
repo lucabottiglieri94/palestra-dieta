@@ -408,8 +408,14 @@
     @media (min-width: 1200px) {
       .nexa-side-banner { display: block; }
       body:not(.light-theme) main {
-        width: calc(100% - 20vw - 32px);
-        max-width: 1280px;
+        width: calc(100% - 20vw);
+        max-width: none;
+        margin-left: 10vw;
+        margin-right: 10vw;
+      }
+      body:not(.light-theme) main > section,
+      body:not(.light-theme) main > div {
+        max-width: none;
       }
     }
 
