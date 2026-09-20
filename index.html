@@ -462,6 +462,17 @@
       display: block !important;
     }
 
+    /* Light desktop: l'header non deve riempire tutta la larghezza, altrimenti crea
+       la banda bianca tra banner superiore e banner laterali. Come nel tema scuro,
+       resta pieno solo il pannello controlli centrale (#appHeaderControls). */
+    @media (min-width: 1281px) {
+      .light-theme #appHeader {
+        background: transparent !important;
+        border-color: transparent !important;
+        box-shadow: none !important;
+      }
+    }
+
     @media (max-width: 1199px) {
       .nexa-side-banner { display: none !important; }
     }
@@ -694,14 +705,13 @@
           document.body.scrollHeight,
           document.documentElement.scrollHeight
         );
-        // Dark e Light usano la stessa identica geometria:
-        // i banner laterali partono da Y=0, dietro il banner superiore,
-        // così restano in continuità senza alcuna banda divisoria.
+        // Dark e Light: i laterali partono dal bordo alto della pagina, dietro il banner
+        // superiore, così proseguono in continuità fino ad esso senza fasce vuote.
         const sideTop = 0;
         document.documentElement.style.setProperty('--nexa-side-top', sideTop + 'px');
         document.documentElement.style.setProperty(
           '--nexa-side-height',
-          pageBottom + 'px'
+          Math.max(0, pageBottom - sideTop) + 'px'
         );
       };
       window.addEventListener('load', syncNexaSideTop);
