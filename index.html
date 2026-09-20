@@ -249,6 +249,95 @@
       filter: none;
     }
 
+    /* Header mobile: centrato, senza overflow laterale. */
+    html, body {
+      width: 100%;
+      min-width: 0;
+      max-width: 100%;
+      overflow-x: hidden;
+    }
+
+    #appHeader {
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    @media (max-width: 640px) {
+      #appHeader {
+        padding: 10px 10px 12px !important;
+      }
+
+      #headerInner {
+        width: 100%;
+        max-width: 100% !important;
+        display: grid !important;
+        grid-template-columns: 1fr;
+        justify-items: center;
+        gap: 8px;
+      }
+
+      #headerIdentity {
+        width: 100%;
+        justify-content: center;
+        min-width: 0;
+      }
+
+      #headerIdentity > div:last-child {
+        min-width: 0;
+      }
+
+      #headerIdentity h1 {
+        font-size: 16px !important;
+      }
+
+      #headerIdentity p {
+        justify-content: center;
+        flex-wrap: wrap;
+        line-height: 1.25;
+      }
+
+      #headerDaySelector {
+        justify-self: center;
+      }
+
+      #headerCommands {
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 6px !important;
+      }
+
+      #headerCommands > button {
+        height: 36px !important;
+        min-width: 0;
+        padding: 0 9px !important;
+        font-size: 11px !important;
+      }
+
+      #headerCommands > button:first-child {
+        padding: 0 10px !important;
+      }
+
+      #headerCommands #headerLogoutBtn {
+        width: 36px !important;
+        padding: 0 !important;
+      }
+
+      main {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        box-sizing: border-box;
+      }
+
+      .tab-view {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box;
+      }
+    }
+
     .login-overlay {
       position: fixed;
       inset: 0;
@@ -412,9 +501,9 @@
   </div>
 
   <!-- HEADER APPLICAZIONE -->
-  <header class="bg-app-black/90 backdrop-blur-xl border-b border-app-border px-4 py-4 sticky z-40 top-0">
-    <div class="max-w-7xl mx-auto flex items-center justify-between">
-      <div class="flex items-center gap-3.5">
+  <header id="appHeader" class="bg-app-black/90 backdrop-blur-xl border-b border-app-border px-4 py-4 sticky z-40 top-0">
+    <div id="headerInner" class="max-w-7xl mx-auto flex items-center justify-between">
+      <div id="headerIdentity" class="flex items-center gap-3.5">
         <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-700 flex items-center justify-center text-black font-display font-black text-lg">
           IR
         </div>
@@ -434,26 +523,26 @@
       </div>
 
       <!-- SELETTORE GIORNO ATTIVO -->
-      <div class="flex items-center gap-2 bg-app-card px-2.5 py-1.5 rounded-2xl border border-app-border">
+      <div id="headerDaySelector" class="flex items-center gap-2 bg-app-card px-2.5 py-1.5 rounded-2xl border border-app-border">
         <button onclick="window.shiftSelectedDay(-1)" class="w-7 h-7 rounded-xl hover:bg-app-cardSubtle flex items-center justify-center text-sm text-app-textMuted hover:text-white transition">‹</button>
         <span id="headerCurrentDateLabel" class="text-xs sm:text-sm font-mono font-bold text-emerald-400 px-1 select-none">Oggi</span>
         <button onclick="window.shiftSelectedDay(1)" class="w-7 h-7 rounded-xl hover:bg-app-cardSubtle flex items-center justify-center text-sm text-app-textMuted hover:text-white transition">›</button>
       </div>
 
       <!-- COMANDI RAPIDI HEADER -->
-      <div class="flex items-center gap-2 sm:gap-3">
+      <div id="headerCommands" class="flex items-center gap-2 sm:gap-3">
         <button onclick="window.toggleTimerModal()" class="px-3.5 py-2 rounded-xl bg-app-card border border-app-border text-sm flex items-center gap-2 text-emerald-400 font-mono active:scale-95 transition">
           <span>⏱️</span>
           <span id="headerTimerReadout">00:00</span>
         </button>
         <button id="themeToggleBtn" onclick="window.toggleUserTheme()" class="px-3 h-10 rounded-xl bg-app-card border border-app-border text-xs font-bold text-app-textMuted hover:text-white transition" title="Cambia tema">
-          ☀️ <span class="hidden sm:inline">Tema</span>
+          ☀️ <span>Tema</span>
         </button>
         <button id="modeToggleBtn" onclick="window.toggleUserDisplayMode()" class="px-3 h-10 rounded-xl bg-app-card border border-app-border text-xs font-bold text-app-textMuted hover:text-white transition" title="Cambia modalità">
-          ⚡ <span class="hidden sm:inline">Modalità</span>
+          ⚡ <span>Modalità</span>
         </button>
         <button onclick="window.deleteUserMemory()" class="px-3 h-10 rounded-xl bg-red-950/70 border border-red-500/40 text-red-300 text-xs font-bold flex items-center gap-1.5 hover:bg-red-900/70 transition" title="Pulisci memoria">
-          🗑️ <span class="hidden sm:inline">Pulisci memoria</span>
+          🗑️ <span>Memoria</span>
         </button>
         <button id="headerLogoutBtn" onclick="window.logoutUser()" class="w-10 h-10 rounded-xl bg-app-card border border-app-border text-sm flex items-center justify-center text-gray-400 hover:text-red-400 transition" title="Logout / Esci">
           ✕
