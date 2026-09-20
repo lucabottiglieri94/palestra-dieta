@@ -226,7 +226,7 @@
           <p class="text-xs sm:text-sm text-app-textMuted flex items-center gap-2 font-mono mt-0.5">
             <span id="cloudStatusReadout" class="text-teal-400 font-semibold">Offline / Locale</span>
             <span class="text-gray-600">•</span>
-            <span class="text-gray-300">Target Deficit 1.950 kcal</span>
+            <span id="headerCalorieTarget" class="text-gray-300">Target Calorie -- kcal</span>
           </p>
         </div>
       </div>
@@ -1086,7 +1086,7 @@
 
     // Stato iniziale neutro: i dati autenticati arrivano dal documento Firebase dell'utente corrente.
     let appData = {
-      dailyRecords: {}, defaultRestingCalories: 1950, weight: '95.0', waist: '104.0',
+      dailyRecords: {}, defaultRestingCalories: 1950, dailyCalorieTarget: 1950, weight: '95.0', waist: '104.0',
       height: '177', workoutsPerWeek: '4',
       goal: 'Ricomporsi: perdere grasso e aumentare muscolo',
       name: '', age: '', profileCompleted: false, approved: false,
@@ -1224,6 +1224,41 @@
         ]
       }
     };
+
+    // Calcolo dinamico del target calorico giornaliero in base al profilo.
+    // Mifflin-St Jeor + livello di attività ricavato dagli allenamenti/settimana.
+    function calculateDailyCalorieTarget() {
+      const age = Number(appData.age);
+      const weight = Number(appData.weight);
+      const height = Number(appData.height);
+      const workouts = Number(appData.workoutsPerWeek) || 4;
+
+      if (!age || !weight || !height) return Number(appData.dailyCalorieTarget) || 1950;
+
+      const bmr = (10 * weight) + (6.25 * height) - (5 * age) + 5;
+      let activity = 1.2;
+      if (workouts >= 1 && workouts <= 2) activity = 1.375;
+      else if (workouts >= 3 && workouts <= 4) activity = 1.55;
+      else if (workouts >= 5 && workouts <= 6) activity = 1.725;
+      else if (workouts >= 7) activity = 1.9;
+
+      const tdee = bmr * activity;
+      const goal = String(appData.goal || '').toLowerCase();
+      let deficit = 500;
+      if (goal.includes('mantenimento')) deficit = 0;
+      else if (goal.includes('massa')) deficit = 200;
+      else if (goal.includes('ricompos')) deficit = 300;
+
+      return Math.max(1400, Math.round((tdee - deficit) / 10) * 10);
+    }
+
+    function updateDailyCalorieTarget() {
+      const target = calculateDailyCalorieTarget();
+      appData.dailyCalorieTarget = target;
+      const el = document.getElementById('headerCalorieTarget');
+      if (el) el.textContent = `Target Calorie ${target.toLocaleString('it-IT')} kcal`;
+      return target;
+    }
 
     function getSelectedDayData() {
       const key = getFormattedDateKey(selectedDate);
@@ -1456,7 +1491,7 @@ const BACKEND_AI_URL =
           Non usare MAI il nome, il profilo o i dati di un altro account. Il nome dell'utente deve essere determinato dall'account Firebase corrente e dal relativo profilo salvato per quel UID.
           Chiama sempre l'utente usando esclusivamente il nome dell'account corrente: ${coachName}.
           Profilo atleta: ${appData.name || 'atleta'}, ${appData.age || 'età non indicata'} anni, ${appData.weight || 'peso non indicato'}kg, ${appData.height || 'altezza non indicata'}cm, circonferenza vita ${appData.waist || 'non indicata'}cm, obiettivo ${appData.goal || 'da definire'}, ${appData.workoutsPerWeek || '4'} sessioni settimanali.
-          Target alimentare: 1.950 kcal/die (target 170g proteine, 3.5L acqua).
+          Target alimentare: ${calculateDailyCalorieTarget()} kcal/die (target 170g proteine, 3.5L acqua).
           Dati oggi: ${totalIntake} kcal assunte, ${day.burnedCalories} kcal attive bruciate, ${day.restingCalories} kcal a riposo, ${day.waterLiters}L acqua bevuta.
           ${reportQuery && reportStats ? `REPORT COMPLETO: dal ${reportStats.firstDay} al ${reportStats.lastDay}; ${reportStats.count} giorni analizzati; media assunte ${reportStats.avgIntake} kcal/die; media riposo ${reportStats.avgResting} kcal/die; media attive ${reportStats.avgActive} kcal/die; media totali bruciate ${reportStats.avgExpenditure} kcal/die; media bilancio ${reportStats.avgBalance} kcal/die; bilancio totale ${reportStats.totalBalance} kcal. Positivo = deficit, negativo = surplus. Usa tutti i giorni disponibili dal primo giorno con dati e non contare giorni senza dati.` : ""}
           ${weeklyQuery && weeklyStats ? `REPORT ULTIMI 7 GIORNI: ${weeklyStats.count} giorni con dati; media assunte ${weeklyStats.avgIntake} kcal/die; media riposo ${weeklyStats.avgResting} kcal/die; media attive ${weeklyStats.avgActive} kcal/die; media dispendio totale ${weeklyStats.avgExpenditure} kcal/die; media bilancio ${weeklyStats.avgBalance} kcal/die; bilancio totale ${weeklyStats.totalBalance} kcal. Bilancio = dispendio totale meno calorie assunte: positivo = deficit, negativo = surplus. Non conteggiare giorni senza dati.` : ''}
@@ -2295,7 +2330,7 @@ const BACKEND_AI_URL =
 
         const prompt = `
           Agisci come Biologo Nutrizionista Sportivo.
-          Profilo: Uomo 32 anni, 95kg, target deficit 1.950 kcal/die (target 170g proteine).
+          Profilo: Uomo ${appData.age || 32} anni, ${appData.weight || 95}kg, target ${calculateDailyCalorieTarget()} kcal/die (target 170g proteine).
           Pasto: "${targetSlot}".
           Analizza l'immagine e calcola porzione, calorie e macronutrienti.
           Restituisci ESCLUSIVAMENTE un JSON:
@@ -3181,6 +3216,7 @@ window.saveOnboardingProfile = async function() {
     };
 
     window.updateUIFromState = function() {
+      updateDailyCalorieTarget();
       const coachNameEl = document.getElementById('coachInlineUserName');
       const headerUserStatsEl = document.getElementById('headerUserStats');
       if (headerUserStatsEl) {
