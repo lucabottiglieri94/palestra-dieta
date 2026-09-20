@@ -305,26 +305,13 @@
       box-shadow: inset 0 1px 2px rgba(0,0,0,.04);
     }
 
-    /* Colori testo più scuri nel tema chiaro: mantengono il contrasto su fondo bianco. */
     .light-theme .text-emerald-300,
-    .light-theme .text-emerald-400 {
-      color: #087a5a !important;
-    }
+    .light-theme .text-emerald-400,
     .light-theme .text-teal-300,
-    .light-theme .text-teal-400 {
-      color: #087f83 !important;
-    }
-    .light-theme .text-cyan-200,
+    .light-theme .text-teal-400,
     .light-theme .text-cyan-300,
     .light-theme .text-cyan-400 {
-      color: #003f5c !important;
-    }
-
-    /* Calorie: rosso pompeiano nel tema chiaro */
-    .light-theme .text-amber-200,
-    .light-theme .text-amber-300,
-    .light-theme .text-amber-400 {
-      color: #b23a2b !important;
+      filter: none;
     }
 
     /* Header mobile: centrato, senza overflow laterale. */
@@ -1534,7 +1521,7 @@
   <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js';
     import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js';
-    import { getFirestore, doc, getDoc, onSnapshot, setDoc, deleteDoc } from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js';
+    import { getFirestore, doc, getDoc, getDocFromServer, onSnapshot, setDoc, deleteDoc } from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js';
 
     const firebaseConfig = {
       apiKey: 'AIzaSyAdZbBv6JYbYnl6CxuFVfHhSftvIxwf2DY',
@@ -1589,7 +1576,6 @@
       ptSheetImage: null, ptSheetDate: null, currentLidlSlot: 'slot1'
     };
     let localStateKey = 'icon_guest_state';
-    let backupRestoreTimestamp = 0;
 
     function resetAppData() {
       appData = {
@@ -1770,6 +1756,13 @@
       return appData.dailyRecords[key];
     }
 
+    let lastCloudErrorAt = 0;
+
+    async function writeCloudNow() {
+      if (!currentUser || !cloudDocRef) return;
+      await setDoc(cloudDocRef, { ...appData, updatedAt: Date.now() }, { merge: true });
+    }
+
     function triggerCloudSave() {
       try {
         localStorage.setItem(localStateKey, JSON.stringify(appData));
@@ -1777,20 +1770,32 @@
 
       if (!currentUser || !cloudDocRef) return;
       clearTimeout(cloudSaveTimeout);
-
-      // Non permettere a un salvataggio partito prima del ripristino
-      // di sovrascrivere il backup appena importato.
-      const saveStartedAt = Date.now();
       cloudSaveTimeout = setTimeout(async () => {
-        if (saveStartedAt < backupRestoreTimestamp) return;
+        cloudSaveTimeout = null;
         try {
-          await setDoc(cloudDocRef, { ...appData, updatedAt: Date.now() }, { merge: true });
+          await writeCloudNow();
         } catch (e) {
           console.warn("Sync cloud differito:", e);
-          showNotification("Errore salvataggio Firebase: " + (e?.code || e?.message || "sconosciuto"), true);
+          // Prima l'errore era solo in console: il salvataggio falliva senza che te ne accorgessi.
+          if (Date.now() - lastCloudErrorAt > 15000) {
+            lastCloudErrorAt = Date.now();
+            showNotification('Salvataggio su Firebase non riuscito (' + (e?.code || e?.message || 'errore') + '): le modifiche restano solo su questo dispositivo.', true);
+          }
         }
       }, 300);
     }
+
+    // Scrive subito l'eventuale salvataggio in attesa (logout, chiusura/cambio scheda del browser).
+    async function flushCloudSave() {
+      if (!cloudSaveTimeout) return;
+      clearTimeout(cloudSaveTimeout);
+      cloudSaveTimeout = null;
+      await writeCloudNow();
+    }
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'hidden') flushCloudSave().catch(() => {});
+    });
+    window.addEventListener('pagehide', () => { flushCloudSave().catch(() => {}); });
 
     function prepareImageForAi(file) {
       return new Promise((resolve, reject) => {
@@ -3061,8 +3066,6 @@ const BACKEND_AI_URL =
         const sumKcal = items.reduce((acc, x) => acc + (Number(x.calories) || 0), 0);
         const sumPro = items.reduce((acc, x) => acc + (Number(x.protein) || 0), 0);
         const sumCarbs = items.reduce((acc, x) => acc + (Number(x.carbs) || 0), 0);
-        const sumProDisplay = Number(sumPro.toFixed(2));
-        const sumCarbsDisplay = Number(sumCarbs.toFixed(2));
 
         const itemsHTML = items.map(m => `
           <div class="flex items-center justify-between p-2.5 rounded-xl bg-app-dark border border-app-border text-sm">
@@ -3092,11 +3095,11 @@ const BACKEND_AI_URL =
               <div class="grid grid-cols-3 gap-2 text-center">
                 <div>
                   <span class="block text-[10px] uppercase font-black text-emerald-400">Proteine</span>
-                  <span class="text-lg font-mono font-black text-emerald-300">${sumProDisplay.toFixed(2)}g</span>
+                  <span class="text-lg font-mono font-black text-emerald-300">${sumPro}g</span>
                 </div>
                 <div>
                   <span class="block text-[10px] uppercase font-black text-cyan-300">Carboidrati</span>
-                  <span class="text-lg font-mono font-black text-cyan-200">${sumCarbsDisplay.toFixed(2)}g</span>
+                  <span class="text-lg font-mono font-black text-cyan-200">${sumCarbs}g</span>
                 </div>
                 <div>
                   <span class="block text-[10px] uppercase font-black text-amber-300">Calorie</span>
@@ -3710,6 +3713,12 @@ window.saveOnboardingProfile = async function() {
 
     window.logoutUser = async function() {
       try {
+        // Scrive le modifiche ancora in attesa PRIMA di chiudere la sessione (poi non si potrebbe più).
+        try { await flushCloudSave(); }
+        catch (e) {
+          console.warn('Salvataggio prima del logout:', e);
+          showNotification('Ultime modifiche NON salvate su Firebase (' + (e?.code || e?.message || 'errore') + ').', true);
+        }
         if (scannerRecognition) { try { scannerRecognition.abort(); } catch (e) {} }
         if (coachRecognition) { try { coachRecognition.abort(); } catch (e) {} }
         if (unsubCloud) { try { unsubCloud(); } catch (e) {} unsubCloud = null; }
@@ -3725,88 +3734,128 @@ window.saveOnboardingProfile = async function() {
     };
 
     window.importFirebaseBackup = async function(file) {
+      const input = document.getElementById('firebaseBackupInput');
+      const done = () => { if (input) input.value = ''; };   // permette di riselezionare lo stesso file
       if (!file) return;
       if (!currentUser || !cloudDocRef) {
         showNotification('Accedi prima con l’account Luca.', true);
-        return;
+        return done();
       }
       if ((currentUser.email || '').trim().toLowerCase() !== PRIMARY_ADMIN_EMAIL) {
         showNotification('Ripristino disponibile solo per l’account principale.', true);
-        return;
+        return done();
       }
 
+      const fail = (msg, err) => {
+        console.error('Ripristino backup Firebase:', msg, err || '');
+        showNotification('Backup NON salvato su Firebase: ' + msg, true);
+        alert('Backup NON salvato su Firebase.\n\n' + msg);
+      };
+      const withTimeout = (promise, ms, msg) => Promise.race([
+        promise,
+        new Promise((_, reject) => setTimeout(() => reject(Object.assign(new Error(msg), { code: 'timeout' })), ms))
+      ]);
+      // Firebase non accetta array dentro array: se ci sono, dico esattamente dove.
+      const findNestedArray = (v, path) => {
+        if (Array.isArray(v)) {
+          for (let i = 0; i < v.length; i++) {
+            if (Array.isArray(v[i])) return path + '[' + i + ']';
+            const p = findNestedArray(v[i], path + '[' + i + ']');
+            if (p) return p;
+          }
+        } else if (v && typeof v === 'object') {
+          for (const k of Object.keys(v)) {
+            const p = findNestedArray(v[k], path ? path + '.' + k : k);
+            if (p) return p;
+          }
+        }
+        return null;
+      };
+      const bytesOf = obj => new Blob([JSON.stringify(obj)]).size;
+
       try {
-        clearTimeout(cloudSaveTimeout);
+        // 1) Lettura e controllo del file
+        let backup;
+        try { backup = JSON.parse(await file.text()); }
+        catch (e) { return fail('il file non è un JSON valido.', e); }
 
-        const rawText = await file.text();
-        const backup = JSON.parse(rawText);
+        const candidates = [backup, backup?.appData, backup?.data, backup?.state];
+        const src = candidates.find(c => c && typeof c === 'object' && c.dailyRecords && typeof c.dailyRecords === 'object');
+        if (!src) return fail('il file non contiene "dailyRecords" (giorni registrati).');
 
-        if (!backup || typeof backup !== 'object' || !backup.dailyRecords || typeof backup.dailyRecords !== 'object') {
-          throw new Error('Il file non contiene dailyRecords validi.');
+        // 2) Solo i campi che l'app salva davvero (niente chiavi sconosciute, credenziali o email storiche).
+        //    Tema e modalità di visualizzazione restano quelli scelti ora.
+        const KEYS = ['dailyRecords', 'workoutExercises', 'customRoutines', 'walkLogs', 'ptSheetImage', 'ptSheetDate',
+          'weight', 'waist', 'height', 'age', 'workoutsPerWeek', 'goal', 'defaultRestingCalories', 'dailyCalorieTarget', 'currentLidlSlot'];
+        const picked = {};
+        KEYS.forEach(k => { if (src[k] !== undefined) picked[k] = JSON.parse(JSON.stringify(src[k])); });
+
+        const nested = findNestedArray(picked, '');
+        if (nested) return fail('Firebase non accetta array dentro array e il backup ne contiene uno in "' + nested + '".');
+
+        // 3) I giorni del backup si sommano a quelli già presenti (a parità di data vince il backup).
+        const backupDays = picked.dailyRecords;
+        const mergedDaily = { ...(appData.dailyRecords || {}), ...backupDays };
+        const dayCount = Object.keys(backupDays).length;
+
+        // 4) Limite di Firestore: 1 MB per documento.
+        const projected = { ...appData, ...picked, dailyRecords: mergedDaily };
+        const size = bytesOf(projected);
+        if (size > 950000) {
+          const big = Object.keys(projected).map(k => [k, bytesOf(projected[k])]).sort((a, b) => b[1] - a[1]).slice(0, 3)
+            .map(([k, n]) => k + ' ' + Math.round(n / 1024) + ' KB').join(', ');
+          return fail('il documento supererebbe il limite di 1 MB di Firebase (' + Math.round(size / 1024) + ' KB). Più pesanti: ' + big + '.');
         }
 
-        // Mai importare credenziali, email storiche o chiavi API.
-        const {
-          userApiKey,
-          email,
-          userEmail,
-          approvalUpdatedAt,
-          updatedAt,
-          ...safeBackup
-        } = backup;
-
-        const restoreTimestamp = Date.now();
-        backupRestoreTimestamp = restoreTimestamp;
-
-        appData = {
-          ...appData,
-          ...safeBackup,
-          name: (currentUser.displayName || '').trim().split(/\s+/)[0] || 'Luca',
-          profileCompleted: true,
-          approved: true
-        };
-
-        localStorage.setItem(localStateKey, JSON.stringify(appData));
-
-        // Scrive il backup come documento completo, non in merge.
-        // In questo modo i dati recuperati diventano lo stato persistente
-        // effettivo dell'account e non possono essere sovrascritti da campi vecchi.
+        // 5) Scrittura su Firebase (prima di toccare l'interfaccia)
+        showNotification('Salvataggio del backup su Firebase in corso…');
         const payload = {
-          ...appData,
-          name: appData.name,
+          ...picked,
+          name: (currentUser.displayName || '').trim().split(/\s+/)[0] || appData.name || 'Luca',
           email: currentUser.email || '',
           userEmail: currentUser.email || '',
           profileCompleted: true,
           approved: true,
-          updatedAt: restoreTimestamp
+          updatedAt: Date.now()
         };
-
-        // Prima testiamo la scrittura sul documento corrente con un marcatore
-        // temporaneo. Se le regole Firebase la bloccano, mostriamo l'errore reale.
         try {
-          await setDoc(cloudDocRef, { backupRestoreTest: restoreTimestamp }, { merge: true });
-        } catch (writeError) {
-          console.error('Firebase backup write test:', writeError);
-          throw new Error('Scrittura Firebase bloccata: ' + (writeError?.code || writeError?.message || 'errore sconosciuto'));
+          await withTimeout(setDoc(cloudDocRef, payload, { merge: true }), 20000,
+            'Firebase non risponde (connessione assente o bloccata): i dati non risultano salvati.');
+        } catch (e) {
+          return fail((e?.code ? '[' + e.code + '] ' : '') + (e?.message || 'scrittura rifiutata') +
+            (e?.code === 'permission-denied' ? '\n\nLe regole di sicurezza di Firestore hanno rifiutato la scrittura.' : ''), e);
         }
 
-        await setDoc(cloudDocRef, payload);
-
-        // Verifica che Firebase abbia realmente registrato il ripristino.
-        const verified = await getDoc(cloudDocRef);
-        if (!verified.exists() || !verified.data()?.dailyRecords) {
-          throw new Error('Firebase ha scritto il documento, ma non trova dailyRecords dopo la rilettura.');
+        // 6) Verifica: rileggo dal server e controllo che ogni giorno del backup ci sia davvero
+        let saved;
+        try {
+          const snap = await withTimeout(getDocFromServer(cloudDocRef), 15000, 'nessuna risposta dal server per la verifica.');
+          saved = (snap.data() || {}).dailyRecords || {};
+        } catch (e) {
+          return fail('scrittura inviata ma non verificabile: ' + (e?.message || 'errore di lettura') + '\nRiprova tra poco.', e);
+        }
+        const missing = Object.keys(backupDays).filter(k => !(k in saved));
+        if (missing.length) {
+          return fail('verifica fallita: ' + missing.length + ' giorni su ' + dayCount + ' non risultano sul server (es. ' + missing.slice(0, 3).join(', ') + ').');
         }
 
-        appData = { ...appData, ...verified.data() };
-        localStorage.setItem(localStateKey, JSON.stringify(appData));
+        // 7) Solo ora aggiorno l'app
+        appData = {
+          ...appData,
+          ...picked,
+          dailyRecords: mergedDaily,
+          name: payload.name,
+          profileCompleted: true,
+          approved: true
+        };
+        try { localStorage.setItem(localStateKey, JSON.stringify(appData)); } catch (e) {}
         window.updateUIFromState();
         window.refreshCoachGreeting();
-
-        showNotification('Backup salvato definitivamente su Firebase.', false);
+        showNotification('Backup ripristinato e verificato su Firebase: ' + dayCount + ' giorni.');
       } catch (e) {
-        console.error('Ripristino backup Firebase:', e);
-        showNotification('Errore ripristino: ' + (e?.message || 'file non valido'), true);
+        fail(e?.message || 'errore imprevisto.', e);
+      } finally {
+        done();
       }
     };
 
@@ -4038,16 +4087,18 @@ window.saveOnboardingProfile = async function() {
       }
 
       // Impostazioni Gemini legacy: lasciate compatibili, ma non più necessarie per il backend Vercel.
+      let firstCloudSnapshot = true;
       unsubCloud = onSnapshot(cloudDocRef, snap => {
         if (snap.exists()) {
           const data = snap.data();
-
-          // Durante/subito dopo un ripristino ignoriamo eventuali snapshot
-          // Firebase più vecchi rimasti in coda nella cache locale.
-          if (backupRestoreTimestamp && Number(data.updatedAt || 0) < backupRestoreTimestamp) {
-            return;
+          // Questi campi venivano salvati sul cloud ma non riletti al login (tornavano ai valori di default).
+          if (data.defaultRestingCalories) appData.defaultRestingCalories = data.defaultRestingCalories;
+          if (data.currentLidlSlot) appData.currentLidlSlot = data.currentLidlSlot;
+          if (firstCloudSnapshot) {
+            if (data.theme) appData.theme = data.theme;
+            if (data.displayMode) appData.displayMode = data.displayMode;
+            firstCloudSnapshot = false;
           }
-
           if (data.dailyRecords) appData.dailyRecords = data.dailyRecords;
           if (data.workoutExercises) appData.workoutExercises = data.workoutExercises;
           if (data.customRoutines) appData.customRoutines = data.customRoutines;
