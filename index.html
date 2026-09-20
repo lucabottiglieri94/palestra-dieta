@@ -689,7 +689,7 @@
             <span id="headerUserStats" class="text-[9px] sm:text-xs font-bold uppercase px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">--a • --kg</span>
           </div>
           <div class="text-[9px] sm:text-xs font-mono font-bold text-app-textMuted truncate">
-            <span id="coachInlineUserName">Utente</span> • Cloud ✓ • <span id="headerCalorieTarget">Target Calorie -- kcal</span>
+            <span id="coachInlineUserName">Utente</span> • <span id="cloudStatusReadout" title="Stato sincronizzazione Firebase">Cloud …</span> • <span id="headerCalorieTarget">Target Calorie -- kcal</span>
           </div>
         </div>
 
@@ -1543,6 +1543,7 @@
     let cloudDocRef = null;
     let unsubCloud = null;
     let cloudSaveTimeout = null;
+    let cloudReady = false;   // true solo dopo la prima lettura dei dati da Firebase
 
     const AI_MODELS = ['gemini-2.5-flash', 'gemini-3.6-flash', 'gemini-3-flash-preview'];
     const MEAL_SLOTS = ["Colazione", "Spuntino", "Pranzo", "Merenda", "Cena", "Spuntino notturno"];
@@ -1759,7 +1760,7 @@
     let lastCloudErrorAt = 0;
 
     async function writeCloudNow() {
-      if (!currentUser || !cloudDocRef) return;
+      if (!currentUser || !cloudDocRef || !cloudReady) return;
       await setDoc(cloudDocRef, { ...appData, updatedAt: Date.now() }, { merge: true });
     }
 
@@ -1769,6 +1770,8 @@
       } catch (e) {}
 
       if (!currentUser || !cloudDocRef) return;
+      // Se i dati del cloud non sono ancora stati letti, scrivere ora cancellerebbe il profilo, le camminate e la scheda PT.
+      if (!cloudReady) return;
       clearTimeout(cloudSaveTimeout);
       cloudSaveTimeout = setTimeout(async () => {
         cloudSaveTimeout = null;
@@ -3300,11 +3303,11 @@ const BACKEND_AI_URL =
 
     function updateWaterDisplay() {
       const day = getSelectedDayData();
-      const liters = day.waterLiters || 0;
+      const liters = Number(day.waterLiters) || 0;
       const readoutBig = document.getElementById('waterValueDisplayBig');
       if (readoutBig) readoutBig.innerText = liters.toFixed(1);
       const badge = document.getElementById('gymBottleCountBadge');
-      if (badge) badge.innerText = `${day.gymBottles || 0} Borracce (${((day.gymBottles || 0) * 0.5).toFixed(1)} L)`;
+      if (badge) badge.innerText = `${Number(day.gymBottles) || 0} Borracce (${((Number(day.gymBottles) || 0) * 0.5).toFixed(1)} L)`;
     }
 
     function initWaterGrid() {
@@ -3598,7 +3601,7 @@ const BACKEND_AI_URL =
 
     window.continueAsGuest = function() {
       document.getElementById('loginOverlay').classList.add('hidden');
-      document.getElementById('cloudStatusReadout').innerText = "Offline / Locale";
+      { const el = document.getElementById('cloudStatusReadout'); if (el) el.innerText = "Offline / Locale"; }
       showNotification("Modalità locale attiva: dati salvati nel browser.");
     };
 
@@ -3724,6 +3727,7 @@ window.saveOnboardingProfile = async function() {
         if (unsubCloud) { try { unsubCloud(); } catch (e) {} unsubCloud = null; }
         await signOut(auth);
         resetAppData();
+        cloudReady = false;
         currentUser = null;
         cloudDocRef = null;
         localStateKey = 'icon_guest_state';
@@ -3743,6 +3747,11 @@ window.saveOnboardingProfile = async function() {
       }
       if ((currentUser.email || '').trim().toLowerCase() !== PRIMARY_ADMIN_EMAIL) {
         showNotification('Ripristino disponibile solo per l’account principale.', true);
+        return done();
+      }
+
+      if (!cloudReady) {
+        showNotification('Attendi il caricamento dei dati da Firebase (Cloud ✓ in alto) e riprova.', true);
         return done();
       }
 
@@ -3944,8 +3953,10 @@ window.saveOnboardingProfile = async function() {
     };
 
     window.updateUIFromState = function() {
-      applyDisplayPreferences();
-      updateDailyCalorieTarget();
+      // Ogni blocco è isolato: se uno lancia un errore, gli altri (es. le calorie assunte) si aggiornano lo stesso.
+      const step = (name, fn) => { try { fn(); } catch (e) { console.error('updateUIFromState › ' + name + ':', e); } };
+      step('applyDisplayPreferences', () => applyDisplayPreferences());
+      step('updateDailyCalorieTarget', () => updateDailyCalorieTarget());
       const coachNameEl = document.getElementById('coachInlineUserName');
       const headerUserStatsEl = document.getElementById('headerUserStats');
       if (headerUserStatsEl) {
@@ -3974,26 +3985,28 @@ window.saveOnboardingProfile = async function() {
         dayTitle.innerText = selectedDate.toLocaleDateString('it-IT', { weekday: 'long', day: 'numeric', month: 'long' });
       }
 
-      renderWorkoutList(currentWorkoutDay);
-      renderDualColumnDiet();
-      renderGroupedMeals();
-      initWaterGrid();
-      updateWaterDisplay();
-      updateBurnedCaloriesUI();
-      updateDeficitCalculations();
-      renderLidlShoppingList();
-      renderWalkHistory();
-      updatePtSheetUI();
-      if (window.updateDetectedMealSlotUI) window.updateDetectedMealSlotUI();
+      step('renderWorkoutList', () => renderWorkoutList(currentWorkoutDay));
+      step('renderDualColumnDiet', () => renderDualColumnDiet());
+      step('renderGroupedMeals', () => renderGroupedMeals());
+      step('initWaterGrid', () => initWaterGrid());
+      step('updateWaterDisplay', () => updateWaterDisplay());
+      step('updateBurnedCaloriesUI', () => updateBurnedCaloriesUI());
+      step('updateDeficitCalculations', () => updateDeficitCalculations());
+      step('renderLidlShoppingList', () => renderLidlShoppingList());
+      step('renderWalkHistory', () => renderWalkHistory());
+      step('updatePtSheetUI', () => updatePtSheetUI());
+      step('updateDetectedMealSlotUI', () => { if (window.updateDetectedMealSlotUI) window.updateDetectedMealSlotUI(); });
 
-      document.getElementById('metricCurrentWeight').innerHTML = `${appData.weight} <span class="text-xs text-app-textMuted">kg</span>`;
-      document.getElementById('metricCurrentWaist').innerHTML = `${appData.waist} <span class="text-xs text-app-textMuted">cm</span>`;
+      step('misure', () => {
+        document.getElementById('metricCurrentWeight').innerHTML = `${appData.weight} <span class="text-xs text-app-textMuted">kg</span>`;
+        document.getElementById('metricCurrentWaist').innerHTML = `${appData.waist} <span class="text-xs text-app-textMuted">cm</span>`;
+      });
     };
 
     onAuthStateChanged(auth, async user => {
       currentUser = user;
       const overlay = document.getElementById('loginOverlay');
-      const cloudStatus = document.getElementById('cloudStatusReadout');
+      const cloudStatus = document.getElementById('cloudStatusReadout') || {};   // mai null: un elemento mancante bloccava il caricamento dei dati
       const onboarding = document.getElementById('onboardingOverlay');
 
       if (!user) {
@@ -4011,6 +4024,7 @@ window.saveOnboardingProfile = async function() {
 
       if (unsubCloud) { try { unsubCloud(); } catch (e) {} unsubCloud = null; }
       resetAppData();
+      cloudReady = false;
       localStateKey = `icon_user_state_${user.uid}`;
       cloudDocRef = doc(db, 'users', user.uid, 'gym_recomp', 'current_state');
       const isPrimaryAdmin = (user.email || '').toLowerCase() === PRIMARY_ADMIN_EMAIL;
@@ -4018,7 +4032,7 @@ window.saveOnboardingProfile = async function() {
       // L'admin principale entra direttamente nella dashboard.
       if (isPrimaryAdmin) {
         overlay.classList.add('hidden');
-        cloudStatus.innerText = `${user.displayName ? user.displayName.split(' ')[0] : 'Luca'} • Cloud ✓`;
+        cloudStatus.innerText = 'Cloud …';
       } else {
         // Leggiamo il profilo prima di nascondere qualsiasi overlay.
         // Così un nuovo utente vede SEMPRE il questionario al primo accesso.
@@ -4083,7 +4097,7 @@ window.saveOnboardingProfile = async function() {
         }
 
         overlay.classList.add('hidden');
-        cloudStatus.innerText = `${user.displayName ? user.displayName.split(' ')[0] : 'Utente'} • Cloud ✓`;
+        cloudStatus.innerText = 'Cloud …';
       }
 
       // Impostazioni Gemini legacy: lasciate compatibili, ma non più necessarie per il backend Vercel.
@@ -4126,6 +4140,8 @@ window.saveOnboardingProfile = async function() {
           }
           appData.approved = data.approved === true;
           if (data.walkLogs) appData.walkLogs = data.walkLogs;
+          cloudReady = true;
+          cloudStatus.innerText = 'Cloud ✓';
           window.refreshCoachGreeting();
           window.updateUIFromState();
 
@@ -4141,7 +4157,7 @@ window.saveOnboardingProfile = async function() {
               overlay.classList.add('hidden');
             }
           }
-        } else if (isPrimaryAdmin) {
+        } else if (isPrimaryAdmin && !snap.metadata?.fromCache) {   // documento davvero assente sul server (non solo nella cache)
           appData.name = appData.name || user.displayName || 'Luca';
           appData.profileCompleted = true;
           appData.approved = true;
@@ -4156,10 +4172,14 @@ window.saveOnboardingProfile = async function() {
           }, {merge:true}).catch(()=>{});
           if (onboarding) onboarding.classList.add('hidden');
           overlay.classList.add('hidden');
+          cloudReady = true;
+          cloudStatus.innerText = 'Cloud ✓';
           window.refreshCoachGreeting();
         }
       }, err => {
         console.warn("Snapshot Cloud:", err);
+        cloudStatus.innerText = 'Cloud ⚠';
+        showNotification('Impossibile leggere i dati da Firebase (' + (err?.code || err?.message || 'errore') + '): salvataggio sospeso per non sovrascriverli.', true);
       });
 
       window.updateUIFromState();
