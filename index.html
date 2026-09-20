@@ -3884,6 +3884,7 @@ window.saveOnboardingProfile = async function() {
 
     onAuthStateChanged(auth, async user => {
       currentUser = user;
+      updateFirebaseBackupButtonVisibility();
       const overlay = document.getElementById('loginOverlay');
       const cloudStatus = document.getElementById('cloudStatusReadout');
       const onboarding = document.getElementById('onboardingOverlay');
