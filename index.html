@@ -386,7 +386,7 @@
     .nexa-side-banner {
       display: none;
       position: fixed;
-      top: 0;
+      top: var(--nexa-side-top, 0px);
       bottom: 0;
       width: max(0px, calc((100vw - 1280px) / 2));
       max-width: none;
@@ -612,7 +612,7 @@
   </div>
 
   <!-- HEADER APPLICAZIONE -->
-  <header id="appHeader" class="sticky top-0 z-50 border-b border-app-border bg-app-black">
+  <header id="appHeader" class="sticky top-0 z-50 border-b border-app-border bg-transparent">
     <div class="w-full overflow-hidden">
       <img id="nexaTopBanner"
         src="https://raw.githubusercontent.com/lucabottiglieri94/palestra-dieta/main/nexabannerdark.jpeg"
@@ -649,7 +649,28 @@
         </div>
       </div>
     </div>
-  </header>  <main class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
+  </header>
+  <script>
+    (() => {
+      const syncNexaSideTop = () => {
+        const banner = document.getElementById('nexaTopBanner');
+        if (!banner) return;
+        document.documentElement.style.setProperty(
+          '--nexa-side-top',
+          banner.getBoundingClientRect().height + 'px'
+        );
+      };
+      window.addEventListener('load', syncNexaSideTop);
+      window.addEventListener('resize', syncNexaSideTop);
+      const banner = document.getElementById('nexaTopBanner');
+      if (banner) {
+        if (banner.complete) syncNexaSideTop();
+        else banner.addEventListener('load', syncNexaSideTop, { once: true });
+        if (window.ResizeObserver) new ResizeObserver(syncNexaSideTop).observe(banner);
+      }
+    })();
+  </script>
+  <main class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
 
     <!-- ============================================================= -->
     <!-- TAB 1: SCHEDA PALESTRA ICON (USO LIVE IN SALA)                -->
