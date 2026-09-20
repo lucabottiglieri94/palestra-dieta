@@ -504,8 +504,13 @@
               Spesa Totale (Riposo + Attive) - Cibo Assunto = Deficit Reale Effettivo
             </p>
           </div>
-          <div id="deficitSurplusBadge" class="self-start sm:self-auto px-4 py-2 rounded-xl font-mono font-black text-sm sm:text-base bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
-            DEFICIT ATTIVO
+          <div class="flex flex-col items-end gap-2 self-start sm:self-auto">
+            <div id="nutritionTargetBadge" class="px-4 py-2 rounded-xl font-mono font-black text-xs sm:text-sm bg-cyan-500/10 text-cyan-300 border border-cyan-500/30">
+              TARGET MASSIMO -- KCAL
+            </div>
+            <div id="deficitSurplusBadge" class="px-4 py-2 rounded-xl font-mono font-black text-sm sm:text-base bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+              DEFICIT ATTIVO
+            </div>
           </div>
         </div>
 
@@ -2657,6 +2662,11 @@ const BACKEND_AI_URL =
       const totalExpenditure = resting + burned;
       const actualDeficit = totalExpenditure - totalIntake;
       const deficitValue = Number(actualDeficit.toFixed(2));
+      const targetBadge = document.getElementById('nutritionTargetBadge');
+      if (targetBadge) {
+        const target = calculateDailyCalorieTarget();
+        targetBadge.textContent = `TARGET MASSIMO ${target.toLocaleString('it-IT')} KCAL`;
+      }
 
       const intakeEl = document.getElementById('summaryIntakeKcal');
       const restEl = document.getElementById('summaryRestingKcal');
