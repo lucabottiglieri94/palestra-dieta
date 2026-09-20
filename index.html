@@ -132,6 +132,30 @@
     .light-theme input,
     .light-theme select,
     .light-theme textarea { background-color: #ffffff !important; color: #17202a !important; border-color: #cbd5e1 !important; }
+    .light-theme #appHeaderControls,
+    .light-theme .light-header-controls {
+      background: #f1f3f5 !important;
+      color: #1d1d1f !important;
+      border-color: #d2d6dc !important;
+      box-shadow: 0 1px 0 rgba(0,0,0,.04), 0 4px 16px rgba(0,0,0,.04);
+    }
+    .light-theme #appHeaderControls .text-white,
+    .light-theme #appHeaderControls .text-app-textMuted {
+      color: #4b5563 !important;
+    }
+    .light-theme #appHeaderControls button {
+      color: #1d1d1f !important;
+      background-color: #ffffff !important;
+      border-color: #d2d6dc !important;
+    }
+    .light-theme #appHeaderControls button:hover {
+      background-color: #f8f9fb !important;
+    }
+    .light-theme #appHeaderControls #themeToggleBtn,
+    .light-theme #appHeaderControls #modeToggleBtn {
+      color: #1d1d1f !important;
+    }
+
     .light-theme .login-overlay { background: rgba(243,245,247,.96) !important; }
     .light-theme .login-overlay > div {
       background: #ffffff !important;
@@ -535,7 +559,7 @@
     </div>
 
     <!-- Controlli: sotto la foto, a contatto con il bordo inferiore del banner -->
-    <div id="appHeaderControls" class="relative z-10 w-full px-2 sm:px-4 py-2 bg-app-black/95 border-t border-app-border backdrop-blur-xl">
+    <div id="appHeaderControls" class="relative z-10 w-full px-2 sm:px-4 py-2 bg-app-black/95 border-t border-app-border backdrop-blur-xl light-header-controls">
       <div class="max-w-7xl mx-auto flex items-center justify-between gap-2 sm:gap-4">
         <div class="min-w-0 text-white">
           <div class="flex items-center gap-1.5 sm:gap-2">
