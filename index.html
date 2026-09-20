@@ -1777,11 +1777,17 @@
 
       if (!currentUser || !cloudDocRef) return;
       clearTimeout(cloudSaveTimeout);
+
+      // Non permettere a un salvataggio partito prima del ripristino
+      // di sovrascrivere il backup appena importato.
+      const saveStartedAt = Date.now();
       cloudSaveTimeout = setTimeout(async () => {
+        if (saveStartedAt < backupRestoreTimestamp) return;
         try {
           await setDoc(cloudDocRef, { ...appData, updatedAt: Date.now() }, { merge: true });
         } catch (e) {
           console.warn("Sync cloud differito:", e);
+          showNotification("Errore salvataggio Firebase: " + (e?.code || e?.message || "sconosciuto"), true);
         }
       }, 300);
     }
