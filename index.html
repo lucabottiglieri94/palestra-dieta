@@ -326,6 +326,12 @@
           <span>⏱️</span>
           <span id="headerTimerReadout">00:00</span>
         </button>
+        <button id="themeToggleBtn" onclick="window.toggleUserTheme()" class="px-3 h-10 rounded-xl bg-app-card border border-app-border text-xs font-bold text-app-textMuted hover:text-white transition" title="Cambia tema">
+          ☀️ <span class="hidden sm:inline">Tema</span>
+        </button>
+        <button id="modeToggleBtn" onclick="window.toggleUserDisplayMode()" class="px-3 h-10 rounded-xl bg-app-card border border-app-border text-xs font-bold text-app-textMuted hover:text-white transition" title="Cambia modalità">
+          ⚡ <span class="hidden sm:inline">Modalità</span>
+        </button>
         <button onclick="window.deleteUserMemory()" class="px-3 h-10 rounded-xl bg-red-950/70 border border-red-500/40 text-red-300 text-xs font-bold flex items-center gap-1.5 hover:bg-red-900/70 transition" title="Pulisci memoria">
           🗑️ <span class="hidden sm:inline">Pulisci memoria</span>
         </button>
@@ -3297,7 +3303,53 @@ window.saveOnboardingProfile = async function() {
       root.classList.toggle('dark', appData.theme !== 'light');
       document.body.classList.toggle('light-theme', appData.theme === 'light');
       document.body.classList.toggle('simple-mode', appData.displayMode === 'simple');
+
+      const themeBtn = document.getElementById('themeToggleBtn');
+      if (themeBtn) {
+        themeBtn.innerHTML = appData.theme === 'light'
+          ? '🌙 <span class="hidden sm:inline">Tema scuro</span>'
+          : '☀️ <span class="hidden sm:inline">Tema chiaro</span>';
+        themeBtn.title = appData.theme === 'light' ? 'Passa al tema scuro' : 'Passa al tema chiaro';
+      }
+
+      const modeBtn = document.getElementById('modeToggleBtn');
+      if (modeBtn) {
+        modeBtn.innerHTML = appData.displayMode === 'simple'
+          ? '▣ <span class="hidden sm:inline">Completa</span>'
+          : '⚡ <span class="hidden sm:inline">Semplificata</span>';
+        modeBtn.title = appData.displayMode === 'simple' ? 'Passa alla modalità completa' : 'Passa alla modalità semplificata';
+      }
     }
+
+    async function saveUserPreferences() {
+      try {
+        localStorage.setItem(localStateKey, JSON.stringify(appData));
+      } catch (e) {}
+
+      if (cloudDocRef && currentUser) {
+        try {
+          await setDoc(cloudDocRef, {
+            theme: appData.theme || 'dark',
+            displayMode: appData.displayMode || 'full',
+            updatedAt: Date.now()
+          }, { merge: true });
+        } catch (e) {
+          console.warn('Preferenze utente:', e);
+        }
+      }
+    }
+
+    window.toggleUserTheme = function() {
+      appData.theme = appData.theme === 'light' ? 'dark' : 'light';
+      applyDisplayPreferences();
+      saveUserPreferences();
+    };
+
+    window.toggleUserDisplayMode = function() {
+      appData.displayMode = appData.displayMode === 'simple' ? 'full' : 'simple';
+      applyDisplayPreferences();
+      saveUserPreferences();
+    };
 
     window.updateUIFromState = function() {
       applyDisplayPreferences();
