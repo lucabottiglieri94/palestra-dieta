@@ -733,6 +733,18 @@
         </div>
       </div>
 
+      <!-- Pasti già scansionati del giorno selezionato -->
+      <div class="apple-glass-card p-5 sm:p-6 rounded-3xl border border-app-border space-y-4">
+        <div class="flex items-center justify-between gap-3">
+          <div>
+            <h4 class="font-display font-black text-lg text-white">Pasti scansionati</h4>
+            <p id="scannerDayMealsSubtitle" class="text-xs text-app-textMuted mt-0.5">Pasti salvati nel giorno selezionato</p>
+          </div>
+          <span id="scannerDayMealsCount" class="text-xs font-mono font-bold px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">0 cibi</span>
+        </div>
+        <div id="scannerDayMealsContainer" class="space-y-2"></div>
+      </div>
+
       <!-- Diario Pasti con Eliminazione Singola -->
       <div class="space-y-4">
         <div class="flex flex-col gap-3 px-1">
@@ -2432,6 +2444,45 @@ const BACKEND_AI_URL =
       showNotification("Diario pasti azzerato.");
     };
 
+    function renderScannerDayMeals() {
+      const container = document.getElementById('scannerDayMealsContainer');
+      if (!container) return;
+
+      const day = getSelectedDayData();
+      const logs = day?.foodLogs || [];
+      const countEl = document.getElementById('scannerDayMealsCount');
+      const subtitleEl = document.getElementById('scannerDayMealsSubtitle');
+
+      const todayKey = getItalyDateKey();
+      const currentKey = getFormattedDateKey(selectedDate);
+      const dateLabel = todayKey === currentKey
+        ? 'oggi'
+        : selectedDate.toLocaleDateString('it-IT', { weekday: 'long', day: 'numeric', month: 'long' });
+
+      if (subtitleEl) subtitleEl.textContent = `Pasti salvati per ${dateLabel}`;
+      if (countEl) countEl.textContent = `${logs.length} ${logs.length === 1 ? 'cibo' : 'cibi'}`;
+
+      if (!logs.length) {
+        container.innerHTML = '<div class="p-4 rounded-2xl bg-app-dark border border-app-border text-sm text-app-textMuted text-center">Nessun pasto scansionato in questo giorno.</div>';
+        return;
+      }
+
+      container.innerHTML = logs.map((m, index) => `
+        <div class="flex items-center justify-between gap-3 p-3 rounded-2xl bg-app-dark border border-app-border">
+          <div class="min-w-0">
+            <div class="font-bold text-white truncate">${m.dishName || 'Piatto'}</div>
+            <div class="text-xs text-app-textMuted font-mono mt-0.5">
+              ${m.time || ''} • ${m.slot || 'Cena'} • ${Number(m.calories) || 0} kcal
+            </div>
+            <div class="text-[11px] text-emerald-300 font-mono mt-0.5">
+              ${Number(m.protein) || 0}g Pro • ${Number(m.carbs) || 0}g Carb • ${Number(m.fat) || 0}g Grassi
+            </div>
+          </div>
+          <button type="button" onclick="window.deleteSingleFoodItem(${index})" class="shrink-0 w-9 h-9 rounded-xl bg-red-950/40 text-red-400 border border-red-500/30 flex items-center justify-center">🗑️</button>
+        </div>
+      `).join('');
+    }
+
     function updateDietMacroButtons() {
       const day = getSelectedDayData();
       const logs = day?.foodLogs || [];
@@ -2448,6 +2499,7 @@ const BACKEND_AI_URL =
     }
 
     function renderGroupedMeals() {
+      renderScannerDayMeals();
       updateDietMacroButtons();
       const container = document.getElementById('groupedMealsContainer');
       if (!container) return;
