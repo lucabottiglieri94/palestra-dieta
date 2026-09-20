@@ -74,6 +74,53 @@
       border-color: #2dd4bf !important;
       background: rgba(20, 184, 166, 0.25) !important;
     }
+    /* Preferenze visuali utente: mantengono tutte le funzioni, modificano solo la presentazione. */
+    .simple-mode .decorative-secondary,
+    .simple-mode .app-description,
+    .simple-mode .secondary-hint {
+      display: none !important;
+    }
+    .simple-mode .apple-glass-card {
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+    }
+    .simple-mode main {
+      max-width: 1100px;
+    }
+    .simple-mode .tab-view {
+      gap: 1rem !important;
+    }
+
+    .light-theme {
+      background-color: #f3f5f7 !important;
+      color: #17202a !important;
+    }
+    .light-theme body {
+      background-color: #f3f5f7 !important;
+      color: #17202a !important;
+    }
+    .light-theme .bg-app-black { background-color: #f3f5f7 !important; }
+    .light-theme .bg-app-dark { background-color: #e8edf1 !important; }
+    .light-theme .bg-app-card { background-color: #ffffff !important; }
+    .light-theme .bg-app-cardSubtle { background-color: #f1f4f6 !important; }
+    .light-theme .apple-glass-card { background: rgba(255,255,255,.92) !important; border-color: #d7dee5 !important; }
+    .light-theme .apple-nav { background: rgba(255,255,255,.96) !important; border-color: #d7dee5 !important; }
+    .light-theme .border-app-border { border-color: #d7dee5 !important; }
+    .light-theme .text-white { color: #17202a !important; }
+    .light-theme .text-gray-200 { color: #334155 !important; }
+    .light-theme .text-gray-300 { color: #475569 !important; }
+    .light-theme .text-gray-400 { color: #64748b !important; }
+    .light-theme .text-app-textSecondary { color: #334155 !important; }
+    .light-theme .text-app-textMuted { color: #64748b !important; }
+    .light-theme .bg-black\/80,
+    .light-theme .bg-black\/70 { background-color: rgba(255,255,255,.94) !important; color: #17202a !important; }
+    .light-theme input,
+    .light-theme select,
+    .light-theme textarea { background-color: #ffffff !important; color: #17202a !important; border-color: #cbd5e1 !important; }
+    .light-theme .login-overlay { background: rgba(243,245,247,.94) !important; }
+    .light-theme ::-webkit-scrollbar-track { background: #e8edf1; }
+    .light-theme ::-webkit-scrollbar-thumb { background: #cbd5e1; }
+
     .login-overlay {
       position: fixed;
       inset: 0;
@@ -185,6 +232,33 @@
         <label class="text-xs text-gray-300">Circonferenza vita (cm)<input id="onbWaist" type="number" step="0.1" class="w-full mt-1 p-3 rounded-xl bg-app-dark border border-app-border text-white" placeholder="106" autocomplete="off"></label>
         <label class="text-xs text-gray-300">Allenamenti/settimana<input id="onbWorkouts" type="number" min="1" max="7" class="w-full mt-1 p-3 rounded-xl bg-app-dark border border-app-border text-white" placeholder="4" autocomplete="off"></label>
       </div>
+      <div class="mt-4 p-4 rounded-2xl bg-app-dark border border-app-border space-y-3">
+        <div>
+          <div class="text-sm font-bold text-white">Come vuoi vedere il sito?</div>
+          <div class="text-xs text-app-textMuted mt-1">Le funzioni restano tutte disponibili. Cambia solo la visualizzazione.</div>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <label class="cursor-pointer">
+            <input type="radio" name="onbDisplayMode" value="full" checked class="sr-only peer">
+            <span class="block p-3 rounded-xl border border-app-border bg-app-card text-center text-xs font-bold text-white peer-checked:border-emerald-500 peer-checked:bg-emerald-500/10">Completa</span>
+          </label>
+          <label class="cursor-pointer">
+            <input type="radio" name="onbDisplayMode" value="simple" class="sr-only peer">
+            <span class="block p-3 rounded-xl border border-app-border bg-app-card text-center text-xs font-bold text-white peer-checked:border-emerald-500 peer-checked:bg-emerald-500/10">Semplificata</span>
+          </label>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <label class="cursor-pointer">
+            <input type="radio" name="onbTheme" value="dark" checked class="sr-only peer">
+            <span class="block p-3 rounded-xl border border-app-border bg-app-card text-center text-xs font-bold text-white peer-checked:border-cyan-500 peer-checked:bg-cyan-500/10">🌙 Scuro</span>
+          </label>
+          <label class="cursor-pointer">
+            <input type="radio" name="onbTheme" value="light" class="sr-only peer">
+            <span class="block p-3 rounded-xl border border-app-border bg-app-card text-center text-xs font-bold text-white peer-checked:border-cyan-500 peer-checked:bg-cyan-500/10">☀️ Chiaro</span>
+          </label>
+        </div>
+      </div>
+
       <label class="block text-xs text-gray-300 mt-3">Obiettivo<select id="onbGoal" class="w-full mt-1 p-3 rounded-xl bg-app-dark border border-app-border text-white"><option>Dimagrimento</option><option>Ricomporsi: perdere grasso e aumentare muscolo</option><option>Aumento massa muscolare</option><option>Mantenimento</option></select></label>
       <button onclick="window.saveOnboardingProfile()" class="w-full mt-5 py-3.5 rounded-2xl bg-emerald-500 text-black font-black">Salva profilo e continua</button>
     </div>
@@ -1074,7 +1148,7 @@
       dailyRecords: {}, defaultRestingCalories: 1950, dailyCalorieTarget: 1950, weight: '95.0', waist: '104.0',
       height: '177', workoutsPerWeek: '4',
       goal: 'Ricomporsi: perdere grasso e aumentare muscolo',
-      name: '', age: '', profileCompleted: false, approved: false,
+      name: '', age: '', profileCompleted: false, approved: false, displayMode: 'full', theme: 'dark',
       workoutExercises: {}, walkLogs: [], customRoutines: {},
       ptSheetImage: null, ptSheetDate: null, currentLidlSlot: 'slot1'
     };
@@ -1085,7 +1159,7 @@
         dailyRecords: {}, defaultRestingCalories: 1950, weight: '95.0', waist: '104.0',
         height: '177', workoutsPerWeek: '4',
         goal: 'Ricomporsi: perdere grasso e aumentare muscolo',
-        name: '', age: '', profileCompleted: false, approved: false,
+        name: '', age: '', profileCompleted: false, approved: false, displayMode: 'full', theme: 'dark',
         workoutExercises: {}, walkLogs: [], customRoutines: {},
         ptSheetImage: null, ptSheetDate: null, currentLidlSlot: 'slot1'
       };
@@ -3081,6 +3155,8 @@ window.saveOnboardingProfile = async function() {
   const waist = parseFloat(document.getElementById('onbWaist').value);
   const workouts = parseInt(document.getElementById('onbWorkouts').value, 10);
   const goal = document.getElementById('onbGoal').value;
+  const displayMode = document.querySelector('input[name="onbDisplayMode"]:checked')?.value || 'full';
+  const theme = document.querySelector('input[name="onbTheme"]:checked')?.value || 'dark';
 
   if (
     !name ||
@@ -3102,6 +3178,8 @@ window.saveOnboardingProfile = async function() {
     waist: waist.toFixed(1),
     workoutsPerWeek: String(workouts),
     goal,
+    displayMode,
+    theme,
     profileCompleted: true,
     approved: false
   });
@@ -3205,7 +3283,16 @@ window.saveOnboardingProfile = async function() {
       } catch (e) { showNotification('Errore durante eliminazione memoria.', true); console.error(e); }
     };
 
+    function applyDisplayPreferences() {
+      const root = document.documentElement;
+      root.classList.toggle('light-theme', appData.theme === 'light');
+      root.classList.toggle('dark', appData.theme !== 'light');
+      document.body.classList.toggle('light-theme', appData.theme === 'light');
+      document.body.classList.toggle('simple-mode', appData.displayMode === 'simple');
+    }
+
     window.updateUIFromState = function() {
+      applyDisplayPreferences();
       updateDailyCalorieTarget();
       const coachNameEl = document.getElementById('coachInlineUserName');
       const headerUserStatsEl = document.getElementById('headerUserStats');
