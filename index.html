@@ -408,14 +408,24 @@
     @media (min-width: 1200px) {
       .nexa-side-banner { display: block; }
       body:not(.light-theme) main {
-        width: calc(100% - 20vw);
-        max-width: none;
-        margin-left: 10vw;
-        margin-right: 10vw;
+        width: calc(100% - 20vw) !important;
+        max-width: none !important;
+        margin-left: 10vw !important;
+        margin-right: 10vw !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
       }
       body:not(.light-theme) main > section,
       body:not(.light-theme) main > div {
-        max-width: none;
+        max-width: none !important;
+      }
+      body:not(.light-theme) #view-workout,
+      body:not(.light-theme) #view-walk,
+      body:not(.light-theme) #view-nutrition,
+      body:not(.light-theme) #view-scanner,
+      body:not(.light-theme) #view-coach,
+      body:not(.light-theme) #view-progress {
+        width: 100% !important;
       }
     }
 
