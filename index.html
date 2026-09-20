@@ -290,6 +290,10 @@
         font-size: 16px !important;
       }
 
+      #headerIdentity > div:first-child {
+        flex: 0 0 auto;
+      }
+
       #headerIdentity p {
         justify-content: center;
         flex-wrap: wrap;
@@ -504,8 +508,8 @@
   <header id="appHeader" class="bg-app-black/90 backdrop-blur-xl border-b border-app-border px-4 py-4 sticky z-40 top-0">
     <div id="headerInner" class="max-w-7xl mx-auto flex items-center justify-between">
       <div id="headerIdentity" class="flex items-center gap-3.5">
-        <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-700 flex items-center justify-center text-black font-display font-black text-lg">
-          IR
+        <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl overflow-hidden bg-black border border-emerald-500/25 shadow-sm shrink-0">
+          <img src="https://raw.githubusercontent.com/lucabottiglieri94/palestra-ai/main/logo-nexafit-ai.jpeg" alt="NexaFit AI" class="w-full h-full object-cover">
         </div>
         <div>
           <div class="flex items-center gap-2">
