@@ -129,6 +129,77 @@
     .light-theme ::-webkit-scrollbar-track { background: #e8edf1; }
     .light-theme ::-webkit-scrollbar-thumb { background: #cbd5e1; }
 
+    /* Tema chiaro Apple: neutralizza anche i pannelli con colori Tailwind scuri
+       presenti nelle varie sezioni, mantenendo leggibili testi, bordi e controlli. */
+    .light-theme header,
+    .light-theme .apple-nav,
+    .light-theme nav {
+      background: rgba(248, 249, 251, 0.96) !important;
+      color: #1d1d1f !important;
+      border-color: #d2d6dc !important;
+      box-shadow: 0 1px 0 rgba(0,0,0,.05), 0 8px 24px rgba(0,0,0,.04);
+    }
+
+    .light-theme [class*="bg-gray-900"],
+    .light-theme [class*="bg-gray-800"],
+    .light-theme [class*="bg-gray-700"],
+    .light-theme [class*="bg-slate-900"],
+    .light-theme [class*="bg-slate-800"],
+    .light-theme [class*="bg-slate-700"],
+    .light-theme [class*="bg-zinc-900"],
+    .light-theme [class*="bg-zinc-800"],
+    .light-theme [class*="bg-zinc-700"],
+    .light-theme [class*="bg-neutral-900"],
+    .light-theme [class*="bg-neutral-800"],
+    .light-theme [class*="bg-neutral-700"] {
+      background-color: #ffffff !important;
+      color: #1d1d1f !important;
+    }
+
+    .light-theme [class*="bg-black"] {
+      background-color: #f8f9fb !important;
+      color: #1d1d1f !important;
+    }
+
+    .light-theme [class*="border-gray-"],
+    .light-theme [class*="border-slate-"],
+    .light-theme [class*="border-zinc-"],
+    .light-theme [class*="border-neutral-"] {
+      border-color: #d2d6dc !important;
+    }
+
+    .light-theme [class*="text-black"] { color: #1d1d1f !important; }
+    .light-theme [class*="text-white"] { color: #1d1d1f !important; }
+    .light-theme [class*="text-gray-100"],
+    .light-theme [class*="text-gray-200"],
+    .light-theme [class*="text-gray-300"],
+    .light-theme [class*="text-gray-400"] { color: #4b5563 !important; }
+
+    .light-theme button:not([class*="bg-emerald"]):not([class*="bg-teal"]):not([class*="bg-red"]):not([class*="bg-amber"]) {
+      color: #1d1d1f;
+    }
+
+    .light-theme .bg-app-card,
+    .light-theme .bg-app-cardSubtle,
+    .light-theme .bg-app-dark {
+      box-shadow: 0 1px 3px rgba(0,0,0,.04);
+    }
+
+    .light-theme input,
+    .light-theme select,
+    .light-theme textarea {
+      box-shadow: inset 0 1px 2px rgba(0,0,0,.04);
+    }
+
+    .light-theme .text-emerald-300,
+    .light-theme .text-emerald-400,
+    .light-theme .text-teal-300,
+    .light-theme .text-teal-400,
+    .light-theme .text-cyan-300,
+    .light-theme .text-cyan-400 {
+      filter: none;
+    }
+
     .login-overlay {
       position: fixed;
       inset: 0;
