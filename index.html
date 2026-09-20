@@ -17,6 +17,13 @@
 
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
+    try {
+      const savedTheme = JSON.parse(localStorage.getItem('icon_guest_state') || '{}').theme;
+      if (savedTheme === 'light') document.documentElement.classList.add('light-theme');
+    } catch (e) {}
+  </script>
+
+  <script>
     tailwind.config = {
       darkMode: 'class',
       theme: {
@@ -125,7 +132,16 @@
     .light-theme input,
     .light-theme select,
     .light-theme textarea { background-color: #ffffff !important; color: #17202a !important; border-color: #cbd5e1 !important; }
-    .light-theme .login-overlay { background: rgba(243,245,247,.94) !important; }
+    .light-theme .login-overlay { background: rgba(243,245,247,.96) !important; }
+    .light-theme .login-overlay > div {
+      background: #ffffff !important;
+      color: #1d1d1f !important;
+      border-color: #d2d6dc !important;
+      box-shadow: 0 12px 40px rgba(0,0,0,.08) !important;
+    }
+    .light-theme .login-overlay h2,
+    .light-theme .login-overlay p { color: #1d1d1f !important; }
+    .light-theme .nexafit-logo { border-color: #b9dfcf !important; }
     .light-theme ::-webkit-scrollbar-track { background: #e8edf1; }
     .light-theme ::-webkit-scrollbar-thumb { background: #cbd5e1; }
 
@@ -408,8 +424,18 @@
   <!-- OVERLAY ACCESSO GOOGLE CON OPZIONE LOCALE IMMEDIATA -->
   <div id="loginOverlay" class="login-overlay">
     <div class="max-w-md w-11/12 p-8 rounded-3xl bg-app-card border border-app-border text-center space-y-5 shadow-2xl">
-      <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-700 flex items-center justify-center text-black font-display font-black text-2xl">
-        IR
+      <div class="nexafit-logo w-16 h-16 mx-auto rounded-2xl overflow-hidden border border-emerald-500/30 shadow-sm flex items-center justify-center">
+        <svg viewBox="0 0 64 64" class="w-full h-full" role="img" aria-label="NexaFit AI">
+          <defs>
+            <linearGradient id="nexaLoginGradient" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#67d6a1"/>
+              <stop offset="100%" stop-color="#23796d"/>
+            </linearGradient>
+          </defs>
+          <rect width="64" height="64" rx="16" fill="url(#nexaLoginGradient)"/>
+          <path d="M17 45V19h7l16 16V19h7v26h-7L24 29v16z" fill="#07130d"/>
+          <circle cx="49" cy="15" r="3" fill="#d9fff0"/>
+        </svg>
       </div>
       <div>
         <h2 class="font-display font-black text-2xl text-white">NexaFit AI</h2>
@@ -418,6 +444,9 @@
         </p>
       </div>
       <div class="space-y-3">
+        <button type="button" onclick="window.toggleGuestTheme()" class="w-full py-2.5 rounded-xl bg-app-cardSubtle hover:bg-app-dark border border-app-border text-app-textMuted font-semibold text-xs transition">
+          ☀️ / 🌙 Cambia tema
+        </button>
         <button id="loginBtn" onclick="window.handleGoogleLogin()" class="w-full py-4 rounded-2xl bg-white hover:bg-gray-100 text-black font-bold text-sm flex items-center justify-center gap-3 transition active:scale-95 shadow-md">
           <svg class="w-5 h-5" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>
           <span id="loginBtnLabel">Accedi con Google</span>
@@ -508,8 +537,18 @@
   <header id="appHeader" class="bg-app-black/90 backdrop-blur-xl border-b border-app-border px-4 py-4 sticky z-40 top-0">
     <div id="headerInner" class="max-w-7xl mx-auto flex items-center justify-between">
       <div id="headerIdentity" class="flex items-center gap-3.5">
-        <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl overflow-hidden bg-black border border-emerald-500/25 shadow-sm shrink-0">
-          <img src="https://raw.githubusercontent.com/lucabottiglieri94/palestra-ai/main/logo-nexafit-ai.jpeg" alt="NexaFit AI" class="w-full h-full object-cover">
+        <div class="nexafit-logo w-12 h-12 sm:w-14 sm:h-14 rounded-2xl overflow-hidden border border-emerald-500/30 shadow-sm shrink-0 flex items-center justify-center" aria-label="NexaFit AI">
+          <svg viewBox="0 0 64 64" class="w-full h-full" role="img" aria-label="NexaFit AI">
+            <defs>
+              <linearGradient id="nexaLogoGradient" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#67d6a1"/>
+                <stop offset="100%" stop-color="#23796d"/>
+              </linearGradient>
+            </defs>
+            <rect width="64" height="64" rx="16" fill="url(#nexaLogoGradient)"/>
+            <path d="M17 45V19h7l16 16V19h7v26h-7L24 29v16z" fill="#07130d"/>
+            <circle cx="49" cy="15" r="3" fill="#d9fff0"/>
+          </svg>
         </div>
         <div>
           <div class="flex items-center gap-2">
@@ -3551,6 +3590,17 @@ window.saveOnboardingProfile = async function() {
         }
       }
     }
+
+    window.toggleGuestTheme = function() {
+      const current = document.documentElement.classList.contains('light-theme');
+      const theme = current ? 'dark' : 'light';
+      document.documentElement.classList.toggle('light-theme', theme === 'light');
+      document.body.classList.toggle('light-theme', theme === 'light');
+      try {
+        const raw = JSON.parse(localStorage.getItem('icon_guest_state') || '{}');
+        localStorage.setItem('icon_guest_state', JSON.stringify({ ...raw, theme }));
+      } catch (e) {}
+    };
 
     window.toggleUserTheme = function() {
       appData.theme = appData.theme === 'light' ? 'dark' : 'light';
