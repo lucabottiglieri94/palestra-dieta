@@ -213,6 +213,27 @@
       border-color: #43a477 !important;
     }
 
+    /* Nel tema chiaro, i comandi che confermano/salvano un'azione usano lo stesso verde dello Scanner. */
+    .light-theme button[onclick*="save"],
+    .light-theme button[onclick*="Save"],
+    .light-theme button[onclick*="apply"],
+    .light-theme button[onclick*="Apply"],
+    .light-theme button[onclick*="Calcola"],
+    .light-theme button[onclick*="applyCustomKcal"] {
+      background-color: #52b788 !important;
+      border-color: #52b788 !important;
+      color: #07130d !important;
+    }
+    .light-theme button[onclick*="save"]:hover,
+    .light-theme button[onclick*="Save"]:hover,
+    .light-theme button[onclick*="apply"]:hover,
+    .light-theme button[onclick*="Apply"]:hover,
+    .light-theme button[onclick*="Calcola"]:hover,
+    .light-theme button[onclick*="applyCustomKcal"]:hover {
+      background-color: #43a477 !important;
+      border-color: #43a477 !important;
+    }
+
     .light-theme input,
     .light-theme select,
     .light-theme textarea {
