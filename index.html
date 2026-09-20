@@ -661,6 +661,16 @@
           </p>
         </div>
 
+        <!-- Selettore Giorno Scanner -->
+        <div class="bg-app-dark p-3 rounded-2xl border border-emerald-500/30 flex items-center justify-between gap-3">
+          <button type="button" onclick="window.shiftSelectedDay(-1)" class="w-11 h-11 rounded-xl bg-app-card border border-app-border text-xl text-gray-300 hover:text-emerald-400 active:scale-95 transition">‹</button>
+          <div class="text-center flex-1">
+            <span class="text-[10px] text-app-textMuted font-bold uppercase tracking-wider block">Diario Scanner</span>
+            <span id="scannerCurrentDateLabel" class="text-sm sm:text-base font-mono font-black text-emerald-400">Oggi</span>
+          </div>
+          <button type="button" onclick="window.shiftSelectedDay(1)" class="w-11 h-11 rounded-xl bg-app-card border border-app-border text-xl text-gray-300 hover:text-emerald-400 active:scale-95 transition">›</button>
+        </div>
+
         <!-- Selettore Slot Orario -->
         <div class="bg-app-dark p-4 rounded-2xl border border-app-border flex flex-col sm:flex-row items-center justify-between gap-3 text-left">
           <div class="flex items-center gap-3">
@@ -3128,6 +3138,13 @@ window.saveOnboardingProfile = async function() {
       const label = document.getElementById('headerCurrentDateLabel');
       if (label) {
         label.innerText = todayKey === currentKey ? "Oggi" : selectedDate.toLocaleDateString('it-IT', { day: 'numeric', month: 'short' });
+      }
+
+      const scannerDateLabel = document.getElementById('scannerCurrentDateLabel');
+      if (scannerDateLabel) {
+        scannerDateLabel.innerText = todayKey === currentKey
+          ? "Oggi"
+          : selectedDate.toLocaleDateString('it-IT', { weekday: 'short', day: 'numeric', month: 'short' });
       }
 
       const dayTitle = document.getElementById('currentDayTitle');
