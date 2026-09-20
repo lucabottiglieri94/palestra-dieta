@@ -77,8 +77,16 @@
     /* Preferenze visuali utente: mantengono tutte le funzioni, modificano solo la presentazione. */
     .simple-mode .decorative-secondary,
     .simple-mode .app-description,
-    .simple-mode .secondary-hint {
+    .simple-mode .secondary-hint,
+    .simple-mode .tab-view > p,
+    .simple-mode .apple-glass-card > p {
       display: none !important;
+    }
+    .simple-mode .apple-glass-card {
+      padding: 1rem !important;
+    }
+    .simple-mode .tab-view {
+      row-gap: 1rem !important;
     }
     .simple-mode .apple-glass-card {
       backdrop-filter: none;
