@@ -3781,12 +3781,21 @@ window.saveOnboardingProfile = async function() {
           updatedAt: restoreTimestamp
         };
 
+        // Prima testiamo la scrittura sul documento corrente con un marcatore
+        // temporaneo. Se le regole Firebase la bloccano, mostriamo l'errore reale.
+        try {
+          await setDoc(cloudDocRef, { backupRestoreTest: restoreTimestamp }, { merge: true });
+        } catch (writeError) {
+          console.error('Firebase backup write test:', writeError);
+          throw new Error('Scrittura Firebase bloccata: ' + (writeError?.code || writeError?.message || 'errore sconosciuto'));
+        }
+
         await setDoc(cloudDocRef, payload);
 
         // Verifica che Firebase abbia realmente registrato il ripristino.
         const verified = await getDoc(cloudDocRef);
         if (!verified.exists() || !verified.data()?.dailyRecords) {
-          throw new Error('Firebase non ha confermato il salvataggio del backup.');
+          throw new Error('Firebase ha scritto il documento, ma non trova dailyRecords dopo la rilettura.');
         }
 
         appData = { ...appData, ...verified.data() };
@@ -3794,7 +3803,7 @@ window.saveOnboardingProfile = async function() {
         window.updateUIFromState();
         window.refreshCoachGreeting();
 
-        showNotification('Backup salvato definitivamente su Firebase.');
+        showNotification('Backup salvato definitivamente su Firebase.', false);
       } catch (e) {
         console.error('Ripristino backup Firebase:', e);
         showNotification('Errore ripristino: ' + (e?.message || 'file non valido'), true);
