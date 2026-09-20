@@ -410,13 +410,25 @@
     .nexa-side-light { display: none !important; }
     .light-theme .nexa-side-dark { display: none !important; }
     .light-theme .nexa-side-light { display: block !important; }
-    .light-theme .nexa-side-light {
-      /* Crop verticale più aggressivo per eliminare la fascia bianca
-         e mantenere continuità tra banner superiore e laterale. */
-      transform: scale(1.38, 1.75);
-      transform-origin: center center;
-    }
     .light-theme .nexa-side-banner { background: #f3f5f7; }
+
+    /* Light: taglia la fascia bianca centrale del file ricomponendo
+       la parte alta e quella bassa senza lasciar trasparenze. */
+    .light-theme .nexa-side-banner .nexa-side-light {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: fill;
+      transform: none;
+    }
+    .light-theme .nexa-side-banner .nexa-side-light-top {
+      clip-path: inset(0 0 60% 0);
+    }
+    .light-theme .nexa-side-banner .nexa-side-light-bottom {
+      clip-path: inset(52% 0 0 0);
+      transform: translateY(-12%);
+    }
 
     @media (min-width: 1400px) {
       .nexa-side-banner { display: block; }
@@ -515,11 +527,13 @@
   <!-- Banner laterali: stessa costruzione desktop/scroll per Dark e Light -->
   <div class="nexa-side-banner nexa-side-banner-left" aria-hidden="true">
     <img class="nexa-side-dark" src="https://raw.githubusercontent.com/lucabottiglieri94/palestra-dieta/main/nexafitsinistra.jpeg" alt="">
-    <img class="nexa-side-light" src="https://raw.githubusercontent.com/lucabottiglieri94/palestra-dieta/main/nexafitleftlight.jpeg" alt="">
+    <img class="nexa-side-light nexa-side-light-top" src="https://raw.githubusercontent.com/lucabottiglieri94/palestra-dieta/main/nexafitleftlight.jpeg" alt="">
+    <img class="nexa-side-light nexa-side-light-bottom" src="https://raw.githubusercontent.com/lucabottiglieri94/palestra-dieta/main/nexafitleftlight.jpeg" alt="">
   </div>
   <div class="nexa-side-banner nexa-side-banner-right" aria-hidden="true">
     <img class="nexa-side-dark" src="https://raw.githubusercontent.com/lucabottiglieri94/palestra-dieta/main/nexafitdestra.jpeg" alt="">
-    <img class="nexa-side-light" src="https://raw.githubusercontent.com/lucabottiglieri94/palestra-dieta/main/nexafitrightlight.jpeg" alt="">
+    <img class="nexa-side-light nexa-side-light-top" src="https://raw.githubusercontent.com/lucabottiglieri94/palestra-dieta/main/nexafitrightlight.jpeg" alt="">
+    <img class="nexa-side-light nexa-side-light-bottom" src="https://raw.githubusercontent.com/lucabottiglieri94/palestra-dieta/main/nexafitrightlight.jpeg" alt="">
   </div>
 
   <!-- OVERLAY ACCESSO GOOGLE CON OPZIONE LOCALE IMMEDIATA -->
