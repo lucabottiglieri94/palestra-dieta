@@ -524,57 +524,11 @@
   </div>
 
   <!-- HEADER APPLICAZIONE -->
-  <header id="appHeader" class="bg-app-black/90 backdrop-blur-xl border-b border-app-border px-4 py-4 sticky z-40 top-0">
-    <div id="headerInner" class="max-w-7xl mx-auto flex items-center justify-between">
-      <div id="headerIdentity" class="flex items-center gap-3.5">
-        <div>
-          <div class="flex items-center gap-2">
-            <h1 class="font-display font-black text-lg sm:text-xl text-white tracking-tight">NexaFit AI</h1>
-            <span id="headerUserStats" class="text-xs font-bold uppercase px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-              --a • --kg
-            </span>
-          </div>
-          <p class="text-xs sm:text-sm text-app-textMuted flex items-center gap-2 font-mono mt-0.5">
-            <span id="cloudStatusReadout" class="text-teal-400 font-semibold">Offline / Locale</span>
-            <span class="text-gray-600">•</span>
-            <span id="headerCalorieTarget" class="text-gray-300">Target Calorie -- kcal</span>
-          </p>
-        </div>
-      </div>
-
-      <!-- SELETTORE GIORNO ATTIVO -->
-      <div id="headerDaySelector" class="flex items-center gap-2 bg-app-card px-2.5 py-1.5 rounded-2xl border border-app-border">
-        <button onclick="window.shiftSelectedDay(-1)" class="w-7 h-7 rounded-xl hover:bg-app-cardSubtle flex items-center justify-center text-sm text-app-textMuted hover:text-white transition">‹</button>
-        <span id="headerCurrentDateLabel" class="text-xs sm:text-sm font-mono font-bold text-emerald-400 px-1 select-none">Oggi</span>
-        <button onclick="window.shiftSelectedDay(1)" class="w-7 h-7 rounded-xl hover:bg-app-cardSubtle flex items-center justify-center text-sm text-app-textMuted hover:text-white transition">›</button>
-      </div>
-
-      <!-- COMANDI RAPIDI HEADER -->
-      <div id="headerCommands" class="flex items-center gap-2 sm:gap-3">
-        <button onclick="window.toggleTimerModal()" class="px-3.5 py-2 rounded-xl bg-app-card border border-app-border text-sm flex items-center gap-2 text-emerald-400 font-mono active:scale-95 transition">
-          <span>⏱️</span>
-          <span id="headerTimerReadout">00:00</span>
-        </button>
-        <button id="themeToggleBtn" onclick="window.toggleUserTheme()" class="px-3 h-10 rounded-xl bg-app-card border border-app-border text-xs font-bold text-app-textMuted hover:text-white transition" title="Cambia tema">
-          ☀️ <span>Tema</span>
-        </button>
-        <button id="modeToggleBtn" onclick="window.toggleUserDisplayMode()" class="px-3 h-10 rounded-xl bg-app-card border border-app-border text-xs font-bold text-app-textMuted hover:text-white transition" title="Cambia modalità">
-          ⚡ <span>Modalità</span>
-        </button>
-        <button onclick="window.deleteUserMemory()" class="px-3 h-10 rounded-xl bg-red-950/70 border border-red-500/40 text-red-300 text-xs font-bold flex items-center gap-1.5 hover:bg-red-900/70 transition" title="Pulisci memoria">
-          🗑️ <span>Memoria</span>
-        </button>
-        <button id="headerLogoutBtn" onclick="window.logoutUser()" class="w-10 h-10 rounded-xl bg-app-card border border-app-border text-sm flex items-center justify-center text-gray-400 hover:text-red-400 transition" title="Logout / Esci">
-          ✕
-        </button>
-      </div>
-    </div>
+  <header id="appHeader" class="sticky top-0 z-50 overflow-hidden border-b border-app-border bg-black">
+    <img id="nexaTopBanner" src="https://raw.githubusercontent.com/lucabottiglieri94/palestra-dieta/main/nexabannerdark.jpeg" data-dark-banner="https://raw.githubusercontent.com/lucabottiglieri94/palestra-dieta/main/nexabannerdark.jpeg" data-light-banner="https://raw.githubusercontent.com/lucabottiglieri94/palestra-dieta/main/nexabannerlight.jpeg" alt="NexaFit AI" class="block w-full h-auto max-h-28 object-cover">
   </header>
-
   <main class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
-    <div id="nexaBannerWrap" class="w-full mb-6 overflow-hidden rounded-3xl border border-app-border shadow-sm bg-app-card">
-      <img id="nexaBanner" src="https://raw.githubusercontent.com/lucabottiglieri94/palestra-dieta/main/nexabannerdark.jpeg" data-dark-banner="https://raw.githubusercontent.com/lucabottiglieri94/palestra-dieta/main/nexabannerdark.jpeg" data-light-banner="https://raw.githubusercontent.com/lucabottiglieri94/palestra-dieta/main/nexabannerlight.jpeg" alt="NexaFit AI" class="block w-full h-auto object-cover">
-    </div>
+>
 
     <!-- ============================================================= -->
     <!-- TAB 1: SCHEDA PALESTRA ICON (USO LIVE IN SALA)                -->
@@ -3553,7 +3507,7 @@ window.saveOnboardingProfile = async function() {
       const bannerUrl = appData.theme === 'light'
         ? 'https://raw.githubusercontent.com/lucabottiglieri94/palestra-dieta/main/nexabannerlight.jpeg'
         : 'https://raw.githubusercontent.com/lucabottiglieri94/palestra-dieta/main/nexabannerdark.jpeg';
-      const banner = document.getElementById('nexaBanner');
+      const banner = document.getElementById('nexaTopBanner');
       if (banner) banner.src = bannerUrl;
 
       const modeBtn = document.getElementById('modeToggleBtn');
