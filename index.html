@@ -219,8 +219,8 @@
         <div>
           <div class="flex items-center gap-2">
             <h1 class="font-display font-black text-lg sm:text-xl text-white tracking-tight">ICON RECOMP</h1>
-            <span class="text-xs font-bold uppercase px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-              32a • 95kg
+            <span id="headerUserStats" class="text-xs font-bold uppercase px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+              --a • --kg
             </span>
           </div>
           <p class="text-xs sm:text-sm text-app-textMuted flex items-center gap-2 font-mono mt-0.5">
@@ -3182,6 +3182,13 @@ window.saveOnboardingProfile = async function() {
 
     window.updateUIFromState = function() {
       const coachNameEl = document.getElementById('coachInlineUserName');
+      const headerUserStatsEl = document.getElementById('headerUserStats');
+      if (headerUserStatsEl) {
+        const age = Number(appData.age);
+        const weight = Number(appData.weight);
+        headerUserStatsEl.textContent =
+          `${Number.isFinite(age) && age > 0 ? age + 'a' : '--a'} • ${Number.isFinite(weight) && weight > 0 ? weight + 'kg' : '--kg'}`;
+      }
       if (coachNameEl) coachNameEl.textContent = appData.name || 'atleta';
       const todayKey = getFormattedDateKey(new Date());
       const currentKey = getFormattedDateKey(selectedDate);
