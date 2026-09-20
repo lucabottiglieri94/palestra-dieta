@@ -3041,6 +3041,8 @@ const BACKEND_AI_URL =
         const sumKcal = items.reduce((acc, x) => acc + (Number(x.calories) || 0), 0);
         const sumPro = items.reduce((acc, x) => acc + (Number(x.protein) || 0), 0);
         const sumCarbs = items.reduce((acc, x) => acc + (Number(x.carbs) || 0), 0);
+        const sumProDisplay = Number(sumPro.toFixed(2));
+        const sumCarbsDisplay = Number(sumCarbs.toFixed(2));
 
         const itemsHTML = items.map(m => `
           <div class="flex items-center justify-between p-2.5 rounded-xl bg-app-dark border border-app-border text-sm">
@@ -3070,11 +3072,11 @@ const BACKEND_AI_URL =
               <div class="grid grid-cols-3 gap-2 text-center">
                 <div>
                   <span class="block text-[10px] uppercase font-black text-emerald-400">Proteine</span>
-                  <span class="text-lg font-mono font-black text-emerald-300">${sumPro}g</span>
+                  <span class="text-lg font-mono font-black text-emerald-300">${sumProDisplay.toFixed(2)}g</span>
                 </div>
                 <div>
                   <span class="block text-[10px] uppercase font-black text-cyan-300">Carboidrati</span>
-                  <span class="text-lg font-mono font-black text-cyan-200">${sumCarbs}g</span>
+                  <span class="text-lg font-mono font-black text-cyan-200">${sumCarbsDisplay.toFixed(2)}g</span>
                 </div>
                 <div>
                   <span class="block text-[10px] uppercase font-black text-amber-300">Calorie</span>
