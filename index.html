@@ -707,7 +707,7 @@
         <div class="flex items-center gap-1 sm:gap-2 shrink-0">
           <div class="flex items-center rounded-xl bg-app-card border border-app-border overflow-hidden">
             <button onclick="window.shiftSelectedDay(-1)" class="px-2 sm:px-3 h-9 text-app-textMuted hover:text-white font-bold text-xs">‹</button>
-            <button onclick="window.updateUIFromState()" class="px-2.5 sm:px-4 h-9 text-emerald-400 font-mono font-bold text-xs">Oggi</button>
+            <button onclick="window.goToToday()" id="headerCurrentDateLabel" class="px-2.5 sm:px-4 h-9 text-emerald-400 font-mono font-bold text-xs">Oggi</button>
             <button onclick="window.shiftSelectedDay(1)" class="px-2 sm:px-3 h-9 text-app-textMuted hover:text-white font-bold text-xs">›</button>
           </div>
           <button onclick="window.toggleTimerModal()" class="hidden sm:flex items-center gap-1.5 px-3 h-9 rounded-xl bg-app-card border border-app-border text-app-textMuted font-mono font-bold text-xs">⏱️ <span id="headerTimerValue">00:00</span></button>
@@ -3556,6 +3556,13 @@ const BACKEND_AI_URL =
     // Navigazione e Autenticazione
     window.shiftSelectedDay = function(delta) {
       selectedDate.setDate(selectedDate.getDate() + delta);
+      window.updateUIFromState();
+    };
+
+    window.goToToday = function() {
+      const todayItalyKey = getItalyDateKey();
+      const [y, m, d] = todayItalyKey.split('-').map(Number);
+      selectedDate = new Date(y, m - 1, d);
       window.updateUIFromState();
     };
 
