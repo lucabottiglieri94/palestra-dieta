@@ -694,16 +694,14 @@
           document.body.scrollHeight,
           document.documentElement.scrollHeight
         );
-        // Light: i laterali iniziano esattamente sotto il banner superiore,
-        // evitando la fascia vuota tra header e immagine laterale.
-        // Dark: mantiene la costruzione già corretta attuale.
-        const isLight = document.body.classList.contains('light-theme') ||
-          document.documentElement.classList.contains('light-theme');
-        const sideTop = isLight ? top : 0;
+        // Dark e Light usano la stessa identica geometria:
+        // i banner laterali partono da Y=0, dietro il banner superiore,
+        // così restano in continuità senza alcuna banda divisoria.
+        const sideTop = 0;
         document.documentElement.style.setProperty('--nexa-side-top', sideTop + 'px');
         document.documentElement.style.setProperty(
           '--nexa-side-height',
-          Math.max(0, pageBottom - sideTop) + 'px'
+          pageBottom + 'px'
         );
       };
       window.addEventListener('load', syncNexaSideTop);
