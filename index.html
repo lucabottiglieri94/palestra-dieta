@@ -657,14 +657,19 @@
         const banner = document.getElementById('nexaTopBanner');
         if (!banner) return;
         const top = banner.getBoundingClientRect().height;
-        const pageHeight = Math.max(
+        const main = document.querySelector('main');
+        const mainBottom = main
+          ? main.getBoundingClientRect().bottom + window.scrollY
+          : document.documentElement.scrollHeight;
+        const pageBottom = Math.max(
+          mainBottom,
           document.body.scrollHeight,
           document.documentElement.scrollHeight
         );
         document.documentElement.style.setProperty('--nexa-side-top', top + 'px');
         document.documentElement.style.setProperty(
           '--nexa-side-height',
-          Math.max(0, pageHeight - top) + 'px'
+          Math.max(0, pageBottom - top) + 'px'
         );
       };
       window.addEventListener('load', syncNexaSideTop);
