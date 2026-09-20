@@ -424,6 +424,16 @@
     }
 
     @media (min-width: 1400px) {
+      /* La barra dei controlli deve avere esattamente la stessa larghezza
+         del body centrale, così i banner laterali arrivano a toccarla. */
+      #appHeaderControls {
+        width: 1280px !important;
+        max-width: calc(100vw - 2 * max(0px, calc((100vw - 1280px) / 2))) !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        box-sizing: border-box !important;
+      }
+
       .nexa-side-banner { display: block; }
       /* Identica geometria del contenuto centrale in entrambi i temi. */
       body main {
