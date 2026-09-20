@@ -1589,6 +1589,7 @@
       ptSheetImage: null, ptSheetDate: null, currentLidlSlot: 'slot1'
     };
     let localStateKey = 'icon_guest_state';
+    let backupRestoreTimestamp = 0;
 
     function resetAppData() {
       appData = {
@@ -3729,6 +3730,8 @@ window.saveOnboardingProfile = async function() {
       }
 
       try {
+        clearTimeout(cloudSaveTimeout);
+
         const rawText = await file.text();
         const backup = JSON.parse(rawText);
 
@@ -3736,7 +3739,7 @@ window.saveOnboardingProfile = async function() {
           throw new Error('Il file non contiene dailyRecords validi.');
         }
 
-        // Non importiamo mai credenziali, email storiche o chiavi API.
+        // Mai importare credenziali, email storiche o chiavi API.
         const {
           userApiKey,
           email,
@@ -3746,8 +3749,9 @@ window.saveOnboardingProfile = async function() {
           ...safeBackup
         } = backup;
 
-        // Applica subito il backup all'interfaccia: così i dati recuperati
-        // sono visibili senza attendere un reload della pagina.
+        const restoreTimestamp = Date.now();
+        backupRestoreTimestamp = restoreTimestamp;
+
         appData = {
           ...appData,
           ...safeBackup,
@@ -3757,23 +3761,34 @@ window.saveOnboardingProfile = async function() {
         };
 
         localStorage.setItem(localStateKey, JSON.stringify(appData));
-        window.updateUIFromState();
-        window.refreshCoachGreeting();
 
-        // Salva lo stesso stato nel documento Firebase dell'account corrente.
+        // Scrive il backup come documento completo, non in merge.
+        // In questo modo i dati recuperati diventano lo stato persistente
+        // effettivo dell'account e non possono essere sovrascritti da campi vecchi.
         const payload = {
-          ...safeBackup,
+          ...appData,
           name: appData.name,
           email: currentUser.email || '',
           userEmail: currentUser.email || '',
           profileCompleted: true,
           approved: true,
-          updatedAt: Date.now()
+          updatedAt: restoreTimestamp
         };
 
-        await setDoc(cloudDocRef, payload, { merge: true });
+        await setDoc(cloudDocRef, payload);
 
-        showNotification('Backup ripristinato: dati Firebase recuperati correttamente.');
+        // Verifica che Firebase abbia realmente registrato il ripristino.
+        const verified = await getDoc(cloudDocRef);
+        if (!verified.exists() || !verified.data()?.dailyRecords) {
+          throw new Error('Firebase non ha confermato il salvataggio del backup.');
+        }
+
+        appData = { ...appData, ...verified.data() };
+        localStorage.setItem(localStateKey, JSON.stringify(appData));
+        window.updateUIFromState();
+        window.refreshCoachGreeting();
+
+        showNotification('Backup salvato definitivamente su Firebase.');
       } catch (e) {
         console.error('Ripristino backup Firebase:', e);
         showNotification('Errore ripristino: ' + (e?.message || 'file non valido'), true);
@@ -4011,6 +4026,13 @@ window.saveOnboardingProfile = async function() {
       unsubCloud = onSnapshot(cloudDocRef, snap => {
         if (snap.exists()) {
           const data = snap.data();
+
+          // Durante/subito dopo un ripristino ignoriamo eventuali snapshot
+          // Firebase più vecchi rimasti in coda nella cache locale.
+          if (backupRestoreTimestamp && Number(data.updatedAt || 0) < backupRestoreTimestamp) {
+            return;
+          }
+
           if (data.dailyRecords) appData.dailyRecords = data.dailyRecords;
           if (data.workoutExercises) appData.workoutExercises = data.workoutExercises;
           if (data.customRoutines) appData.customRoutines = data.customRoutines;
