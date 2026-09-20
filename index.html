@@ -425,7 +425,7 @@
   <div id="loginOverlay" class="login-overlay">
     <div class="max-w-md w-11/12 p-8 rounded-3xl bg-app-card border border-app-border text-center space-y-5 shadow-2xl">
       <div class="nexafit-logo w-16 h-16 mx-auto rounded-2xl overflow-hidden border border-emerald-500/30 shadow-sm" aria-label="NexaFit AI">
-        <img src="https://raw.githubusercontent.com/lucabottiglieri94/palestra-dieta/main/logo-nexafit-ai.png.jpeg" alt="NexaFit AI" class="w-full h-full object-contain">
+        <img id="headerNexaLogo" src="https://raw.githubusercontent.com/lucabottiglieri94/palestra-dieta/main/logo-nexafit-ai.png.jpeg" data-dark-logo="https://raw.githubusercontent.com/lucabottiglieri94/palestra-dieta/main/logo-nexafit-ai.png.jpeg" data-light-logo="https://raw.githubusercontent.com/lucabottiglieri94/palestra-dieta/main/NEXAFITLIGHT.jpeg" alt="NexaFit AI" class="w-full h-full object-contain">
       </div>
       <div>
         <h2 class="font-display font-black text-2xl text-white">NexaFit AI</h2>
@@ -528,7 +528,7 @@
     <div id="headerInner" class="max-w-7xl mx-auto flex items-center justify-between">
       <div id="headerIdentity" class="flex items-center gap-3.5">
         <div class="nexafit-logo w-12 h-12 sm:w-14 sm:h-14 rounded-2xl overflow-hidden border border-emerald-500/30 shadow-sm shrink-0" aria-label="NexaFit AI">
-          <img src="https://raw.githubusercontent.com/lucabottiglieri94/palestra-dieta/main/logo-nexafit-ai.png.jpeg" alt="NexaFit AI" class="w-full h-full object-contain">
+          <img id="loginNexaLogo" src="https://raw.githubusercontent.com/lucabottiglieri94/palestra-dieta/main/logo-nexafit-ai.png.jpeg" data-dark-logo="https://raw.githubusercontent.com/lucabottiglieri94/palestra-dieta/main/logo-nexafit-ai.png.jpeg" data-light-logo="https://raw.githubusercontent.com/lucabottiglieri94/palestra-dieta/main/NEXAFITLIGHT.jpeg" alt="NexaFit AI" class="w-full h-full object-contain">
         </div>
         <div>
           <div class="flex items-center gap-2">
@@ -3543,6 +3543,14 @@ window.saveOnboardingProfile = async function() {
           : '☀️ <span class="hidden sm:inline">Tema chiaro</span>';
         themeBtn.title = appData.theme === 'light' ? 'Passa al tema scuro' : 'Passa al tema chiaro';
       }
+
+      const logoUrl = appData.theme === 'light' 
+        ? 'https://raw.githubusercontent.com/lucabottiglieri94/palestra-dieta/main/NEXAFITLIGHT.jpeg'
+        : 'https://raw.githubusercontent.com/lucabottiglieri94/palestra-dieta/main/logo-nexafit-ai.png.jpeg';
+      ['headerNexaLogo', 'loginNexaLogo'].forEach(id => {
+        const logo = document.getElementById(id);
+        if (logo) logo.src = logoUrl;
+      });
 
       const modeBtn = document.getElementById('modeToggleBtn');
       if (modeBtn) {
