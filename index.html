@@ -525,10 +525,36 @@
 
   <!-- HEADER APPLICAZIONE -->
   <header id="appHeader" class="sticky top-0 z-50 overflow-hidden border-b border-app-border bg-black">
-    <img id="nexaTopBanner" src="https://raw.githubusercontent.com/lucabottiglieri94/palestra-dieta/main/nexabannerdark.jpeg" data-dark-banner="https://raw.githubusercontent.com/lucabottiglieri94/palestra-dieta/main/nexabannerdark.jpeg" data-light-banner="https://raw.githubusercontent.com/lucabottiglieri94/palestra-dieta/main/nexabannerlight.jpeg" alt="NexaFit AI" class="block w-full h-auto max-h-28 object-cover">
+    <div class="relative w-full">
+      <img id="nexaTopBanner" src="https://raw.githubusercontent.com/lucabottiglieri94/palestra-dieta/main/nexabannerdark.jpeg" data-dark-banner="https://raw.githubusercontent.com/lucabottiglieri94/palestra-dieta/main/nexabannerdark.jpeg" data-light-banner="https://raw.githubusercontent.com/lucabottiglieri94/palestra-dieta/main/nexabannerlight.jpeg" alt="NexaFit AI" class="block w-full h-auto max-h-32 object-cover">
+      <div class="absolute inset-0 bg-gradient-to-r from-black/65 via-transparent to-black/55 pointer-events-none"></div>
+      <div class="absolute inset-0 flex items-center justify-between gap-2 px-3 sm:px-6 lg:px-10">
+        <div class="min-w-0 text-white drop-shadow-lg">
+          <div class="flex items-center gap-2">
+            <span id="headerAppTitle" class="font-display font-black text-base sm:text-xl">NexaFit AI</span>
+            <span id="headerUserStats" class="text-[10px] sm:text-xs font-bold uppercase px-2 py-0.5 rounded-full bg-black/45 border border-white/20 text-emerald-300">--a • --kg</span>
+          </div>
+          <div class="text-[10px] sm:text-xs font-mono font-bold text-white/90 truncate">
+            <span id="coachInlineUserName">Utente</span> • Cloud ✓ • <span id="headerCalorieTarget">Target Calorie -- kcal</span>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
+          <div class="flex items-center rounded-xl bg-black/45 border border-white/20 overflow-hidden backdrop-blur-md">
+            <button onclick="window.shiftSelectedDay(-1)" class="px-2.5 sm:px-3 h-9 text-white font-bold text-xs">‹</button>
+            <button onclick="window.updateUIFromState()" class="px-3 sm:px-4 h-9 text-emerald-300 font-mono font-bold text-xs">Oggi</button>
+            <button onclick="window.shiftSelectedDay(1)" class="px-2.5 sm:px-3 h-9 text-white font-bold text-xs">›</button>
+          </div>
+          <button onclick="window.toggleTimerModal()" class="hidden sm:flex items-center gap-1.5 px-3 h-9 rounded-xl bg-black/45 border border-white/20 text-white font-mono font-bold text-xs backdrop-blur-md">⏱️ <span id="headerTimerValue">00:00</span></button>
+          <button onclick="window.toggleUserTheme()" id="themeToggleBtn" class="px-2.5 sm:px-3 h-9 rounded-xl bg-black/45 border border-white/20 text-white text-xs font-bold backdrop-blur-md">☀️ <span class="hidden md:inline">Tema</span></button>
+          <button onclick="window.toggleUserDisplayMode()" id="modeToggleBtn" class="px-2.5 sm:px-3 h-9 rounded-xl bg-black/45 border border-white/20 text-white text-xs font-bold backdrop-blur-md">⚡ <span class="hidden md:inline">Modalità</span></button>
+          <button onclick="window.deleteUserMemory()" class="hidden md:block px-3 h-9 rounded-xl bg-red-950/65 border border-red-300/30 text-red-100 text-xs font-bold">🗑 Memoria</button>
+          <button onclick="window.logoutUser()" class="w-9 h-9 rounded-xl bg-black/45 border border-white/20 text-white text-sm backdrop-blur-md" title="Esci">✕</button>
+        </div>
+      </div>
+    </div>
   </header>
   <main class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
->
 
     <!-- ============================================================= -->
     <!-- TAB 1: SCHEDA PALESTRA ICON (USO LIVE IN SALA)                -->
