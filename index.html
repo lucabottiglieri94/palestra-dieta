@@ -3712,18 +3712,20 @@ window.saveOnboardingProfile = async function() {
         showNotification('Accedi prima con l’account Luca.', true);
         return;
       }
-      if ((currentUser.email || '').toLowerCase() !== PRIMARY_ADMIN_EMAIL) {
+      if ((currentUser.email || '').trim().toLowerCase() !== PRIMARY_ADMIN_EMAIL) {
         showNotification('Ripristino disponibile solo per l’account principale.', true);
         return;
       }
+
       try {
-        const text = await file.text();
-        const backup = JSON.parse(text);
-        if (!backup || typeof backup !== 'object' || !backup.dailyRecords) {
-          throw new Error('Backup NexaFit non valido.');
+        const rawText = await file.text();
+        const backup = JSON.parse(rawText);
+
+        if (!backup || typeof backup !== 'object' || !backup.dailyRecords || typeof backup.dailyRecords !== 'object') {
+          throw new Error('Il file non contiene dailyRecords validi.');
         }
 
-        // Non importiamo mai credenziali o chiavi API dal backup.
+        // Non importiamo mai credenziali, email storiche o chiavi API.
         const {
           userApiKey,
           email,
@@ -3733,9 +3735,24 @@ window.saveOnboardingProfile = async function() {
           ...safeBackup
         } = backup;
 
+        // Applica subito il backup all'interfaccia: così i dati recuperati
+        // sono visibili senza attendere un reload della pagina.
+        appData = {
+          ...appData,
+          ...safeBackup,
+          name: (currentUser.displayName || '').trim().split(/\s+/)[0] || 'Luca',
+          profileCompleted: true,
+          approved: true
+        };
+
+        localStorage.setItem(localStateKey, JSON.stringify(appData));
+        window.updateUIFromState();
+        window.refreshCoachGreeting();
+
+        // Salva lo stesso stato nel documento Firebase dell'account corrente.
         const payload = {
           ...safeBackup,
-          name: 'luca',
+          name: appData.name,
           email: currentUser.email || '',
           userEmail: currentUser.email || '',
           profileCompleted: true,
@@ -3744,11 +3761,11 @@ window.saveOnboardingProfile = async function() {
         };
 
         await setDoc(cloudDocRef, payload, { merge: true });
-        showNotification('Backup Firebase ripristinato. Ricarico i dati…');
-        setTimeout(() => location.reload(), 700);
+
+        showNotification('Backup ripristinato: dati Firebase recuperati correttamente.');
       } catch (e) {
         console.error('Ripristino backup Firebase:', e);
-        showNotification('Errore nel ripristino del backup.', true);
+        showNotification('Errore ripristino: ' + (e?.message || 'file non valido'), true);
       }
     };
 
