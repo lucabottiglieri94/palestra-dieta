@@ -411,7 +411,9 @@
     .light-theme .nexa-side-dark { display: none !important; }
     .light-theme .nexa-side-light { display: block !important; }
     .light-theme .nexa-side-light {
-      transform: scale(1.38);
+      /* Crop verticale più aggressivo per eliminare la fascia bianca
+         e mantenere continuità tra banner superiore e laterale. */
+      transform: scale(1.38, 1.75);
       transform-origin: center center;
     }
     .light-theme .nexa-side-banner { background: #f3f5f7; }
