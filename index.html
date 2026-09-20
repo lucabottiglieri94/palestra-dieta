@@ -672,10 +672,13 @@
           document.body.scrollHeight,
           document.documentElement.scrollHeight
         );
-        document.documentElement.style.setProperty('--nexa-side-top', top + 'px');
+        // I banner laterali devono coprire anche la fascia dei controlli:
+        // nessun vuoto tra banner superiore, controlli e contenuto.
+        const sideTop = 0;
+        document.documentElement.style.setProperty('--nexa-side-top', sideTop + 'px');
         document.documentElement.style.setProperty(
           '--nexa-side-height',
-          Math.max(0, pageBottom - top) + 'px'
+          pageBottom + 'px'
         );
       };
       window.addEventListener('load', syncNexaSideTop);
