@@ -660,6 +660,8 @@
   <!-- PROFILO UTENTE E CANCELLAZIONE MEMORIA -->
   <div id="accountActions" class="fixed bottom-4 left-4 z-40 flex gap-2">
     <button onclick="window.logoutUser()" class="px-3 py-2 rounded-xl bg-app-card border border-app-border text-xs text-gray-300">Logout</button>
+    <button onclick="document.getElementById('firebaseBackupInput').click()" class="px-3 py-2 rounded-xl bg-emerald-950/80 border border-emerald-500/40 text-xs text-emerald-300">Ripristina backup</button>
+    <input id="firebaseBackupInput" type="file" accept=".json,application/json" class="hidden" onchange="window.importFirebaseBackup(this.files?.[0])">
     <button onclick="window.deleteUserMemory()" class="px-3 py-2 rounded-xl bg-red-950/80 border border-red-500/40 text-xs text-red-300">Elimina memoria</button>
   </div>
 
@@ -3701,6 +3703,52 @@ window.saveOnboardingProfile = async function() {
         document.getElementById('onboardingOverlay')?.classList.add('hidden');
         showNotification("Disconnesso.");
       } catch (e) { console.warn('Logout:', e); }
+    };
+
+    window.importFirebaseBackup = async function(file) {
+      if (!file) return;
+      if (!currentUser || !cloudDocRef) {
+        showNotification('Accedi prima con l’account Luca.', true);
+        return;
+      }
+      if ((currentUser.email || '').toLowerCase() !== PRIMARY_ADMIN_EMAIL) {
+        showNotification('Ripristino disponibile solo per l’account principale.', true);
+        return;
+      }
+      try {
+        const text = await file.text();
+        const backup = JSON.parse(text);
+        if (!backup || typeof backup !== 'object' || !backup.dailyRecords) {
+          throw new Error('Backup NexaFit non valido.');
+        }
+
+        // Non importiamo mai credenziali o chiavi API dal backup.
+        const {
+          userApiKey,
+          email,
+          userEmail,
+          approvalUpdatedAt,
+          updatedAt,
+          ...safeBackup
+        } = backup;
+
+        const payload = {
+          ...safeBackup,
+          name: 'luca',
+          email: currentUser.email || '',
+          userEmail: currentUser.email || '',
+          profileCompleted: true,
+          approved: true,
+          updatedAt: Date.now()
+        };
+
+        await setDoc(cloudDocRef, payload, { merge: true });
+        showNotification('Backup Firebase ripristinato. Ricarico i dati…');
+        setTimeout(() => location.reload(), 700);
+      } catch (e) {
+        console.error('Ripristino backup Firebase:', e);
+        showNotification('Errore nel ripristino del backup.', true);
+      }
     };
 
     window.deleteUserMemory = async function() {
