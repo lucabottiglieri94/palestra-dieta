@@ -684,13 +684,16 @@
           document.body.scrollHeight,
           document.documentElement.scrollHeight
         );
-        // I banner laterali devono coprire anche la fascia dei controlli:
-        // nessun vuoto tra banner superiore, controlli e contenuto.
-        const sideTop = 0;
+        // Light: i laterali iniziano esattamente sotto il banner superiore,
+        // evitando la fascia vuota tra header e immagine laterale.
+        // Dark: mantiene la costruzione già corretta attuale.
+        const isLight = document.body.classList.contains('light-theme') ||
+          document.documentElement.classList.contains('light-theme');
+        const sideTop = isLight ? top : 0;
         document.documentElement.style.setProperty('--nexa-side-top', sideTop + 'px');
         document.documentElement.style.setProperty(
           '--nexa-side-height',
-          pageBottom + 'px'
+          Math.max(0, pageBottom - sideTop) + 'px'
         );
       };
       window.addEventListener('load', syncNexaSideTop);
